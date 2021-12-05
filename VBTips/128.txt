@@ -1,0 +1,154 @@
+* VB-CODE (2)
+Tip 128: Calculating the Beginning and Ending Date of a Month
+
+July 1, 1995
+
+Abstract
+When developing an application in Microsoft=AE Visual Basic=AE, you may =
+need to
+calculate the specific date of the first and last days of a month. This =
+article
+explains how to accomplish this task in Visual Basic.
+
+Manipulating Dates in Visual Basic
+Microsoft=AE Visual Basic=AE offers many functions that you can use to =
+determine what
+day a specific date falls on, what month it is, and so on. You can use =
+the
+DateValue function to convert a date string, such as July 3, 1995, to a =
+date
+serial number. This function usually determines what day of the week a =
+specific
+date falls on.
+
+The DateSerial function converts a numeric value to a date serial =
+number. The
+serial number is a unique number that represents each possible date from =
+January
+1, 100 A.D. through December 31, 9999. Therefore, you can easily =
+calculate how
+many days elapsed between two specific dates by using the DateSerial =
+function.
+In the example program below, you want to find the first and last dates =
+in the
+month of July, 1995. To do this, you convert the string date (July 3, =
+1995) to a
+date serial number. Then you use the DateSerial function in conjunction =
+with the
+Year and Month functions to calculate the first date in the month of =
+July. You
+repeat this routine to determine the last date in the month of July.
+
+After calling the DateSerial function, you must use the Visual Basic =
+Year, Month,
+and Day functions to extract and decode specific portions of information =
+from the
+date serial number. You must do this because the date serial number is =
+encoded in
+a special format.
+In the example program below, you use the Year and Month functions to =
+determine
+which date is the first day of the month. The Month function returns a =
+value of
+1 through 12 that represents the specified month. In a similar fashion, =
+the Visual
+Basic Year function returns the year from the encoded serial number.
+
+The MonthEnd function in the example program actually calculates the =
+next month's
+first day. It then backtracks by one day to calculate the correct date =
+for the
+last day of the month.
+
+Example Program
+This program shows how to retrieve the first and last date for a =
+ list, the focus does not automatically
+change to the next available item in the list. The example program below =
+shows how
+to do this.
+The ListIndex property of a List Box control tells you which item was =
+selected by
+the user. Knowing this value, you can use the RemoveItem method to =
+delete that
+specific entry from the list. For example, if you select the third item =
+in the
+List Box control, the ListIndex property would be set to a value of two =
+(the List
+Box control starts numbering the entries from zero).
+
+It is a simple matter, then, to set the focus to the next available item =
+in the
+list by keeping track of your position within the list. After deleting =
+the
+selected item, you set the ListIndex property to your current position =
+minus one.
+You can then set the focus to this newly selected item.
+
+Example Program
+This program shows how to delete an item from a List Box control and set =
+the focus
+to the next available item in the list.
+
+ 1. Create a new project in Visual Basic. Form1 is created by default.
+ 2. Add the following code to the Form_Load event for Form1:
+
+Private Sub Form_Load()
+    List1.AddItem "Item #1"
+    List1.AddItem "Item #2"
+    List1.AddItem "Item #3"
+    List1.AddItem "Item #4"
+    List1.AddItem "Item #5"
+End Sub
+
+ 3. Add a List Box control to Form1. List1 is created by default.
+ 4. Add a Command Button control to Form1. Command1 is created by =
+default.
+ 5. Add the following code to the Click event for Command1:
+
+Private Sub Command1_Click()
+    Dim PositionInList As Integer
+    Dim NumberOfItemsInList As Integer
+    PositionInList =3D List1.ListIndex
+    NumberOfItemsInList =3D List1.ListCount
+    If NumberOfItemsInList > 0 Then
+        If PositionInList >=3D 0 Then
+            List1.RemoveItem PositionInList
+        Else
+            MsgBox "You must select an item to delete.", 48, "Error"
+        End If
+    Else
+        MsgBox "There are no items to delete.", 48, "Error"
+    End If
+    NumberOfItemsInList =3D List1.ListCount
+    If NumberOfItemsInList > 0 Then
+        If PositionInList =3D NumberOfItemsInList Then
+            List1.ListIndex =3D NumberOfItemsInList - 1
+        Else
+            List1.ListIndex =3D PositionInList
+        End If
+    End If
+    List1.SetFocus
+End Sub
+
+Run the example program by pressing F5. Five items will appear in the =
+List Box
+control. Notice that no items are selected. Click the Delete command =
+button. A
+message box is displayed, indicating that you must select an item before =
+you can
+delete it.
+Click the OK command button. Click the third item (Item #3) to select =
+it. The
+item is deleted from the List Box control, and the focus is moved to the =
+next
+available item in the list.
+Notice that if you attempt to delete an item that does not exist in the =
+List Box
+control, a message box will be displayed, telling you that there are no =
+items to
+delete.
+
+Additional References
+Tip 24: Avoiding Errors When Removing Items from a List Box
+
+

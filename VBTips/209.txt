@@ -1,0 +1,91 @@
+Tip 209: Changing the Color of a Label Control When the Mouse Pointer Is
+         over the Control in Visual Basic 4.0
+
+February 28, 1996
+
+Abstract
+This article explains how to add visual appeal to your Microsoft® Visual
+Basic® version 4.0 application by changing the color of a Label control
+when the mouse is positioned over that control.
+
+Changing the ForeColor Property of a Label Control
+When designing a Microsoft® Visual Basic® version 4.0 application, you can
+change the color of a Label control when the mouse pointer is positioned
+over that control. Then, when the mouse pointer is moved away from the
+control, the original ForeColor property is restored. This technique lets
+you draw attention temporarily to a specific Label control while your
+application is running.
+
+Because a Label control does not have an hWnd property, you cannot use
+Microsoft Windows® application programming interface (API) functions to
+determine whether the mouse pointer is hovering over the control. You can,
+however, monitor the MouseMove event of the Label control to determine
+when you should change the ForeColor property of the Label control.
+
+Example Program
+This program shows how to change the color of a Label control when the
+mouse pointer is positioned over the control.
+
+ 1. Create a new project in Visual Basic. Form1 is created by default.
+ 2. Add the following code to the General Declarations section of Form1:
+
+Dim MyFocusColor, MyNormalColor
+Dim Lbl As Label
+
+ 3. Add the following code to the Form_Load event for Form1:
+
+Private Sub Form_Load()
+    MyNormalColor = QBColor(0)
+    MyFocusColor = QBColor(10)
+End Sub
+
+ 4. Add the following code to the MouseMove event for Form1 (note that the
+    Private statement must be typed as a single line of code):
+
+Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single,
+   Y As Single)
+    For Each i In Me.Controls
+        If TypeOf i Is Label Then
+            If i.ForeColor <> MyNormalColor Then
+                i.ForeColor = MyNormalColor
+            End If
+        End If
+    Next i
+End Sub
+
+ 5. Add a Label control to Form1. Label1 is created by default.
+ 6. Add the following code to the MouseMove event for Label1 (note that
+    the Private statement must be typed as a single line of code):
+
+Private Sub Label1_MouseMove(Button As Integer, Shift As Integer, X As Single,
+   Y As Single)
+    Call ChangeColor(Label1)
+End Sub
+
+ 7. Add a second Label control to Form1. Label2 is created by default.
+ 8. Add the following code to the MouseMove event for Label2 (note that
+    the Private statement must be typed as a single line of code):
+
+Private Sub Label2_MouseMove(Button As Integer, Shift As Integer, X As Single,
+   Y As Single)
+    Call ChangeColor(Label2)
+End Sub
+
+ 9. Create a new subroutine called ChangeColor. Add the following code to
+    this subroutine:
+
+Sub ChangeColor(Lbl As Label)
+    If Lbl.ForeColor <> MyFocusColor Then
+        Lbl.ForeColor = MyFocusColor
+    End If
+End Sub
+
+Run the example program by pressing F5. Each time you move the mouse
+pointer over the Label control, the color of the Label control is changed.
+
+Additional Reference
+"BackColor, ForeColor Properties." (Library, Product Documentation,
+   Languages, Visual Basic 4.0 Professional and Enterprise Editions,
+   Language Reference, AZ Reference)
+
+

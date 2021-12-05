@@ -1,0 +1,101 @@
+* VB-CODE (1)
+Tip 147: Retrieving Multiple File Names from the Common Dialog Control
+
+August 31, 1995
+
+Abstract
+The Common Dialog File control lets you easily select one or more files
+in your Microsoft? Visual Basic? application. This article shows how you
+can retrieve the names of selected files from the Common Dialog control.
+
+Using the Common Dialog Control
+The Common Dialog File control in Microsoft? Visual Basic? allows you to
+provide a user with access to the directory and file structure of the hard
+disk from within an application. For example, if a user needs to select a
+text file, you can display a Common Dialog File control box that allows
+that user to browse various directories until he or she finds the needed
+file.
+
+By setting the Flags property of the Common Dialog control to the constant
+value OFN_ALLOWMULTISELECT, you can make it possible for your user to
+select several files to work with. Multiple files can be selected by
+clicking each file name while pressing and holding down SHIFT or CTRL.
+The selected file names are highlighted.
+To enable your Visual Basic program to work with files selected by the
+user, you need to retrieve each file name from the control's Filename
+property. The file names selected by the user are all stored in this
+property as one long string. Each file name is separated by a space (32)
+character.
+
+You can use the InStr function to search for the delimiting space
+character to retrieve each file name from the Filename property of
+the Common Dialog. The InStr function returns the location of the
+space character within the Filename property string. After you have
+obtained the location of the space character, you can use the Mid
+function to remove the individual file name entry from the string.
+
+Example Program
+This program shows how to retrieve all file names selected in a Common
+Dialog File control.
+
+ 1. Create a new project in Visual Basic. Form1 is created by default.
+ 2. Add a Common Dialog control to Form1. CommonDialog1 is created by
+    default.
+ 3. Add a Text Box control to Form1. Text1 is created by default.
+ 4. Add a second Text Box control to Form1. Text2 is created by default.
+    Set its MultiLine property to True.
+ 5. Add a Command Button control to Form1. Command1 is created by default.
+ 6. Add the following code to the Click event for Command1:
+
+Private Sub Command1_Click()
+    Dim I As Integer
+    Dim Y As Integer
+    Dim Z As Integer
+    Dim FileNames$()
+ 
+    Const OFN_ALLOWMULTISELECT = &H200&
+ 
+    CommonDialog1.filename = ""
+    CommonDialog1.Filter = "All Files|*.*"
+    CommonDialog1.Flags = OFN_ALLOWMULTISELECT
+    CommonDialog1.Action = 1
+    CommonDialog1.filename = CommonDialog1.filename & Chr(32)
+
+    Z = 1
+    For I = 1 To Len(CommonDialog1.filename)
+        I = InStr(Z, CommonDialog1.filename, Chr(32))
+        If I = 0 Then Exit For
+        ReDim Preserve FileNames(Y)
+        FileNames(Y) = Mid(CommonDialog1.filename, Z, I - Z)
+        Z = I + 1
+        Y = Y + 1
+    Next
+ 
+    If Y = 1 Then
+        Text1.Text = FileNames(0)
+    Else
+        Text2.Text = ""
+        For I = 0 To Y - 1
+            If I = 0 Then
+                Text1.Text = FileNames(I)
+            Else
+                Text2.Text = Text2.Text & UCase(FileNames(I)) & Chr$(13) & Chr$(10)
+            End If
+        Next
+    End If
+End Sub
+
+Run the example program by pressing F5. Click the Command Button. The
+Common Dialog Box File control will be displayed on the screen. Then,
+select several files from the file list by clicking a file name while
+pressing and holding down SHIFT or CTRL. After you have selected he
+appropriate file(s), click OK. The file names will be displayed in the
+second Text Box control, and the directory name will be displayed in the
+first Text Box control.
+
+Additional References
+"Common Dialog Control." (Development Library, Product Documentation,
+   SDKs, Win32 SDK, Win32 Programmer's Reference, Window Management,
+   System Services
+
+

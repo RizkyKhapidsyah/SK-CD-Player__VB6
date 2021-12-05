@@ -1,0 +1,1025 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 15 -- Debugging and Error Trapping</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;15</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Debugging and Error Trapping</FONT>
+</H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#Debugging">
+Debugging</A>
+<UL>
+<LI><A HREF="#TheImmediateWindow">
+The Immediate Window</A>
+<LI><A HREF="#Breakpoints">
+Breakpoints</A>
+<LI><A HREF="#UsingOptionExplicit">
+Using Option Explicit</A>
+<LI><A HREF="#TheLocalsWindow">
+The Locals Window</A>
+<LI><A HREF="#MonitoringExpressionsUsingWatches">
+Monitoring Expressions Using Watches</A>
+<LI><A HREF="#UsingAssertions">
+Using Assertions</A>
+</UL>
+<LI><A HREF="#ErrorHandling">
+Error-Handling</A>
+<UL>
+<LI><A HREF="#WritingErrorHandlers">
+Writing Error-Handlers</A>
+<LI><A HREF="#TheErrObject">
+The Err Object</A>
+<LI><A HREF="#RaisingErrors">
+Raising Errors</A>
+</UL>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+Control creation presents new challenges in
+the area of debugging. It can sometimes seem as if you're debugging
+two programs at once<FONT FACE="Times">-</FONT>the ActiveX control
+and the Visual Basic application in which it resides.
+<P>
+The key, as you've seen already from the previous examples in
+this book, is to keep your control project separate from your
+EXE project until you're fairly sure your control is ready for
+prime time. The fact that Visual Basic now enables you to keep
+multiple projects in the same development environment is a great
+help in this area; it enables you to keep a &quot;throwaway&quot;
+EXE project lying around any time you need it.
+<P>
+Planning ahead can also give you an edge when it comes to dealing
+with problems in your code. For example, if you start your project
+by making a list of your control's properties, their data types,
+and whether those properties are to be delegated or stored in
+variables, it's less likely that you're going to forget the name
+of an obscure variable or property.
+<P>
+Good planning leads to fewer bugs. But you knew that already.
+This chapter deals with what happens <I>after</I> you've planned
+and coded and adjusted your expectations and you discover that
+things are still messed up.
+<H2><A NAME="Debugging"><FONT SIZE=5 COLOR=#FF0000>
+Debugging</FONT></A></H2>
+<P>
+<I>Debugging</I> is the practice of taking care of problems in
+your code after you've written it. Whether these problems are
+comprised of <I>bugs</I> (you committed a syntactical mistake
+in your code) or <I>errors</I> (your code doesn't come up with
+the correct result), the debugging features of Visual Basic can
+help you figure out what's wrong.
+<P>
+This section describes all of the debugging features of the Visual
+Basic IDE, highlighting the new features of Visual Basic 5.0 where
+appropriate. Because VB's debugging features have only a tangential
+bearing on control creation, I tried to keep the demonstrations
+succinct. This was so I could leave more room for the second half
+of this chapter, which covers error-handling, and which has more
+of a bearing on control creation.
+<H3><A NAME="TheImmediateWindow">
+The Immediate Window</A></H3>
+<P>
+In previous chapters, you used the Immediate window as a place
+to view the results of the Debug.Print method. But you can also
+issue commands to Visual Basic through the Immediate window. This
+is useful when you want to execute individual lines of code to
+see what they'll do at the point the program is currently at.
+<P>
+Typing code into the Immediate window works only when you've paused
+program execution. When a program has been paused as the result
+of a pre-programmed breakpoint or as a result of the programmer
+pressing Ctrl+Break, it is said to be in <I>break mode</I>. The
+following example shows how to enter break mode-pausing a program
+while it's running-by using Ctrl+Break.
+<P>
+To see how to issue commands to a running program through the
+Immediate window:
+<OL>
+<LI>Start a new EXE project.
+<LI>Add a command button to the form. In the form's Click event,
+enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Command1_Click()
+
+For x = 1 To 1000000
+    Debug.Print x
+    y = 3.14159
+    z = y * x
+
+Next x
+</PRE>
+</BLOCKQUOTE>
+<OL>
+<BR>This code simulates the code you'd normally see in a real
+program.
+</OL>
+<P>
+
+<OL START=3>
+<LI>Run the code by using the function key <B>F5</B>.
+<LI>Click the command button on the form. You should be able to
+see the Immediate window fill up with all kinds of meaningless
+numbers.
+<LI>Press <B>Ctrl+Break</B> on your keyboard. The program stops.
+The currently active line is highlighted, as illustrated in Figure
+15.1.<BR>
+<A HREF="f15-1.gif"><B>Figure 15.1 :</B> <I>Break mode</I>.</A>
+<P>
+<LI>Position your mouse pointer on top of one of the variables
+in the code (but don't click). After you hold the mouse pointer
+over a variable for a second or so, Visual Basic displays the
+value of that variable, as displayed in Figure 15.2.<BR>
+<A HREF="f15-2.gif"><B>Figure 15.2 :</B> <I>Auto Data Tip in Break mode</I>.</A>
+<P>
+<LI>Now click in the Immediate window. Type the code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+x = 999999
+</PRE>
+</BLOCKQUOTE>
+<OL>
+<BR>and press Enter.
+</OL>
+<P>
+
+<OL START=8>
+<LI>Run the program by pressing the function key <B>F5</B>. You
+should be able to see that the program picks up from where it
+left off, but because you increased the value of the counter x
+to 999,999, it only goes through the loop once more before exiting
+the Click event procedure.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>To exit break mode and resume running your code, press F5.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+Using the Immediate window is helpful when you're trying to track
+down the source of a bug. But using Ctrl+Break can be a bit tricky
+when you're trying to break the program at a particular line of
+code. It's<FONT FACE="Times"> </FONT>doubly so when you're trying
+to get at your control project's running code from the EXE project.
+That's where breakpoints come in.
+<H3><A NAME="Breakpoints">
+Breakpoints</A></H3>
+<P>
+A breakpoint halts program execution when your application comes
+to a certain line of code. You can set as many breakpoints in
+your project as you want, except for lines of code that aren't
+executed-such as variable declarations, comments, and blank lines.
+<P>
+You can use breakpoints in control projects just as you do in
+normal Visual Basic code. To place a breakpoint, you must have
+a code window open and have the insertion point on the line of
+code where you want your breakpoint to be. There are four ways
+to place a breakpoint in a line of code:
+<UL>
+<LI>Choose the menu command <B>Debug, Toggle Breakpoint.</B>
+<LI>Use the function key shortcut <B>F9.</B>
+<LI>Right-click on a line of code, then from the context menu,
+select <B>Toggle</B>, then from the submenu, select <B>Breakpoint.</B>
+<LI>Use the mouse shortcut by clicking in the left margin of the
+code window. This is a new shortcut in Visual Basic 5.0, illustrated
+in Figure 15.3. The red circle that appears in the margin of the
+code window is called a <I>breakpoint margin indicator</I>; it
+appears whenever a breakpoint is set on a particular line.<BR>
+<A HREF="f15-3.gif"><B>Figure 15.3 :</B> <I>Breakpoint shortcut</I>.</A>
+</UL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>By far, the mouse shortcut is the easiest way to set a breakpoint.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+To resume running your code after you're done examining it in
+break mode, press F5. Since you can have as many breakpoints as
+you want in your code, the code will run until it reaches another
+breakpoint, or otherwise pauses or terminates.
+<P>
+<B>The Stop Statement</B>
+<P>
+Inserting a Stop statement in your code is the same as placing
+a breakpoint there. In some ways, a Stop statement is more convenient,
+since you can type it without having to fool around with the mouse,
+or a function key, or any of that other hoo-hah. To insert a Stop
+statement in your code, simply type the statement
+<BLOCKQUOTE>
+<PRE>
+Stop
+</PRE>
+</BLOCKQUOTE>
+<P>
+on a line by itself. When your code runs, Visual
+Basic will stop execution as if there were a breakpoint there.
+<H4>Stepping through Code in Break Mode</H4>
+<P>
+Once your program is in Break mode, you can step through the lines
+of code that follow the breakpoint, one line at a time. Stepping
+through the code enables you to see the effect of each line of
+code as it is executed. While you're stepping through each line
+of code, you can use the Immediate window to execute additional
+lines of code, or use Auto Data Tips to inspect the values of
+variables at any point (as described in the preceding section).
+<P>
+The easiest way to step through code is to use the function key
+F8, although you can also use the menu command Debug, Step Into.
+To see how to step through code, do the following:
+<OL>
+<LI>Open the code snippet from the previous demonstration. Using
+your favorite method from the list above, set a breakpoint on
+the next-to-last line of code, so that the code looks like Figure
+15.4.<BR>
+<A HREF="f15-4.gif"><B>Figure 15.4 : </B><I>Breakpoint in code</I>.</A>
+<P>
+<LI>Run the EXE project and click on the command button. The code
+runs, pausing at the line where you set a breakpoint, as illustrated
+in Figure 15.5.<BR>
+<A HREF="f15-5.gif"><B>Figure 15.5 : </B><I>Code in Break mode</I>.</A>
+<P>
+<LI>Press the function key F8 a few times. You should be able
+to see the code execute one line at a time. 
+</OL>
+<H4>Stepping over Code</H4>
+<P>
+While you're stepping through code, you can step over code that
+you know doesn't need to be scrutinized. For example, say you're
+debugging a subroutine that contains code of its own, as well
+as calls to other subroutines. If you've already verified that
+the other subroutines are bug-free, you'd probably want to step
+over them rather than stepping through them for the hundredth
+time. You might also want to step over a line of code to see what
+happens when it is omitted.
+<P>
+You step over code in Break mode by using the keystroke shortcut
+Shift+F8 or by choosing the menu command Debug, Step Over. This
+ignores the current line of execution; stepping over a subroutine
+or function in this manner prevents the subroutine or function
+from executing.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>You can step over only one line at a time. To step over multiple lines at a time, use the Set Next Statement command described later in this chapter. </I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H4>Running to Cursor</H4>
+<P>
+Run to Cursor is another new feature of Visual Basic 5.0 used
+in Break mode. The command instructs Visual Basic to start running
+code up to the point where you've placed the cursor. When execution
+hits the line where the cursor is at, VB returns the program to
+Break mode. In a sense, the Run to Cursor command is sort of like
+a temporary breakpoint, because it doesn't persist after you've
+run the command. To see how run to cursor works:
+<OL>
+<LI>Run the EXE project code. Execution stops at the break point.
+<LI>Click on the line that contains the Debug.Print statement.
+<LI>Select the menu command <B>Debug</B>, <B>Run to Cursor </B>(or
+use the keystroke shortcut <B>Ctrl+F8</B>). The code runs up to
+the point where your cursor is, then goes back into Break mode.
+</OL>
+<H4>Stepping Out</H4>
+<P>
+You use the Step Out command to tell Visual Basic to finish executing
+a particular subroutine, then return to Break mode. This is another
+Break mode command that is new to Visual Basic 5.0.
+<P>
+For example, say you're stepping through code and you inadvertently
+step into a subroutine you've already debugged. You can use the
+Step Out command to whiz through the remainder of the already
+debugged subroutine and return to stepping through the original
+code. To see how this works:
+<OL>
+<LI>Modify the example code so it contains a subroutine. The code
+should now look like this:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Command1_Click()
+
+For x = 1 To 1000000
+    Debug.Print x
+    Spoon
+    y = 3.14159
+    z = y * x
+
+Next x
+
+End Sub
+
+Private Sub Spoon()
+    For a = 1 To 10
+        Debug.Print &quot;Spoon!&quot;
+    Next a
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=2>
+<LI>Run the code. Execution is paused at the break point.
+<LI>Step through the code one step at a time until execution moves
+to the Spoon subroutine, as illustrated in Figure 15.6.<BR>
+<A HREF="f15-6.gif"><B>Figure 15.6 : </B><I>Stepping out of the Spoon subroutin</I>.</A>
+<P>
+<LI>Choose the menu command <B>Debug, Step Out</B>. The remainder
+of the Spoon subroutine is executed and control returns to the
+Click event procedure.
+</OL>
+<H4>Setting the Next Statement to Be Executed</H4>
+<P>
+In Break mode, you can designate the next line of code to be executed.
+This is helpful when you want to skip a number of lines or when
+you want to execute a number of lines again.
+<P>
+You set the next statement to be executed by following these steps:
+<OL>
+<LI>In Break mode, click on the line of code you want to be executed
+next.
+<LI>Select the menu command <B>Debug, Set Next Statement</B>,
+or use the function key shortcut <B>Ctrl+F9</B>, then restart
+execution by choosing the command <B>Run, Continue</B> (or use
+the function key <B>F5</B>). The program immediately resumes running
+at the point you set.
+</OL>
+<P>
+In Visual Basic 5.0, there is a new and easier way to set the
+next statement to be executed. In Break mode, you can click-drag
+the margin indicator that designates the next line to be executed.
+To see how this works:
+<OL>
+<LI>While in Break mode, use the mouse to click-drag on the yellow
+arrow in the margin; this margin indicator shows which line of
+code will execute next. Drag the indicator to the last line of
+code, as illustrated in Figure 15.7.<BR>
+
+<A HREF="f15-7.gif"><B>Figure 15.7: </B><I>Dragging the margin indicator</I>.</A>
+<p>
+
+<LI>Continue execution by choosing the menu command <B>Run,</B>
+<B>Continue</B>, or by pressing the function key <B>F5</B>. You
+should be able to see that you've broken out of the loop by moving
+the next line of execution to the last line of the subroutine.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>You can clear all the breakpoints in your project at any time by choosing the menu command Debug, Clear All Breakpoints, or by using the keystroke shortcut Ctrl+Shift+F9.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H3><A NAME="UsingOptionExplicit">
+Using Option Explicit</A></H3>
+<P>
+When you want to use a variable in Visual Basic, you simply make
+a reference to it. There are very few restrictions on what variables
+you can use or how many or how they need to be declared.
+<P>
+This is a good thing if you're new to Visual Basic or if you're
+brainstorming. (See the note at the end of this section for my
+thoughts on that.) But if your program has a lot of variables,
+or if you change the names of variables around quite a bit, you'll
+sooner or later run into a situation where you make reference
+to an uninitialized variable. In Visual Basic, an uninitialized
+variable is equivalent to zero, so this represents a problem if
+you thought you were referring to a variable that contained some
+meaningful value.
+<P>
+The Option Explicit statement forces you to declare all the variables
+you use. When you use explicit variable declaration, the program
+warns you when you make reference to a variable you haven't explicitly
+declared. To turn explicit variable declaration on, you type the
+code:
+<BLOCKQUOTE>
+<PRE>
+Option Explicit
+</PRE>
+</BLOCKQUOTE>
+<P>
+in the declarations section of a code module. All
+of the procedures in that module will then be subject to explicit
+variable declaration.
+<P>
+For example, consider the following code:
+<BLOCKQUOTE>
+<PRE>
+Private Sub cmdCalcVolume_Click()
+    theVolume = intHeight * intWidth * intDepth
+    MsgBox &quot;The volume is&quot; &amp; theVolume
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+The assumption here is that the variables intHeight,
+intWidth, and intDepth were declared and initialized elsewhere
+(possibly at the module level). But if you forgot to declare these
+variables, or if you named them something other than intHeight,
+intWidth, and intDepth, they'll be uninitialized when this code
+runs. The volume calculation will always be zero.
+<P>
+If you use explicit variable declaration, Visual Basic spots this
+problem as soon as you attempt to run the application. The undeclared
+variable is highlighted and the error message in Figure 15.8 appears.
+<P>
+<A HREF="f15-8.gif"><B>Figure 15.8 : </B><I>Variable not defined error</I>.</A>
+<P>
+To resolve this problem using Option Explicit, you'd modify the
+code as follows:
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+Option Explicit
+
+Private Sub cmdCalcVolume_Click()
+    theVolume = intHeight * intWidth * intDepth
+    MsgBox &quot;The volume is&quot; &amp; theVolume
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<H3><A NAME="TheLocalsWindow">
+The Locals Window</A></H3>
+<P>
+The Locals window, a new feature to Visual Basic 5.0, lets you
+see the state of all of the variables and properties in your project.
+<P>
+To see how the Locals window works, select the menu command View,
+Locals from an application that's in Break mode. The Locals window
+appears, as illustrated in Figure 15.9
+<P>
+<A HREF="f15-9.gif"><B>Figure 15.9 : </B><I>Locals window</I>.</A>
+<P>
+As you can see, in addition to showing the value of each variable,
+the Locals window also shows you the data type of each variable<FONT FACE="Times">,
+</FONT>including the Variant type, if applicable.
+<P>
+The Locals window also shows you the current value of all the
+properties in the active form. To see this information, click
+on the plus to the left of the Me item in the Locals window (Me
+always refers to the active form). The list of properties expands
+into an outline, as illustrated in Figure 15.10.
+<P>
+<A HREF="f15-10.gif"><B>Figure 15.10: </B><I>Expanded Locals outline</I>.</A><BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>Should You Be Explicit? </B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+Although every book on professional Visual Basic programming ever written emphatically espouses the use of Option Explicit in every code module you ever write, I'm here to say that I don't use Option Explicit when I first start writing code. This is 
+because I go through a brainstorming phase (right after I scrupulously plan out my project's feature set on a sheet of graph paper). In this phase, I add and remove variables willy-nilly. </BLOCKQUOTE>
+<BLOCKQUOTE>
+When I'm at this point in the project, I don't like to be slowed down by having to return to the top of the procedure to declare a new variable when I need one. When my procedure is close to doing what it needs to do, I throw an Option Explicit into the 
+code module and start debugging. This method may not work for you; it's one man's approach, submitted for your consideration.</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+You can also use the Locals window to inspect the relationship
+between your UserControl and its container. If you place a UserControl
+on an EXE project form and open the Locals window in Break mode,
+you'll see an entry in the outline for your UserControl. Click
+on the plus to the left of the UserControl in the list to expand
+the outline, and you'll see something like Figure 15.11.
+<P>
+<A HREF="f15-11.gif"><B>Figure 15.11: </B><I>Ambient properties in Locals window</I>.</A>
+<P>
+The Locals window also enables you to change the value of a variable
+or property while in Break mode. To see how this works:
+<OL>
+<LI>Run an EXE project, then put it in Break mode by pressing
+<B>Ctrl+Break</B>.
+<LI>Open the Locals window by choosing the menu command <B>View,
+Locals</B>.
+<LI>Click on the plus sign to the left of Me. The outline expands
+to display a list of properties for the current form.
+<LI>Click in the Value column to the right of the BackColor property.
+<LI>Change the BackColor value to 255. You should be able to see
+that the form's background color has turned red.
+</OL>
+<H3><A NAME="MonitoringExpressionsUsingWatches">
+Monitoring Expressions Using Watches</A></H3>
+<P>
+You can use watches to monitor the state of a variable or expression.
+You can also use a watch to pause program execution when a variable
+expression changes.
+<P>
+When you set a watch, it appears in the Watches window. From there,
+you can monitor the state of the variable or expression. To see
+how this works:
+<OL>
+<LI>Click-drag to select the variable x in your example code.
+(This code exists in the Spoon project on the CD-ROM that accompanies
+this book; the project group filename is Spoon.vbg.)
+<LI>Choose the menu command <B>Debug, Add Watch</B>. The Watches
+window appears, displaying the watch you've just set, as illustrated
+in Figure 15.12<BR>
+<A HREF="f15-12.gif"><B>Figure 15.12: </B><I>Watches window</I>.</A>
+<p>
+<LI>Remove any breakpoints you may have set up in the code (by
+using the menu command <B>Debug, Remove All</B> <B>Breakpoints</B>
+or the keystroke shortcut <B>Ctrl+Shift+F9</B>).
+<LI>Run the code, then use <B>Ctrl+Break</B> to pause it. The
+Watches window displays the current value of x, as illustrated
+in Figure 15.13.<BR>
+<A HREF="f15-13.gif"><B>Figure 15.13: </B><I>Watches window in Break mode</I>.</A>
+</OL>
+<P>
+Just as you can change the value of a property or variable in
+the Locals window, Visual Basic 5.0 now lets you change the value
+of a variable in the Watches window. To see how this works:
+<OL>
+<LI>In Break mode, click on the value of x in the Value column
+of the Watches window.
+<LI>Type in the value 999999.
+<LI>Continue program execution by using the menu command <B>Run,
+Continue</B> (or by pressing the function key <B>F5</B>). The
+code should iterate once more, then complete.
+</OL>
+<P>
+To delete a watch, right-click on the watch you want to delete
+in the Watches window, then from the pop-up menu, choose Delete
+Watch.
+<H4>Quick Watch</H4>
+<P>
+The Quick Watch feature is a holdover from the Instant Watch feature
+of previous versions of Visual Basic. You use a quick watch to
+inspect the value of a variable or expression in Break mode.
+<P>
+This feature is essentially supplanted by the Auto Data Tips feature,
+which enables you to see the value of a variable or expression
+by simply positioning the mouse pointer over your code in Break
+mode. But the Quick Watch feature is helpful if you think you
+might attach a formal watch to the variable you're inspecting.
+To see how this works:
+<OL>
+<LI>Run your code example, then put it in Break mode.
+<LI>Click-drag to select any instance of the variable y in your
+code.
+<LI>Select the menu command <B>Debug, Quick Watch</B>, or use
+the keystroke shortcut <B>Shift+F9</B>. The Quick Watch dialog
+box appears, displaying the current value of the variable, as
+illustrated in Figure 15.14.<BR>
+<A HREF="f15-14.gif"><B>Figure 15.14: </B><I>Quick Watch dialog box</I>.</A>
+<p>
+<LI>Click on <B>Add</B>. Notice that the Watches window appears
+and your quick watch has been converted into a formal watch.
+</OL>
+<H3><A NAME="UsingAssertions">
+Using Assertions</A></H3>
+<P>
+You can use the Assert method of the Debug object to test whether
+an operation succeeded or not. If the test is False (that is,
+the operation was unsuccessful or the expression returned zero
+or the value False), execution is paused on the line that contains
+the assertion. So in a sense, an assertion is like a conditional
+breakpoint.
+<P>
+Let's say you've encountered a bug in the sample application.
+You've determined that if the variable z goes above a value of
+32,000, the bug is triggered. But you're not sure where in your
+code z exceeds 32,000, or why that causes an error to occur. You
+can use an assertion to find out. To do this:
+<OL>
+<LI>Change the code of the Click event in the Spoon project as
+follows:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Command1_Click()
+Dim x As Long, y As Single, z As Single
+
+For x = 1 To 1000000
+    Debug.Assert (z &lt; 32000)
+    y = 3.14159
+    z = y * x
+Next x
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=2>
+<LI>Run the code. The code will run, then break when the value
+of z equals 32,000.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>You can also use a watch to accomplish the same thing as the assertion described in this example. However, watches can only be set to break when an expression is True, as opposed to assertions, which always break when an expression is False. 
+Additionally, watches are not saved along with your code; when you close a project and re-open it, the watches you've set are lost. Assertions, in contrast, stay with your code and are saved along with it.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="ErrorHandling"><FONT SIZE=5 COLOR=#FF0000>
+Error-Handling</FONT></A></H2>
+<P>
+<I>Error-handling</I>, sometimes referred to as <I>error-trapping</I>,
+is a vital component of any programming project; it's particularly
+important in an ActiveX control. It refers to the process whereby
+a program attempts to deal with unexpected problems-anything from
+a mismatched variable data type to a full hard drive.
+<P>
+In a conventional Visual Basic project, when you fail to include
+an error-handler in a procedure, any error your program encounters
+causes the program to stop executing. When your ActiveX control
+generates an unhandled error, the error is passed along to the
+host application.
+<H3><A NAME="WritingErrorHandlers">
+Writing Error-Handlers</A></H3>
+<P>
+You use the On Error statement to handle errors in procedures
+you write. When you initiate error-handling through the use of
+an On Error statement, that error-handler remains in effect for
+the duration of the procedure, unless it is superseded by another
+error-handler you enable or it is shut off by you. There are three
+forms of the On Error statement:
+<UL>
+<LI>On Error GoTo <I>line</I>
+<LI>On Error Resume Next
+<LI>On Error GoTo 0
+</UL>
+<P>
+On Error GoTo <I>line</I> jumps program execution to another point
+in the procedure (by convention, at the end of the procedure).
+On Error Resume Next tells the procedure to ignore any errors
+generated by the procedure and proceed as if nothing has happened;
+the implication is that your code is either going to ignore the
+error or handle it on the line immediately following the error.
+On Error GoTo 0 disables the current procedure's error-handler.
+It is used very infrequently; in fact, the only situation in which
+I'd use it is in an error-handler, in order to prevent an endless
+loop. (An endless loop is where the procedure encounters an error
+and hands control to an error-handler, which then encounters an
+error and then attempts to hand control to an error-handler, <I>ad
+infinitum</I>.)
+<P>
+Here's an example of the various incarnations of the On Error
+statement. In previous examples in this book dealing with controls
+designed for use in Web pages, we included the minimal error-handler
+<BLOCKQUOTE>
+<PRE>
+On Error Resume Next
+</PRE>
+</BLOCKQUOTE>
+<P>
+in the control's InitProperties event. We did this
+to avoid problems with the Extender object, since you're not supposed
+to rely on the Extender object's availability.
+<P>
+On Error Resume Next used in this way isn't really an error-handler
+at all, since it tells the procedure to eat any error it may encounter,
+no matter how heinous. (In the SoundButton example in Chapter
+13, for example, we used this as a cheap way to get around the
+fact that a control in a Web page can't get the same Extender
+properties as a control in a VB project.)
+<P>
+Now that you know all about error-handlers, you can write more
+adept error-handlers for your controls. Consider the following
+modification to the InitProperties event of the SoundButton control:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_InitProperties()
+    On Error GoTo InitPropErr
+
+    Caption = Extender.Name
+
+Exit Sub
+
+InitPropErr:
+    MsgBox &quot;InitProperties: &quot; &amp; Err &amp; &quot; - &quot; &amp; Error$
+    Resume Next
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+This is an example of an extremely rudimentary placeholder error
+trap I use when I'm in the process of figuring out what errors
+my procedure is likely to encounter. The code you see here is
+better than On Error Resume Next, but not much better. (You can
+see that as a result of the Resume Next in the error-handler,
+any error encountered by the procedure is ignored anyway.)
+<P>
+Also, the MsgBox statement in the error-handler violates the guideline
+that your control raise errors rather than display message boxes.
+But this is just a placeholder, so humor me for a few minutes
+while I get through this demonstration.
+<P>
+The most likely error this procedure will encounter has to do
+with the nefarious Extender object. For example, Access 95 can't
+deal with the concept of Extender.Name; if you place the control
+in a Microsoft Access form, the control displays the error message
+illustrated in Figure 15.15. Access then proceeds to insert the
+control anyway, even though your control encountered an error.
+Go figure.
+<P>
+<A HREF="f15-15.gif"><B>Figure 15.15: </B><I>SoundButton error message</I>.</A>
+<P>
+Instead of just generating an error message, it's better if your
+control attempts to do something intelligent to resolve the error
+condition. Because you inserted a rudimentary error trap in the
+control's InitProperties event, you now know in which procedure
+the error took place, as well as what error number was triggered.
+<P>
+Because the whole point of the code in the InitProperties event
+is to give the SoundButton control a default caption, the resolution
+of the problem is simple.<FONT FACE="Times"> </FONT>When the control
+encounters error 438 in its InitProperties event, supply some
+generic default caption (like SoundButton, rather than SoundButton1).
+<P>
+But what happens when a totally unexpected error happens, something
+you couldn't have planned for? In a Visual Basic EXE project,
+you'd write code to gracefully abort out of the subroutine, or
+perhaps even shut down the application if the error took place
+in a critical spot. But in an ActiveX control, the appropriate
+response to an unexpected error is to raise it to the level of
+the host application. You raise an error to the host application
+by using the Raise method of the Err object, as explained in the
+next section.
+<H4>Error-Handling Options</H4>
+<P>
+You have the ability to control the conditions under which Visual
+Basic will halt your application in situations where the application
+encounters an error. You do this in the General tab of the Tools,
+Options dialog box, as illustrated in Figure 15.16.
+<P>
+<A HREF="f15-16.gif"><B>Figure 15.16: </B><I>Options dialog box</I>.</A>
+<P>
+Here is what the different levels of error-handling mean:
+<UL>
+<LI>Break on All Errors-Every error encountered by your project
+will place the project into Break mode. You might use this setting
+when you're testing newly developed code and writing error-handlers
+in order to determine which errors your code is likely to encounter.
+<LI>Break in Class Module-Unhandled errors in a class module place
+the project in Break mode. You use this setting when you're debugging
+a control project and you want errors in the control project to
+put the EXE project in Break mode. If you don't use this mode
+when you're debugging a class module, Break mode displays the
+code in the EXE project that called the class module's procedure
+that encountered the error, not the code in the class module itself.
+This setting is the default setting for error-trapping in Visual
+Basic.
+</UL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Class modules are covered in <A HREF="ch16.htm" >Chapter 16</A>. For the purposes of this setting, your ActiveX control projects are not considered to be class modules, even though they have a number of attributes in common with class modules.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<UL>
+<LI>Break on Unhandled Errors-Errors that are handled by your
+code do not put your project into Break mode. Unhandled errors
+put the project into Break mode. Unhandled errors in class modules
+break at the point where the class procedure was called (not in
+the class module's code).
+</UL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>ERR Statements versus Objects</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+In the previous examples of error-handling in this chapter, you saw that you could get the number of the error by using Err. Once upon a time, Err was a Visual Basic statement, but now that Err is an object, when you refer to Err, you're really making a 
+reference to the default property of the Err object. The default property of Err is Number, so references to Err.Number and Err are really the same thing.</BLOCKQUOTE>
+<BLOCKQUOTE>
+Similarly, references to Error$ and Err.Description really refer to the same thing. It's probably better (from the viewpoint of clarity, correctness, and all that) if you use the new, improved, object-style references to Err properties, but the old style 
+works, and old habits die hard, and Err is easier to type than Err.Number. It's obviously up to you which style you use.</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Be aware that when you change the level of error-handling, the change becomes a part of the Visual Basic IDE, not part of the current project, so the change you make will be reflected in all the projects you work with until you change the setting 
+back.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H3><A NAME="TheErrObject">
+The Err Object</A></H3>
+<P>
+In Visual Basic, information about errors is handled through the
+Err object. Err is a system-provided object that contains information
+about the last error that took place in your code. In addition,
+you can use the Raise method of the Err object to cause your application
+(or, more likely, your control project) to signal that an error
+condition has arisen.
+<P>
+When your control raises an error, it's sending a message to the
+host application. This is distinguished from error-<I>handling</I>,
+which attempts to deal with an error condition. <I>Raising</I>
+an error means that your control has encountered an error and
+is passing that information on to the host application. Table
+15.1 shows a complete listing of the properties of the Err object,
+and Table 15.2 covers its methods.
+<H3><A NAME="RaisingErrors">
+Raising Errors</A></H3>
+<P>
+Although you're probably accustomed to seeing ActiveX controls
+display message boxes when they encounter error conditions, your
+control shouldn't display such message boxes with the MsgBox statement.
+Instead, your control should raise an error, sending a message
+back to the host application that an error has taken place and
+enabling the host application to deal with the error.<BR>
+<P>
+<CENTER><B>Table 15.1 Properties of the Err Object</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=144><B>Property</B></TD><TD WIDTH=432><B>Description</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=144>Description</TD><TD WIDTH=432>The textual description of the error
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=144>HelpContext</TD><TD WIDTH=432>The Help Context ID of a help topic that describes this error
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=144>HelpFile</TD><TD WIDTH=432>The Windows Help file that contains a help topic that describes this error
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=144>LastDLLError</TD><TD WIDTH=432>The error code returned from a DLL call. (This property is only relevant if the error was raised as the result of a call to a DLL.)
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=144>Number</TD><TD WIDTH=432>The number of the error. If no error exists, Number equals zero.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=144>Source</TD><TD WIDTH=432>The object or process that generated the error.
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+<CENTER><B>Table 15.2 Methods of the Err Object</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=60%>
+<TR VALIGN=TOP><TD WIDTH=96>Clear</TD><TD WIDTH=288>Clears the properties of the Err object
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Raise</TD><TD WIDTH=288>Raises an error to the host application
+</TD></TR>
+</TABLE></CENTER>
+<P>
+When your control raises an error, one of two scenarios takes
+place:
+<UL>
+<LI>If the host application does not handle the error, then Visual
+Basic will display a message box telling the user what happened
+(and, in all likelihood, the host application will then terminate).
+<LI>If the host application does handle the error, then control
+passes to the host application's error-handler. Whatever action
+the host application takes to resolve the error or inform the
+user of its existence is up to the host application.
+</UL>
+<P>
+You can modify your control's error-handler so it will react more
+intelligently to this error condition, raising an error instead
+of displaying a message box. Here's a basic example of a procedure
+that does this:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_InitProperties()
+
+    On Error GoTo InitPropErr
+
+    Caption = Extender.Name
+    
+Exit Sub
+    
+InitPropErr:
+
+    Select Case Err
+        Case 438  ' Obj doesn't support this property
+        Caption = &quot;SoundButton&quot;
+        
+        Case Else&quot;
+        Err.Raise Err, &quot;SoundButton&quot;, Err.Description
+        
+    End Select
+
+End Sub<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Notice that the Select Case in the error-handler uses the error number (438), rather than the textual description of the error (&quot;Object doesn't support this property&quot;). This is because error numbers are guaranteed not to change from one 
+version of Visual Basic to the next, while descriptions can change.</I>
+</BLOCKQUOTE>
+<BLOCKQUOTE>
+<I>You may want to consider declaring and using constants for error numbers so you don't have to sit around wondering what &quot;438&quot; means. Using a constant like ERR_OBJECT_DOESNT_SUPPORT can make much more sense, depending on your programming style. 
+I like using the numbers and commenting them, as in the above example, so I don't have to remember what I named my constants.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+Having a single error-handler for a procedure is nice because
+all the error-handling code is in the same place. However, this
+may not give you the granularity you need to handle the many things
+a particular procedure may be called upon to do. As an alternative,
+you can handle potential errors line-by-line, in this way:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_InitProperties()
+
+    On Error Resume Next
+
+    Caption = Extender.Name
+
+    If Err Then
+        Select Case Err
+            Case 438  ' Obj doesn't support this property
+            Caption = &quot;SoundButton&quot;
+
+            Case Else
+            Err.Raise Err, &quot;SoundButton&quot;, Err.Description
+
+        End Select
+    End If
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+In this case, there is no On Error Goto; instead, the value of
+Err is inspected after any line that might cause problems. If
+Err is nonzero, the error is handled immediately.
+<P>
+Handling errors line-by-line requires more work on your part,
+but it's vital if you have a procedure that may need to handle
+the same error in several different ways depending on where in
+the procedure the error comes up.
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+In this chapter we talked about debugging and error handling,
+particularly with respect to control creation. We covered error-handling
+as well as raising errors encountered by your control project
+to the level of the host application.
+<P>
+In the next chapter we'll take a look at object-oriented programming
+concepts in Visual Basic, and how to put them to work in your
+control projects.
+<HR>
+
+<CENTER><P><A HREF="ch14.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch16.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

@@ -1,0 +1,1446 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 14 -- Controls That Interact with the Internet
+</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;14</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Controls That Interact with the
+Internet</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#AsynchronousDownloadofPropertyValues">
+Asynchronous Download of Property Values</A>
+<UL>
+<LI><A HREF="#UsingtheAsyncReadMethod">
+Using the AsyncRead Method</A>
+<LI><A HREF="#TheHappyHourControlsURLProperties">
+The HappyHour Control's URL Properties</A>
+<LI><A HREF="#WhattheTimerEventDoes">
+What the Timer Event Does</A>
+<LI><A HREF="#TestingtheCode">
+Testing the Code</A>
+</UL>
+<LI><A HREF="#InternetControlsasConstituentControls">
+Internet Controls as Constituent Controls</A>
+<UL>
+<LI><A HREF="#ObtainingtheMabryMailControl">
+Obtaining the Mabry Mail Control</A>
+<LI><A HREF="#BuildingtheTechSupportControl">
+Building the TechSupport Control</A>
+</UL>
+<LI><A HREF="#AddingWebBrowsingFeaturestoYourControl">
+Adding Web-Browsing Features to Your Control</A>
+<UL>
+<LI><A HREF="#UsingInternetExplorerasaConstituentControl">
+Using Internet Explorer as a Constituent Control</A>
+<LI><A HREF="#ControlsThatActasHyperlinks">
+Controls That Act as Hyperlinks</A>
+<LI><A HREF="#UsingtheInternetExplorerAutomationObject">
+Using the Internet Explorer Automation Object</A>
+</UL>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+This chapter discusses how to add Internet features to your control.
+The Internet features I address fall into two broad categories:
+<UL>
+<LI>Using Internet technologies in the context of a compiled EXE
+application; for example, writing a Visual Basic application that
+sends e-mail based on a control you provide
+<LI>Creating ActiveX controls that are destined for use in the
+context of a Web browser; for example, a control that sends the
+user to a different Web page based on the user's input
+</UL>
+<P>
+Whether your control is appropriate to use in an EXE or a Web
+page context, or both,<FONT FACE="Times"> </FONT>will depend on
+its functionality, as well as safety issues discussed in Chapter
+13. This chapter will discuss both types of controls. In addition,
+we'll tie in the topics of distributing your control and using
+your ActiveX control in a Web context that we covered in Chapters
+12 and 13.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>A few of the examples in this chapter require Microsoft Internet Explorer. You can download Internet Explorer free from the Microsoft Web site at <A HREF="http://www.microsoft.com/ie/download/">http://www.microsoft.com/ie/download/.</A></I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="AsynchronousDownloadofPropertyValues"><FONT SIZE=5 COLOR=#FF0000>
+Asynchronous Download of Property Values</FONT></A></H2>
+<P>
+One of Visual Basic 5.0's new features is the ability of ActiveX
+controls to asynchronously download property values. This feature
+enables your control to read a property from a remote source<FONT FACE="Times">-</FONT>generally,
+the Internet. The fact that the download is asynchronous means
+that your application does not have to wait for the download to
+complete before proceeding with other processing. Because files
+can take a while to be transmitted over the Internet, the asynchronous
+download feature is very useful indeed.
+<P>
+The HappyHour control, comprised of a constituent PictureBox and
+Label controls, was introduced earlier in this book. Because it
+is designed to display a different picture and text message depending
+on the time of day, it is an ideal demonstration of the power
+of asynchronous download over the Internet.
+<P>
+This new version of the HappyHour control has the following programmable
+interface:
+<UL>
+<LI>The HappyHourChanged event, triggered when the happy hour
+status changes. This event is passed a Boolean argument<FONT FACE="Times">-</FONT>True
+if it's currently happy hour, and False if it isn't. This event
+is only triggered if the HappyHourBegin and HappyHourEnd properties
+have been set.
+<LI>The Caption property, a string set by the user.
+<LI>The HappyHourBegin property that stores the beginning of happy
+hour. This property is stored as a Date.
+<LI>The HappyHourEnd property, which stores the end of happy hour.
+This property is also stored as a Date.
+<LI>HappyHourYesURL, a string that stores a local filename or
+an Internet URL that points to a graphic. The graphic located
+at this URL is loaded by the control at the beginning of happy
+hour.
+<LI>HappyHourNoURL, a string that stores a filename or a URL;
+the graphic located at this URL is loaded by the control when
+happy hour is over.
+</UL>
+<H3><A NAME="UsingtheAsyncReadMethod">
+Using the AsyncRead Method</A></H3>
+<P>
+In order to access the graphics denoted by the HappyHourYesURL
+and HappyHourNoURL properties, your control will need to download
+them. You use the UserControl object's AsyncRead method to do
+this. Because AsyncRead is an asynchronous process, as soon as
+you call this method, processing continues while the property
+downloads in the background. This processing could include, for
+example, additional input by the user or even the download of
+additional data from another source, since you can have a hypothetically
+unlimited number of downloads going at the same time. Even if
+you don't plan on enabling your control to perform other actions
+while it's asynchronously downloading a property value, it's a
+good idea to asynchronously download properties your control gets
+from the Internet, since you often have no control over how long
+something takes to download over the Internet.
+<P>
+The syntax of the AsyncRead method is:
+<BLOCKQUOTE>
+<PRE>
+UserControl.AsyncRead <I>strURL</I>, <I>lngAsyncType</I>, [<I>Property</I>]
+</PRE>
+</BLOCKQUOTE>
+<P>
+The argument strURL is the target URL from which
+to download the property. The lngAsyncType argument is an enumeration
+that specifies what kind of property is being downloaded. The
+legal values for this argument are:
+<UL>
+<LI>vbAsyncTypeByteArray. A byte array is a way of storing binary
+data of indeterminate size. (<A HREF="ch11.htm" >Chapter 11</A> gives a demonstration
+of using a byte array in this manner.)
+<LI>vbAsyncTypeFile. The downloaded property is a file.
+<LI>vbAsyncTypePicture. The downloaded property is a Picture object.
+</UL>
+<P>
+The <I>Property</I> argument is an optional identifier. It does
+not assign the download to a property, as you might think it would.
+Instead, it gives a name to the download so you can cancel it
+later if you need to. (You would use the CancelAsyncRead method
+to cancel the download.) The property name you assign here is
+also used to assign the downloaded data to a property; this is
+done in the AsyncReadComplete event, which is fired after the
+download is complete.
+<P>
+To see how this works, begin by opening the version of the HappyHour
+control in the Chapter 14\HappyHour4\Before folder in the CD-ROM
+that accompanies this book. The project group file is HappyHour.vbg.
+<H3><A NAME="TheHappyHourControlsURLProperties">
+The HappyHour Control's URL Properties</A></H3>
+<P>
+In the previous iteration of this control, the HappyHour control
+raised a HappyHour-Changed event when it was time for happy hour.
+This new iteration of the control continues to raise this event
+but also adds two new properties, HappyHourYesURL and HappyHourNoURL.
+These two URLs point to graphic files on the Internet that are
+loaded when the HappyHourChanged event is triggered. When it's
+happy hour, the graphic located at HappyHourYesURL is loaded.
+When it's not happy hour, the graphic located at HappyHourNoURL
+is loaded. 
+<P>
+To enable these new properties, do the following:
+<OL>
+<LI>Add the two new properties to the happy hour control. The
+complete list of private property declarations should look like
+this:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Properties (in declarations section)
+Private mdatHappyHourBegin As Date
+Private mdatHappyHourEnd As Date
+Private mstrHappyHourYesURL As String
+Private mstrHappyHourNoURL As String
+</PRE>
+</BLOCKQUOTE>
+<OL START=2>
+<LI>Declare the internal variable mvHappyHour as a Variant. This
+private variable is used by the control as a flag to determine
+whether it is currently happy hour or not. (It is declared as
+a Variant instead of a Boolean so the control can perform a test
+to determine whether the variable was initialized or not; this
+is an enhancement to this version of the HappyHour control.)
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Internal variables
+Private mvHappyHour As Variant
+</PRE>
+</BLOCKQUOTE>
+<OL START=3>
+<LI>The existing event declaration for the HappyHourChanged event
+should remain as-is, as shown below. The declarations for this
+control are now complete.
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Events
+Public Event HappyHourChanged(HappyStatus As Variant)
+</PRE>
+</BLOCKQUOTE>
+<OL START=4>
+<LI>Next, to save the control's properties' design-time values,
+add code for them in the ReadProperties and WriteProperties events
+of the UserControl. The code in events (including the code that
+was there previously) should now look like this:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
+On Error Resume Next
+    mstrHappyHourYesURL = PropBag.ReadProperty(&quot;HappyHourYesURL&quot;, &quot;&quot;)
+    mstrHappyHourNoURL = PropBag.ReadProperty(&quot;HappyHourNoURL&quot;, &quot;&quot;)
+    Caption = PropBag.ReadProperty(&quot;Caption&quot;, Extender.Name)
+    mdatHappyHourBegin = PropBag.ReadProperty(&quot;HappyHourBegin&quot;)
+    mdatHappyHourEnd = PropBag.ReadProperty(&quot;HappyHourEnd&quot;)
+End Sub
+
+Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
+    PropBag.WriteProperty &quot;HappyHourYesURL&quot;, mstrHappyHourYesURL, &quot;&quot;
+    PropBag.WriteProperty &quot;HappyHourNoURL&quot;, mstrHappyHourNoURL, &quot;&quot;
+    PropBag.WriteProperty &quot;Caption&quot;, Caption, Extender.Name
+    PropBag.WriteProperty &quot;HappyHourBegin&quot;, mdatHappyHourBegin
+    PropBag.WriteProperty &quot;HappyHourEnd&quot;, mdatHappyHourEnd
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=5>
+<LI>Enter Property Get and Property Let procedures for these new
+properties:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Public Property Get HappyHourYesURL() As String
+    HappyHourYesURL = mstrHappyHourYesURL
+End Property
+
+Public Property Let HappyHourYesURL(ByVal strNewValue As String)
+    mstrHappyHourYesURL = strNewValue
+    If mvHappyHour Then
+        HappyHourLoadGraphic True
+    End If
+    PropertyChanged &quot;HappyHourYesURL&quot;
+End Property
+
+Public Property Get HappyHourNoURL() As String
+    HappyHourNoURL = mstrHappyHourNoURL
+End Property
+
+Public Property Let HappyHourNoURL(ByVal strNewValue As String)
+    mstrHappyHourNoURL = strNewValue
+    If Not(mvHappyHour) Then
+        HappyHourLoadGraphic False
+    End If
+    PropertyChanged &quot;HappyHourNoURL&quot;
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+The LoadHappyHourGraphic subroutine, called from the Property
+Let procedures of the new properties, initiates the asynchronous
+download. The code for this subroutine looks like this:
+<BLOCKQUOTE>
+<PRE>
+Private Sub LoadHappyHourGraphic(HappyStatus)
+' Loads the appropriate happy hour graphic
+
+If HappyStatus = True Then
+    AsyncRead mstrHappyHourYesURL, vbAsyncTypePicture, _
+    &quot;asyncHappyHourYes&quot;
+Else
+    AsyncRead mstrHappyHourNoURL, vbAsyncTypePicture, _
+              &quot;asyncHappyHourNo&quot;
+End If
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+Putting the AsyncRead in its own subroutine helps you to avoid
+duplicating code in your project, since (as you'll see) the AsyncRead
+method must be called in several different places. Although the
+AsyncRead method reads the property from the Net, the property
+can't be assigned until the download is complete. This assignment
+takes place in the AsyncReadComplete event.
+<P>
+In order to assign the downloaded data to a property, the AsyncReadComplete
+event of the UserControl is passed an AsyncProperty object. The
+AsyncProperty object represents the property that was downloaded.
+This object has three properties of its own:
+<UL>
+<LI>Value. The value of the property that was just downloaded.
+<LI>PropertyName. The name of the property as established by the
+parameter you gave to the AsyncRead method. Again, this is just
+an identifier and is not necessarily the name of a property of
+your control.
+<LI>AsyncType. The type of the download (also established by you
+when you called AsyncRead method). This is either a byte array,
+a file, or a Picture object.
+</UL>
+<P>
+To handle an incoming asynchronously downloaded property, enter
+the following code:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_AsyncReadComplete(AsyncProp As AsyncProperty)
+    If AsyncProp.AsyncType = vbAsyncTypePicture Then
+        Picture1.Picture = AsyncProp.Value
+    End If
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+This code is simple because there are only two types of asynchronous
+downloads handled by the HappyHour control-one that downloads
+the Happy Hour graphic, the other that downloads the &quot;Get
+back to work&quot; graphic<FONT FACE="Times">-</FONT>and they
+are both assigned to the same thing (the Picture property of Picture1).
+<P>
+However, if your control had to download many different kinds
+of files over the Net, you'd have to set up a Select Case based
+on AsyncProp in the AsyncReadComplete event. The code would look
+like this:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_AsyncReadComplete(AsyncProp As AsyncProperty)
+    Select Case AsyncProp.PropertyName
+        Case &quot;asyncHappyHourYes&quot;
+        ' assign AsyncProp.Value to the property
+
+        Case &quot;asyncHappyHourNo&quot;
+        ' assign AsyncProp.Value to the property
+
+        Case &quot;asyncSomethingElse&quot;
+        ' and so forth
+
+    End Select
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+Finally, in order to cause the control to download the property
+at happy hour, change the Timer event of the constituent Timer
+control to call the same LoadHappyHourGraphic subroutine you called
+in the control's Property Let procedures. The code for the Timer
+event should look like this:
+<BLOCKQUOTE>
+<PRE>
+Private Sub Timer1_Timer()
+' Raise the appropriate event based on
+' whether it's happy hour or not
+
+' happy hour hasn't been set yet
+    If mdatHappyHourBegin = 0 Or mdatHappyHourEnd = 0 Then
+        Exit Sub
+    End If
+
+Select Case mvHappyHour
+    Case Empty  ' i don't know whether it's happy hour or not
+        If Time &gt; mdatHappyHourBegin And _
+           Time &lt; mdatHappyHourEnd Then
+           mvHappyHour = True
+        Else
+           mvHappyHour = False
+        End If
+        LoadHappyHourGraphic mvHappyHour
+        RaiseEvent HappyHourChanged(mvHappyHour)
+        
+    Case True   ' it was happy hour a second ago
+        If Time &gt; mdatHappyHourBegin And _
+           Time &lt; mdatHappyHourEnd Then
+        ' it's still happy hour; do nothing
+        Else
+            mvHappyHour = False
+            LoadHappyHourGraphic (False)
+            RaiseEvent HappyHourChanged(False)
+        End If
+    
+    Case False  ' it was not happy hour now a second ago
+        If Time &gt; mdatHappyHourBegin And _
+           Time &lt; mdatHappyHourEnd Then
+        ' it's now happy hour
+            mvHappyHour = True
+            LoadHappyHourGraphic (True)
+            RaiseEvent HappyHourChanged(True)
+        Else
+        ' do nothing
+        End If
+
+End Select
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+There's nothing particular tricky about this event procedure;
+all of the work is done in the subroutines you entered previously.
+<H3><A NAME="WhattheTimerEventDoes">
+What the Timer Event Does</A></H3>
+<P>
+The code in the Timer event first checks the variables that store
+happy hour's begin and end times. If either of these is set to
+zero (that is, it has not yet been initialized), then the event
+bails out, because it would make no sense to proceed if the control
+didn't know when happy hour is. Note that if mdatHappyHourBegin
+and mdatHappyHourEnd were Variant instead of Date values, you'd
+instead use the IsEmpty function to determine if the variables
+had not yet been initialized.
+<P>
+Once the procedure has determined when happy hour is, it compares
+that value to one of three previous states for happy hour: True,
+False, or uninitialized (Empty). This comparison takes place in
+the Select Case in the Timer event.
+<P>
+Based on this comparison, the procedure either raises the HappyHourChanged
+event and downloads the appropriate graphic, or (if the state
+of happy hour has not changed), does nothing.
+<H3><A NAME="TestingtheCode">
+Testing the Code</A></H3>
+<P>
+Now that you've set up the new asynchronous download properties,
+you can test the control. To do this:
+<OL>
+<LI>Close the code window and close the HappyHour control's designer.
+Switch to the EXE test form frmHHTestForm.
+<LI>Click on the HappyHour control on the EXE project test form
+to select it.
+<LI>In its HappyHourYesURL property, type the URL of a graphic,
+either on your local machine or on the Internet. Type the URL
+of a different graphic in the HappyHourNoURL property. (If you
+don't have Net access or you just don't want to come up with a
+URL of your own, you can use the files happy.bmp and work.bmp
+on the CD-ROM that accompanies this book.)
+<LI>Enter time values for HappyHourBegin and HappyHourEnd. Make
+HappyHourBegin a few minutes from now (according to your computer's
+clock). The Properties window should look like Figure 14.1.<BR>
+<A HREF="f14-1.gif"><B>Figure 14.1 :</B> <I>Properties window for HappyHour control</I>.</A>
+<p>
+<LI>Depending on whether it's happy hour or not, one of the graphics
+will appear. (This may take a moment, depending on the size of
+the file, whether you selected a local file or an Internet file,
+and the speed of your Internet connection.)
+<LI>Wait a few minutes for the state of the control to change
+from non-happy hour to happy hour. When it becomes time for happy
+hour, you should be able to see the control download the happy
+hour graphic you specified in its HappyHourYesURL property, as
+illustrated in Figure 14.2.<BR>
+<A HREF="f14-2.gif"><B>Figure 14.2 :</B> <I>Downloaded HappyHourYesURL property</I>.</A>
+</OL>
+<H2><A NAME="InternetControlsasConstituentControls"><FONT SIZE=5 COLOR=#FF0000>
+Internet Controls as Constituent Controls</FONT></A></H2>
+<P>
+You can include an Internet control as a constituent control in
+order to give your project Internet capabilities. Internet controls
+handle such tasks as sending e-mail and transferring files (using
+file transfer protocol, or FTP). There are also Internet controls
+that give you direct access to Net connections, so-called <I>socket</I>
+<I>controls</I> that enable you to build your own Internet-aware
+application from scratch without having to worry about how the
+network transport works.
+<P>
+In this demonstration, you'll build a control that will act as
+a custom technical support request interface. This control could
+be used in situations where you need to deploy one or more applications
+that supply a tech support e-mail feature. Providing an ActiveX
+control to enable users to send e-mail to tech support would not
+only be useful in a number of different applications, but it would
+also provide a consistent interface across those different apps.
+<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The Internet control I used for this demonstration is a shareware mail control produced by Mabry Software. There are a few suites of Internet controls on the market; I chose Mabry's because I like their liberal shareware policy<FONT 
+FACE="Times">-</FONT>and they make good stuff. You can find Mabry on the web at <A HREF="http://www.mabry.com">http://www.mabry.com.</A></I>
+</BLOCKQUOTE>
+<BLOCKQUOTE>
+<I>In 1996 Microsoft briefly made a set of Internet controls available called Internet Control Pack. These controls have since been &quot;transferred&quot; to NetManage, and you can find them on the Web at <A 
+HREF="http://www.netmanage.com">http://www.netmanage.com.</A></I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="ObtainingtheMabryMailControl">
+Obtaining the Mabry Mail Control</A></H3>
+<P>
+You can obtain a shareware version of the Internet mail control
+used in the following demonstration. This control is available
+as part of the Mabry Internet Pack, downloadable from Mabry Software's
+Web site at <A HREF="http://www.mabry.com">http://www.mabry.com.</A> Information on the Internet
+Pack is at <A HREF="http://www.mabry.com/ipack.htm">http://www.mabry.com/ipack.htm</A>; the downloadable shareware
+version of the controls are at <A HREF="ftp://ftp.mabry.com/ipack.exe.
+">ftp://ftp.mabry.com/ipack.exe.
+</A><P>
+Once you've obtained ipack.exe and installed it on your system,
+the complete set of Mabry Internet controls is available on your
+system. You'll use one of these controls in the following demonstration.
+<H3><A NAME="BuildingtheTechSupportControl">
+Building the TechSupport Control</A></H3>
+<P>
+To build the TechSupport control, do the following:
+<OL>
+<LI>Create a new control project. Open the UserControl's designer.
+Give the UserControl the name TechSupport.
+<LI>Add a list box, command button, and text box control to the
+control designer. Give the command button the name cmdSend. Give
+the text box the name txtMessage. Give the list box the name lstDepartment.
+<LI>Set the Caption property of cmdSend to <B>Send</B>.
+<LI>Set txtMessage's MultiLine property to <B>True</B>.
+<LI>Set the Text property of txtMessage to <B>Type your message</B>
+<B>here, then click on the Send button</B>. The control designer
+should look like Figure 14.3.<BR>
+<A HREF="f14-3.gif"><B>Figure 14.3 :</B> <I>TechSupport control designer</I>.</A>
+</OL>
+<P>
+Next you'll add code to initialize the control. The idea here
+is to give the user the ability to send a tech support request
+to any one of a number of tech support departments. To do this:
+<OL>
+<LI>Double-click on the control designer to open its code window.
+<LI>In the Initialize event of the UserControl, type the following
+code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_Initialize()
+    lstDepartment.AddItem &quot;Hardware Support&quot;
+    lstDepartment.AddItem &quot;Software Support&quot;
+    lstDepartment.AddItem &quot;Athletic Support&quot;
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+Next, you'll put code in the command button's Click event to validate
+that the tech support message has been created correctly. To do
+this:
+<OL>
+<LI>In cmdSend's Click event, type the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub cmdSend_Click()
+    If lstDepartment.ListIndex = -1 Then
+        MsgBox &quot;Please choose a tech support department &quot; &amp; _
+               &quot;from the list.&quot;, vbExclamation, &quot;Tech Support&quot;
+        lstDepartment.SetFocus
+        Exit Sub
+    End If
+    
+    If txtMessage.Text = &quot;&quot; Then
+        MsgBox &quot;Please type a message.&quot;, vbExclamation, &quot;Tech Support&quot;
+        txtMessage.SetFocus
+        Exit Sub
+    End If
+    
+    ' OK to send the message
+    SendMessage
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=2>
+<LI>The SendMessage subroutine, called at the end of the Click
+procedure, is the procedure that actually sends the mail; you'll
+write that procedure in a later step. First, to make the SendMessage
+work, type the following enumeration and module-level declaration
+in the Declarations section of the code window:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private State As EmailState
+
+Enum EmailState
+    StateSending = 1
+    StateConnecting = 2
+    StateDisconnecting = 3
+End Enum
+</PRE>
+</BLOCKQUOTE>
+<P>
+Now you're ready to add the mail control and write
+the code that will drive it. To do this:
+<OL>
+<LI>Select the menu command <B>Project</B>, <B>Components</B>.
+In the list of available components, check Mabry Internet Mail
+control. The Components dialog box should look like Figure 14.4.
+<BR>
+<A HREF="f14-4.gif"><B>Figure 14.4 :</B> <I>Components dialog box</I>.</A>
+<p>
+<LI>Click on <B>OK</B>. The Mabry Mail control appears in the
+Toolbox, as illustrated in Figure 14.5.<BR>
+<A HREF="f14-5.gif"><B>Figure 14.5 :</B> <I>Mail control in Toolbox</I>.</A>
+<p>
+<LI>Using the Toolbox, add an instance of the mail control to
+the control designer. If you're using the shareware version of
+the mail control, an information window (popularly known in the
+downscale world of shareware as a <I>nag screen</I>) pops up.
+Wait a few seconds, then click on the nag screen to make it go
+away.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The nag screen appears because this control, like many ActiveX controls, is distributed as shareware. Shareware means that you can try the software before you purchase it; if you use it, you're expected to pay the author for it. Additionally, if you 
+register the control by purchasing it, the nag screen goes away. Mabry Software has a very liberal shareware policy; all of their controls are available for download as shareware.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=4>
+<LI>An instance of the Mabry Mail control appears on your control
+designer. Don't worry about where this control is positioned on
+the designer; it will be invisible at runtime.
+<LI>The code that will send the mail message exists in two places:
+the SendMessage subroutine and the Done event of the mail control.
+The following code implements the SendMessage subroutine.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+The best way to test an application like this is to set it up to send e-mail messages to <I>yourself</I> (as opposed to, for example, me). Be sure to replace those bogus e-mail addresses with your own, so that when you're testing this control you'll 
+actually get some mail.
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<BLOCKQUOTE>
+<PRE>
+Private Sub SendMessage()
+' Sends an email message
+
+Select Case lstDepartment.Text
+' For testing purposes, you'll want
+' to replace one or all of these
+' email addresses with real Internet addresses.
+
+    Case &quot;Hardware Support&quot; ' replace with your email address
+    mMail1.To = &quot;hardware@support.com&quot;
+    
+    Case &quot;Software Support&quot; ' replace with your email address
+    mMail1.To = &quot;software@support.com&quot;
+    
+    Case &quot;Athletic Support&quot; ' replace with your email address
+    mMail1.To = &quot;athletic@support.com&quot;  
+    
+End Select
+
+    mMail1.Subject = &quot;Tech Support Request&quot;
+    mMail1.From = &quot;Hapless User &lt;hapless@user.com&gt;&quot;
+
+' Replace the value in the next line with your
+' internet service provider's email server; usually
+' &quot;mail.yourisp.com&quot;.
+    mMail1.Host = &quot;mail.your_internet_service_provider.com&quot;
+
+' Replace the value in the next line with the
+' name of your email account. This value will not
+' appear in the email message; it's used to log in
+' to your outgoing email server (if the server 
+' requires such a login).
+    mMail1.EMailAddress = &quot;&lt;your_account@yourisp.com&gt;&quot;
+        
+    mMail1.Body(0) = txtMessage.Text
+
+    Screen.MousePointer = 11
+    State = StateConnecting
+    mMail1.Action = MailActionConnect
+    
+    If (mMail1.Blocking = True) Then
+       mMail1_Done
+    End If
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+The important part of this code is toward the end of the procedure.
+This code calls the Done event of the mail control three times,
+once for each stage of the e-mail session (sending, connecting,
+and disconnecting).
+<P>
+To finish the project, put the following code in the mail control's
+Done event:
+<BLOCKQUOTE>
+<PRE>
+Private Sub mMail1_Done()
+    Screen.MousePointer = 0
+    
+    Select Case State
+        Case StateConnecting
+            State = StateSending
+            mMail1.Flags = MailDstIsHost
+            mMail1.Action = MailActionWriteMessage
+            If (mMail1.Blocking = True) Then
+                mMail1_Done
+            End If
+        Case StateSending
+            State = StateDisconnecting
+            mMail1.Action = MailActionDisconnect
+            If (mMail1.Blocking = True) Then
+                mMail1_Done
+            End If
+        Case StateDisconnecting
+            'do nothing; let it finish
+    End Select
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+You can see that this event procedure can do three things depending
+on the state of the session with the mail server. If the event
+is raised after the control has finished connecting with the server
+(the StateConnecting case), the procedure changes the State flag
+to Sending, then sends the message. If the event is raised after
+the control has sent the message (the StateSending case), the
+event procedure changes the State flag to Disconnecting and disconnects
+from the server. If the event is raised after the control has
+disconnected (the StateDisconnecting case), then the procedure
+does nothing, because its work is done.
+<P>
+This control project now has all it needs to blanket the world
+(or you, at least) with useless e-mail. To test the control, do
+the following:
+<OL>
+<LI>Close the code window and the control designer.
+<LI>Open the test EXE project form.
+<LI>Place an instance of the control on the form.
+<LI>Run the project by choosing the menu command <B>Run</B>, <B>Start</B>,
+or by pressing the function key <B>F5</B>.
+<LI>The project runs. Select a tech support department from the
+list box, then type a message in the text box. Click on <B>Send</B>
+to send the message.
+<LI>If you modified the code so it sends e-mail to yourself, wait
+a few minutes, then check your mail (using whatever application
+you normally use to check your mail). The mail message should
+appear in your incoming e-mail.
+</OL>
+<P>
+Although this is an extremely simple example of sending Internet
+e-mail, the fact that you have programmable control over the process
+opens up a number of interesting possibilities. You could write
+a control that polls a database once per hour, notifying a system
+administrator when a query retrieved a particular set of results.
+Or you could modify the control to generate a mass mailing to
+everyone in your company once per day, thereby introducing you
+to the exciting and dynamic world of independent consulting.
+<H4>About the Winsock API</H4>
+<P>
+Any Windows application that does anything with the Internet does
+so through a networking API known as Winsock. Winsock implementations
+have existed for every version of Windows since 16-bit Windows
+3.1.
+<P>
+In this chapter, I wanted to include an example of how to write
+a Winsock control using native Winsock API calls, but I quickly
+realized that such a project could very well take up a book of
+its own<FONT FACE="Times">-</FONT>and, in fact, somebody else
+has already written that book. The book is Michael Marchuk's <I>Building
+Internet Applications With Visual Basic </I>(Que, 1995), and it's
+definitely one of a kind. This book will really give you an insight
+into how to get to the Internet from Visual Basic. Its only problem
+from the perspective of a Visual Basic control creator is that
+all the examples and API declarations are geared toward the 16-bit
+implementation of Winsock.
+<H4>What's Going On under the Hood</H4>
+<P>
+In order to appreciate how much functionality is encapsulated
+by the mail control, you might find it helpful to see the actual
+text of the conversation it has with the server when it sends
+your e-mail message. You can get a look at the conversation the
+mail control has with the mail server by activating its debug
+mode. To do this:
+<OL>
+<LI>Open the control designer and click on the mail control. In
+the Properties window, set the control's Debug property to 1.
+<LI>Double-click on the mail control to bring up its code window.
+Using the Procedure combo box, switch to the mail control's Debug
+event.
+<LI>In the Debug event, write the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub mMail1_Debug(ByVal Message As String)
+    Debug.Print Message
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=4>
+<LI>Close the code window and the control designer. Go back to
+the EXE test form, launch it, and send yourself another e-mail
+message.
+<LI>In the Immediate window, the following conversation appears:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+OnSend
+220-mail1.sirius.com Sendmail 8.6.12/960710 ready at Mon, 23 Dec 1996 
+12:10:50 -0800
+220 ESMTP spoken here
+
+HELO bedrock
+
+250 mail1.sirius.com Hello ppp011-sf1.sirius.com [205.134.227.11], 
+pleased to meet you
+
+MAIL FROM:&quot;Skippy&quot; &lt;skippy@sirius.com&gt;
+
+250 &quot;Skippy&quot; &lt;skippy@well.com&gt;... Sender ok
+
+RCPT TO:skippy@sirius.com
+
+250 skippy@sirius.com... Recipient ok
+
+DATA
+354 Enter mail, end with &quot;.&quot; on a line by itself
+
+250 MAA19061 Message accepted for delivery
+
+quit
+
+221 mail1.sirius.com closing connection<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>This is roughly what I get when I send mail through my Internet service provider (ISP), anyway. The exact words you'll see will depend on how your ISP's mail server is configured.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+From looking at the debug information, you can see that the mail
+control really works on two levels.<FONT FACE="Times"> </FONT>It
+handles the Winsock connectivity behind the scenes, acting as
+a wrapper around the Winsock API calls and encapsulating the Internet
+mail protocol, known as Simple Mail Transfer Protocol (SMTP).
+This protocol governs the way applications send mail through Internet
+mail servers. Again, it isn't strictly necessary for you to know
+how this works to add Internet mail functionality to your application,
+but it might prove helpful if you ever wanted to write your own
+Internet mail control.
+<H2><A NAME="AddingWebBrowsingFeaturestoYourControl"><FONT SIZE=5 COLOR=#FF0000>
+Adding Web-Browsing Features to Your Control</FONT></A></H2>
+<P>
+Although there are a few ActiveX controls on the market that enable
+Web browsing and downloading of Internet data, none are likely
+to have an interface as rich (or well-supported) as that of Microsoft
+Internet Explorer. So it's fortuitous that Internet Explorer is
+a free download. Someday (hopefully soon) ActiveX will be supported
+on all operating system platforms, so you'll be able to activate
+Web browsers everywhere.
+<P>
+Internet Explorer's object interface can be used by Visual Basic
+applications in two ways: as an ActiveX control (the WebBrowser
+control) and as an Automation object. We'll take a look at both
+of these techniques in the remainder of this chapter. Then, in
+<A HREF="ch16.htm" >Chapter 16</A>, &quot;Object-Oriented Programming,&quot; you'll see
+how to put these technologies to work in the form of a custom
+Web-browsing Hotlist control.
+<H3><A NAME="UsingInternetExplorerasaConstituentControl">
+Using Internet Explorer as a Constituent Control</A></H3>
+<P>
+One of the neat things about Microsoft Internet Explorer is the
+fact that it is built around an ActiveX control. This means you
+can use Internet Explorer as a constituent control in your applications;
+the only requirement is that your users have Internet Explorer
+installed on their computers<FONT FACE="Times">-</FONT>not a particularly
+steep requirement, since it's a free download.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The full documentation of the object model of the WebBrowser control is available on the Microsoft Web site at <A HREF="http://www.microsoft.com/intdev/sdk/docs/iexplore/">http://www.microsoft.com/intdev/sdk/docs/iexplore/.</A> It's definitely worth 
+downloading if you plan on building a control based on the WebBrowser object. There are separate versions of the documentation geared toward Visual Basic and C/C++ developers.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+The ActiveX implementation of the WebBrowser control is in a file
+called shdocvw.dll; it is registered in the list of ActiveX components
+as Microsoft Internet Controls.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>In order to keep you on your toes, Microsoft did not give the WebBrowser ActiveX control an .OCX extension as you'd expect; it is a .DLL file. But you knew already from your diligent reading of the previous chapters of this book that .OCX files are 
+really just special types of .DLL files. You weren't confused by that, were you? Of course not.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+In order to see an example of the WebBrowser control in a control
+project, you'll build a control that will display Web pages automatically,
+one after the other, in a slide show format. To do this:
+<OL>
+<LI>Start a new control project. Give the UserControl the name
+NetSlideShow.
+<LI>Add a Timer control to the control designer.
+<LI>From the Project menu, select Components. Scroll through the
+list until you find Microsoft Internet Controls, then check it.
+The dialog box will look like Figure 14.6.<BR>
+<A HREF="f14-6.gif"><B>Figure 14.6 :</B> <I>Components dialog box</I>.</A>
+<p>
+<LI>Click on <B>OK</B>. The WebBrowser control is added to the
+Toolbox, as illustrated in Figure 14.7.<BR>
+<A HREF="f14-7.gif"><B>Figure 14.7 :</B> <I>WebBrowser control in Toolbox</I>.</A>
+<p>
+<LI>Add an instance of the WebBrowser control to the control designer.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>In the beta version of Visual Basic 5.0 used to develop the examples in this book, the WebBrowser control did not repaint itself or display its borders correctly at design time. This was probably just a quirk in the beta of VB 5.0; it's likely that this 
+will have been fixed by the time you read this. This problem does not affect the control's functionality, at any rate.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=6>
+<LI>Add the following code to resize the WebBrowser control to
+the dimensions of the UserControl. In addition to resizing the
+control, this code also displays a Web page; it exists in the
+Resize event so the control will display something as soon as
+it is instantiated at runtime.
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_Resize()
+    WebBrowser1.Move 0, 0, ScaleWidth, ScaleHeight
+    If mstrFirstURL &gt; &quot;&quot; Then
+        WebBrowser1.Navigate mstrFirstURL
+    End If
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=7>
+<LI>Your control needs to expose a TimerInterval property that
+enables the user to specify how many seconds to display each Web
+page. Unlike the constituent Timer's Interval property, this property
+is measured in seconds, instead of milliseconds; your control
+will perform the conversion seamlessly. Additionally, the Property
+Let needs to include validation code to ensure that the user does
+not set the TimerInterval property to an unreasonable value. To
+implement this property, enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Public Property Get TimerInterval() As Integer
+    TimerInterval = Timer1.Interval / 1000
+End Property
+
+Public Property Let TimerInterval(ByVal lngNewValue As Integer)
+    If lngNewValue &gt; 0 And lngNewValue &lt; 60 Then
+        Timer1.Interval = lngNewValue * 1000
+    End If
+End Property
+</PRE>
+</BLOCKQUOTE>
+<OL START=8>
+<LI>Next you'll implement two properties, FirstURL and SecondURL.
+These properties store the URLs of the Web pages that the control
+will display. To do this, enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+Private mstrFirstURL As String
+Private mstrSecondURL As String
+Private mbURLFlag As Boolean  ' specifies which URL is current
+
+Public Property Get FirstURL() As String
+    FirstURL = mstrFirstURL
+End Property
+
+Public Property Let FirstURL(ByVal strNewValue As String)
+    mstrFirstURL = strNewValue
+    WebBrowser1.Navigate strNewValue
+End Property
+
+Public Property Get SecondURL() As String
+    SecondURL = mstrSecondURL
+End Property
+
+Public Property Let SecondURL(ByVal strNewValue As String)
+    mstrSecondURL = strNewValue
+    WebBrowser1.Navigate strNewValue
+End Property
+</PRE>
+</BLOCKQUOTE>
+<OL START=9>
+<LI>The Timer event of the constituent Timer control performs
+the work of downloading the appropriate URLs at runtime. To make
+it work, enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Timer1_Timer()
+
+' Only rotate slides at run time.
+If Ambient.UserMode = True Then
+    If mbURLFlag Then
+        If mstrFirstURL &gt; &quot;&quot; Then
+            WebBrowser1.Navigate mstrSecondURL
+            mbURLFlag = False
+        End If
+    Else
+        If mstrSecondURL &gt; &quot;&quot; Then
+            WebBrowser1.Navigate mstrFirstURL
+            mbURLFlag = True
+        End If
+    End If
+End If
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=10>
+<LI>Finally, add code to the ReadProperties and WriteProperties
+events of the UserControl so the values of its design-time properties
+are stored:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
+    mstrFirstURL = PropBag.ReadProperty(&quot;FirstURL&quot;, &quot;&quot;)
+    mstrSecondURL = PropBag.ReadProperty(&quot;SecondURL&quot;, &quot;&quot;)
+    Timer1.Interval = PropBag.ReadProperty(&quot;TimerInterval&quot;, 0) * 1000
+End Sub
+
+Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
+    PropBag.WriteProperty &quot;FirstURL&quot;, mstrFirstURL, &quot;&quot;
+    PropBag.WriteProperty &quot;SecondURL&quot;, mstrSecondURL, &quot;&quot;
+    PropBag.WriteProperty &quot;TimerInterval&quot;, Timer1.Interval / 1000, 0
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=11>
+<LI>Now you can test the control. To do this, close the code window,
+close the control designer, and open the text EXE project form.
+<LI>Place an instance of the NetSlideShow control on the form.
+The control appears, but no URL opens, because you haven't set
+any of the control's properties yet.
+<LI>Set the control's FirstURL property to http://www.fieldguide.com.
+The Web page for the <I>Field Guide to North American Males </I>appears,
+as illustrated in Figure 14.8.<BR>
+<A HREF="f14-8.gif"><B>Figure 14.8 :</B> <I>NetSlideShow control with Web page</I>.</A>
+<p>
+<LI>Set the control's SecondURL property to http://www.well.com/user/jeffreyp/activex/.
+The home page for this book appears.
+<LI>Set the control's TimerInterval property to 20. (The trick
+here is to set the interval to a number high enough that the user
+can see the current picture fully loaded before the next one starts
+loading.)
+<LI>Launch the EXE project by choosing the menu command <B>Run,</B>
+<B>Start</B>, or by pressing the function key <B>F5</B>. Wait
+twenty seconds; the URL should change automatically.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>A more elegant way to implement the URL properties of this control might be through the use of a collection. That way, rather than limiting the number of Web pages to two, you could display a (theoretically) unlimited number of Web pages by adding each 
+new Web page to a collection of URLs. For more information on how to implement collections, see <A HREF="ch16.htm" >Chapter 16</A>, &quot;Object-Oriented Programming.&quot;</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H3><A NAME="ControlsThatActasHyperlinks">
+Controls That Act as Hyperlinks</A></H3>
+<P>
+You can use the Internet Explorer object model to control a Web
+browser from an ActiveX control contained in the browser.
+<P>
+For example, consider a large Web site with large pages containing
+lots of links. Such sites often contain HTML hyperlinks that say
+Back, which is<FONT FACE="Times"> </FONT>the link that takes you
+back to the page where you came from. But how does the page know
+exactly which page you came from? The answer is: it doesn't. It
+assumes you followed the hierarchy the Web site designer set up
+for you. But we all know the Web doesn't always work that way.
+You could have come to the site from a search engine or typed
+in the URL manually.
+<P>
+In order to have a true Back button, your control would need information
+about which URL the user had been previously viewing. Internet
+Explorer conveniently stores that information in a place called
+the <I>history list</I>. You can move through the URLs in the
+browser's history list by using the GoForward and GoBack methods
+of the WebBrowser control.
+<P>
+To see how this works, you'll set up a custom command button that
+acts as a Back button. The advantage of this control over a Back
+hyperlink is that it will always take the user back to the previous
+URL viewed. Another advantage is that it will always work, no
+matter which Web page you use it in. To set up this control:
+<OL>
+<LI>Create a new control project. Give the UserControl the name
+BackButton.
+<LI>Add a constituent command button to the control designer.
+<LI>In the command button's Click event, enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Command1_Click()
+On Error Resume Next
+    Hyperlink.GoBack
+End Sub<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>You include the On Error Resume Next in case some wisenheimer tries to put the control in a Visual Basic form; since only Web pages support the GoBack method, this control is only appropriate for use in a Web page.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+In the Click event procedure, you use the Hyperlink object (an
+element of the UserControl object) to navigate through the Web
+browser container's history list. The Hyperlink object has three
+methods: 
+<UL>
+<LI>GoBack sends the Web browser to the previous URL viewed, backing
+the browser through the history list. If you continue executing
+the GoBack method, the browser continues to be sent backward through
+the history list.
+<LI>GoFoward sends the Web browser to the next URL in the history
+list (this presumes that you previously used GoBack to move backward
+in the history list).
+<LI>NavigateTo sends the Web browser to a URL you specify. This
+method takes a string argument (the name of the URL).
+</UL>
+<P>
+To finish this control and prepare it for testing, include the
+standard code for resizing and initializing the control's Caption
+property:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_InitProperties()
+On Error Resume Next
+    Caption = Extender.Name
+End Sub
+
+Private Sub UserControl_Resize()
+    Command1.Move 0, 0, ScaleWidth, ScaleHeight
+End Sub
+
+Public Property Get Caption() As String
+    Caption = Command1.Caption
+End Property
+
+Public Property Let Caption(ByVal strNewValue As String)
+    Command1.Caption = strNewValue
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+Now you're in a funny situation, because at this point you want
+to test the control. But you don't want to go to the trouble of
+testing the control on a Web page, because then you'd have to
+compile it and write an HTML test page for it. I thought about
+creating an EXE test form with a Web browser control on it, then
+making the Web browser control the container of the BackButton
+control. But that doesn't work (because the Web browser control
+doesn't contain controls in the traditional sense; it can contain
+controls, but only if those controls are embedded into the HTML).
+<P>
+So for now, you're stuck with compiling and writing an HTML test
+page for the BackButton control in order to test it. To do this:
+<OL>
+<LI>In the Project Explorer, give the control project a name,
+such as MyBackButton. This name will show up when you compile
+the control.
+<LI>Select the menu command <B>File</B>, <B>Make MyBackButton.ocx</B>.
+The Make Project dialog appears. Click on <B>OK</B>.
+<LI>Launch the ActiveX Control Pad. Insert an instance of MyBackButton.BackButton
+in the HTML page that's automatically generated, then save the
+page as BackButton.htm.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>See <A HREF="ch13.htm" >Chapter 13</A> for more information on how to use the ActiveX Control Pad.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=4>
+<LI>Close the ActiveX Control Pad and launch Microsoft Internet
+Explorer. The browser will launch and open to the default page.
+<LI>In Internet Explorer, select the menu command <B>File</B>,
+<B>Open</B>. Click on Browser to locate the file BackButton.htm
+you saved previously.
+<LI>The Web page containing the BackButton control appears. Click
+on it and you'll be sent back to the default page.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>If at this point you wish to go back and enhance the control you're working on, be sure to check the Binary Compatibility option (in Project Properties) before you recompile. If you don't do this, you'll need to recreate your test HTML page, because the 
+control's GUID will change when it is recompiled.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H3><A NAME="UsingtheInternetExplorerAutomationObject">
+Using the Internet Explorer Automation Object</A></H3>
+<P>
+You can launch an instance of Microsoft Internet Explorer using
+a technology known as Automation (formerly known as OLE Automation).
+Automation is an object technology, related to but different from
+ActiveX control objects. Automation objects have the following
+distinguishing characteristics:
+<UL>
+<LI>They exist primarily in code and do not always include a visual
+interface.
+<LI>They have a programmable interface comprised of properties,
+methods, and collections.
+<LI>They are generally related to an application, known as an
+Automation server. For example, all of the Microsoft Office applications,
+including Word and Excel, are Automation servers; Internet Explorer
+is an Automation server as well.
+<LI>They are accessed as variables of type Object and instantiated
+through the CreateObject function.
+</UL>
+<P>
+You can use Internet Explorer as an Automation server to provide
+additional Internet features to your control project in situations
+where you would rather not use the WebBrowser control. To see
+an example of how to do this:
+<OL>
+<LI>Start a new control project. This project will provide the
+user with a list of choices from which to obtain online help in
+an application; selecting a choice will launch an instance of
+Internet Explorer and display an online help topic.
+<LI>Give the UserControl the name OnlineHelp.
+<LI>Add a constituent list box control to the project. Give the
+list box the name lstURL.
+<LI>Double-click on the control designer to open its code window.
+In the control's Initialize event, populate the list box by adding
+the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_Initialize()
+    lstURL.AddItem &quot;General Help Topics&quot;
+    lstURL.AddItem &quot;Printing&quot;
+    lstURL.AddItem &quot;Saving Your Work&quot;
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=5>
+<LI>Make the constituent list box resize to fit the dimensions
+of the UserControl by adding the following code to the UserControl's
+Resize event:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_Resize()
+    lstURL.Move 0, 0, ScaleWidth, ScaleHeight
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=6>
+<LI>Finally, place the following code in the constituent list
+box's DblClick event:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub lstURL_DblClick()
+    Screen.MousePointer = vbHourglass
+
+    Dim objExplorer As Object
+    Set objExplorer = CreateObject(&quot;InternetExplorer.Application&quot;)
+
+    
+    Select Case lstURL.Text
+        Case &quot;General Help Topics&quot;
+        objExplorer.Navigate &quot;http://www.microsoft.com/kb/&quot;
+        
+        Case &quot;Printing&quot;
+        objExplorer.Navigate &quot;c:\work\print.html&quot;
+        
+        Case &quot;Saving Your Work&quot;
+        objExplorer.Navigate &quot;c:\work\save.html&quot;
+        
+        Case Else
+        ' whoops! do nothing
+        Exit Sub
+        
+    End Select
+    
+    ' Setting explicit Left and Top values
+    ' ensures that IE will always appear in
+    ' a full window even if the user has an
+    ' existing instance minimized
+    objExplorer.Left = 10
+    objExplorer.Top = 10
+    objExplorer.Visible = True
+    Screen.MousePointer = vbArrow
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+As you've probably surmised, this code launches Internet Explorer,
+tells it to navigate to a particular URL, then makes the application
+visible. (Most Automation servers are initially invisible by default.)
+<P>
+The code creates an instance of Internet Explorer by using the
+CreateObject function. Using the CreateObject function to create
+an instance of an Automation server is not unlike creating a control
+on a form in Visual Basic, except that Automation takes place
+in code; there is no visual component to it. Once you've created
+an instance of Internet Explorer (represented in this code by
+the object variable objExplorer), you can execute its methods
+(such as its Navigate method) and alter its properties (such as
+its Left, Top, and Visible properties).
+<P>
+Once the instance of Internet Explorer is visible, users are free
+to use Internet Explorer's user interface to do whatever they
+want,<FONT FACE="Times"> </FONT>saving you a heap of trouble in
+the area of user-interface design and event handling.
+<P>
+To test the capabilities of the code you just entered, do the
+following:
+<OL>
+<LI>Close the code window and the control designer.
+<LI>Switch to the text EXE project form, Form1.
+<LI>Place an instance of the OnlineHelp control on Form1.
+<LI>Launch the project using the menu command <B>Run</B>, <B>Start</B>
+(or the function key <B>F5</B>).
+<LI>Double-click on the first item in the list. After a short
+delay, Internet Explorer should pop up, displaying the Microsoft
+Knowledge Base Web page.
+</OL>
+<P>
+If this were a real control project, you'd want to insert an error
+trap to handle the situation where a URL didn't exist or couldn't
+be opened by Internet Explorer. See <A HREF="ch15.htm" >Chapter 15</A> for more information
+on how to do this. A more elegant version of this control will
+be presented in <A HREF="ch16.htm" >Chapter 16</A>, as you learn how to use Visual Basic's
+object-oriented programming features to create a working Internet
+Hotlist control project.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>There is an article on the Microsoft Web site that gives a code example of how to launch Internet Explorer from Visual Basic. The code example provided in the Microsoft article is incorrect, at least as of this writing. This article is in the Microsoft 
+Knowledge Base; its article ID is Q160976. You can access the Microsoft Knowledge base on the Web at <A HREF="http://www.microsoft.com/kb/">http://www.microsoft.com/kb/.</A></I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+In this chapter, we explored a number of Internet-related topics,
+including downloading property values, sending Internet mail and
+controlling Microsoft Internet Explorer. It's good to get a handle
+on these technologies<FONT FACE="Times">-</FONT>even if you're
+not doing Internet stuff right now, chances are in the coming
+years you'll be called upon to do so.
+<P>
+In the next chapter, we'll jump into the infinitely sublime topic
+of handling errors and debugging your control projects.
+<HR>
+
+<CENTER><P><A HREF="ch13.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch15.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

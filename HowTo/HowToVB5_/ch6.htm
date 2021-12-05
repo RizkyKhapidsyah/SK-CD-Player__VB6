@@ -1,0 +1,551 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 6 -- Control Methods</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;6</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Control Methods</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#CreatingaMethod">
+Creating a Method</A>
+<UL>
+<LI><A HREF="#WhattheWatchClockMethodDoes">
+What the WatchClock Method Does</A>
+<LI><A HREF="#TestingtheWatchClockMethod">
+Testing the WatchClock Method</A>
+</UL>
+<LI><A HREF="#CreatingaMethodThatTakesanArgument">
+Creating a Method That Takes an Argument</A>
+<UL>
+<LI><A HREF="#TestingtheParameterizedEventProcedure">
+Testing the Parameterized Event Procedure</A>
+</UL>
+<LI><A HREF="#CreatingaMethodThatReturnsaValue">
+Creating a Method That Returns a Value</A>
+<UL>
+<LI><A HREF="#TestingtheCalculateHowLongMethod">
+Testing the CalculateHowLong Method</A>
+</UL>
+<LI><A HREF="#ImplementingStandardMethods">
+Implementing Standard Methods</A>
+<LI><A HREF="#UsingMethodsSuppliedbytheContainer">
+Using Methods Supplied by the Container</A>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+You can create a method in your ActiveX control as easily as you create
+a function or subroutine in Visual Basic; the syntax is the same,
+because any public function or subroutine in your control is exposed
+as a method.
+<P>
+Methods are the verbs of your control, just as properties are
+the adjectives. Users expect methods to perform processing or
+other actions. Accordingly, you should carefully consider whether
+the method you're looking to implement should really be implemented
+as a property. Putting yourself in the user's shoes and comparing
+your control to other controls that provide similar functionality
+will go a long way toward resolving the way your interface should
+be presented.
+<P>
+Bear in mind that it is permissible for methods to automatically
+adjust properties, although you should avoid doing this if it
+makes your interface incomprehensible. One example of a method
+that can change a property is the Move method, which most controls
+expose. The Move method not only determines where a control is
+positioned relative to its container, but it can also alter the
+control's size. The Move method has the ability, then, to change
+the Top, Left, Height, and Width<B> </B>properties of a control.
+Giving your methods the ability to alter properties of your control
+isn't always necessary to do, but it can make your control easier
+to program.
+<H2><A NAME="CreatingaMethod"><FONT SIZE=5 COLOR=#FF0000>
+Creating a Method</FONT></A></H2>
+<P>
+This section demonstrates how to implement a simple method in
+your control. For this demonstration, we'll use a new version
+of the HappyHour control you worked on in previous chapters. You'll
+find this control on your CD-ROM.
+<P>
+The procedure you'll create will display the amount of time between
+now and happy hour. This procedure will be exposed in the HappyHour<B>
+</B>control as the WatchClock<B> </B>method. When this method
+is executed, the control will display a message box informing
+the user how much time remains until happy hour. To add this method
+to the HappyHour control:
+<OL>
+<LI>Open the project group HappyHour<B>.</B>vbg in the HappyHour3
+folder.
+<LI>In the Project Explorer, open the HappyHour control designer.
+<LI>Double-click on the HappyHour control designer to open its
+code window.
+<LI>Enter the code in the following listing.
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Public Sub WatchClock()
+Dim lMinutesLeft As Long
+
+    If mHappyHourBegin = &quot;&quot; Or mHappyHourEnd = &quot;&quot; Then
+        MsgBox &quot;I have no idea when happy hour is.&quot;, _
+                            vbExclamation, _
+                            &quot;Something's Wrong&quot;
+        Exit Sub
+    End If
+
+    If Time &gt; mHappyHourBegin And Time &lt; mHappyHourEnd Then
+        ' it's already happy hour
+        MsgBox &quot;It's happy hour! What are you doing here?&quot;, _
+                            vbExclamation, _
+                            &quot;Party Time!&quot;
+        Exit Sub
+    Else
+        ' calculate and display the number
+        ' of hours until happy hour
+        lMinutesLeft = DateDiff(&quot;n&quot;, Time, mHappyHourBegin)
+        MsgBox &quot;Happy hour is in &quot; &amp; lMinutesLeft _
+                                   &amp; &quot; minutes!&quot;, _
+                                   vbInformation, _
+                                   &quot;Get Back To Work!&quot;
+    End If
+End Sub<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>CAUTION</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Be very careful that you declare this sub as Public. Subs declared as Private aren't exposed as methods of the property.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="WhattheWatchClockMethodDoes">
+What the WatchClock Method Does</A></H3>
+<P>
+The code you just entered does the following:
+<UL>
+<LI>It verifies that the properties HappyHourStart and HappyHourEnd
+have been initialized. (If they aren't set to anything, the procedure
+informs the user. In real life, you'd probably instead want to
+formally raise an error and let the user determine whether a message
+should be displayed or not. For more information on this, see
+<A HREF="ch15.htm" >Chapter 15</A>, &quot;Debugging and Error Trapping.&quot;)
+<LI>The code determines if it's happy hour already. If it is happy
+hour, the procedure notifies the user with a message box urging
+them to get out there and party.
+<LI>If it's not happy hour, the procedure uses the Visual Basic
+DateDiff function to determine how many minutes there are until
+happy hour. The procedure then displays this information to the
+user using a message box.
+</UL>
+<H3><A NAME="TestingtheWatchClockMethod">
+Testing the WatchClock Method</A></H3>
+<P>
+Since methods are only executable at runtime, you will have to
+put the EXE project form into run mode and use the Immediate window
+to test your new method. To do this:
+<OL>
+<LI>Close HappyHour's control designer.
+<LI>Open the EXE project form frmHHTestForm and add an instance
+of the HappyHour control.
+<LI>Run the project by clicking on the Start button, using the
+Run, Start menu commands, or pressing the function key F5.
+<LI>Pause the program by clicking on the Break<B> </B>button on
+the toolbar or by using the keystroke combination Ctrl+Break.
+<LI>Make sure the Immediate<B> </B>window is visible. If it isn't,
+choose the menu commands View, Immediate Window or use the keystroke
+shortcut Ctrl+G.
+<LI>Click in the Immediate window.
+<LI>Set the happy hour start time by typing in the following code
+into the Immediate window:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+HappyHour1.HappyHourBegin = #11:49:00 AM#
+</PRE>
+</BLOCKQUOTE>
+<OL START=8>
+<LI>Next, set the happy hour end time by typing in the following
+code into the Immediate window:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+HappyHour1.HappyHourEnd = #12:30:00 PM#
+</PRE>
+</BLOCKQUOTE>
+<OL START=9>
+<LI>Finally, execute your method by typing in the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+HappyHour1.WatchClock
+</PRE>
+</BLOCKQUOTE>
+<P>
+The message box displayed by the HappyHour control depends on
+what time it is. If it is currently happy hour, you'll see the
+message box displayed as in Figure 6.1.
+<P>
+<A HREF="f6-1.gif"><B>Figure 6.1 :</B> <I>It's happy hour</I>.</A>
+<P>
+If it's not happy hour, the control will determine how many minutes
+until it's happy hour and display the message shown in Figure
+6.2.
+<P>
+<A HREF="f6-2.gif"><B>Figure 6.2 :</B> <I>Minutes until happy hour</I>.</A><BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>You'll recall that in Visual Basic, the standard delimiter for date and time values is the pound sign (#). This is analogous to the double-quotation sign that delimits a string.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H2><A NAME="CreatingaMethodThatTakesanArgument"><FONT SIZE=5 COLOR=#FF0000>
+Creating a Method That Takes an Argument</FONT></A></H2>
+<P>
+You can pass an argument to a method the same way you pass an
+argument to any other procedure. Passing an argument to a procedure
+gives the procedure additional information about how to perform
+its processing.
+<P>
+For example, consider the Move method that exists in most controls.
+The syntax of this method is:
+<BLOCKQUOTE>
+<PRE>
+<I>object</I>.Move [<I>left</I>, <I>top</I>, <I>width</I>, <I>height</I>]
+</PRE>
+</BLOCKQUOTE>
+<P>
+To use this method to move a command button called cmdSpeedy,
+you'd use the code:
+<BLOCKQUOTE>
+<PRE>
+cmdSpeedy.Move 100, 100
+</PRE>
+</BLOCKQUOTE>
+<P>
+(The <I>width </I>and <I>height</I> arguments are omitted in this
+code because you're only looking to move, rather than resize,
+the control.)
+<P>
+You can add arguments to your event procedures to make them work
+the same way the Move event does. In the following example, you'll
+learn how to create a method that takes an argument by adding
+another method to the HappyHour<B> </B>project. This method, called
+HappyAlert, generates one or more audible tones that get the user's
+attention. The number of audible tones generated by the HappyAlert
+event is determined by the integer argument passed to it; if you
+write the code HappyHour1<B>.</B>HappyAlert<B> </B>5, the control
+will beep five times. 
+<P>
+Here's the code for the HappyAlert method. This code is designed
+to be included in the HappyHourChanged event; to include it, type
+the following code in the code window of the HappyHour user control:
+<BLOCKQUOTE>
+<PRE>
+Public Sub HappyAlert(iAlertNumber As Integer)
+    Dim iCounter As Integer
+    
+    For iCounter = 1 To iAlertNumber
+        Beep
+    Next iCounter
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<H3><A NAME="TestingtheParameterizedEventProcedure">
+Testing the Parameterized Event Procedure</A></H3>
+<P>
+To test this code, do the following:
+<OL>
+<LI>Close the HappyHour control's designer and return to frmHHTestForm.
+<LI>Run the EXE project by clicking on the Start button on the
+Toolbar, choosing the Run, Start commands from the menu, or pressing
+the function key F5.
+<LI>Pause execution by clicking on the Break button on the Toolbar,
+or by using the keystroke shortcut Ctrl+Break.
+<LI>In the Immediate<B> </B>window, type the code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+HappyHour1.HappyAlert 5
+</PRE>
+</BLOCKQUOTE>
+<P>
+You should be able to hear your computer beep five times.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>If your computer uses a .WAV file as standard system beep, you may not hear exactly five beeps. This is because the Beep statement isn't capable of beeping synchronously; it simply tells the operating system to beep as fast as it can. If you don't hear 
+five beeps, the system may be playing them so fast that the first beep doesn't have a chance to finish before the second and third beeps get going. You have the ability, however, to make the operating system play sounds in a more intelligent manner through 
+the use of API calls. We'll discuss how to make API calls in <A HREF="ch11.htm" >Chapter 11</A>, &quot;Windows API and DLL Calls.&quot;</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="CreatingaMethodThatReturnsaValue"><FONT SIZE=5 COLOR=#FF0000>
+Creating a Method That Returns a Value</FONT></A></H2>
+<P>
+Just as functions return values, methods can return values as
+well. Methods that return values don't occur very frequently in
+the Visual Basic world, but when they do, they can be very powerful.
+<P>
+If your method returns a value, you can use the value it returns
+in other code. For example, consider the OpenRecordset method
+of the Database object. This method is used to return a reference
+to a table, query, or another set of records in a database. The
+method takes a table name or query name as a parameter and returns
+a Recordset object variable.
+<P>
+A typical OpenRecordset method looks like this:
+<BLOCKQUOTE>
+<PRE>
+Dim MyDatabase As Database
+Dim MyRecordset As Recordset
+Set MyRecordset = MyDatabase.OpenRecordset(&quot;tblAddress&quot;)
+</PRE>
+</BLOCKQUOTE>
+<P>
+The whole purpose of the OpenRecordset method, then, is to put
+the object that represents the table called tblAddress into the
+object variable MyRecordset.
+<P>
+This brings up an interesting point about methods that return
+values:<FONT FACE="Times"> </FONT>If a method can act like a function
+and return a value, what is the difference between a method that
+returns a value and a property?
+<P>
+It makes sense that a database would have an OpenRecordset method
+rather than a Recordset property, since a single database can
+produce a potentially infinite number of recordsets. (This is
+not only because databases can have multiple tables, but because
+a Recordset object can point to any subset of records in a single
+table.)
+<P>
+To my way of thinking, for most purposes you're likely to run
+across, there isn't much functional difference between a property
+and a method that returns a value, except that a method that returns
+a value is a strange animal. Most Visual Basic programmers aren't
+expecting your methods to return values, so if you write a bunch
+of methods that return values, most Visual Basic programmers are
+going to become confused.
+<P>
+This means if you're ever tempted to include a property-like method
+in your control, you should strongly consider writing the procedure
+as a property instead. Properties are much easier for the average
+Visual Basic user to understand, they're much more commonly used,
+and they're generally more hygienic and morally upright.
+<P>
+Because you might have a case where you want to write a method
+that acts as a property, I'll toss out a demonstration of how
+to do it. The demonstration will calculate the number of minutes
+between now and happy hour in the form of a method called TellHowLong.
+Bear in mind this method could just as well be written as a read-only
+property.
+<P>
+The CalculateHowLong method won't be nearly as complicated to
+call as the OpenRecordset method of the Database object; in fact,
+it will be nearly identical to the WatchClock<B> </B>method. But
+instead of notifying the user with a message box saying how many
+minutes until happy hour, it will return the number of minutes
+as a long integer to the calling procedure (rather than displaying
+it on the screen, as in the previous example). If it is currently
+happy hour, the method returns the value True (or -1). To do this:
+<OL>
+<LI>Open HappyHour's control designer.
+<LI>Double-click on its control designer to open its code window.
+<LI>Enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Public Function CalculateHowLong()
+' Returns the number of minutes
+' until happy hour (similar to
+' WatchClock).
+
+    If mHappyHourBegin = &quot;&quot; Or mHappyHourEnd = &quot;&quot; Then
+        CalculateHowLong = False
+        Exit Function
+    End If
+
+    If Time &gt; mHappyHourBegin And Time &lt; mHappyHourEnd Then
+        ' It's already happy hour
+        CalculateHowLong = True
+        Exit Function
+    Else
+        ' Calculate and return the number
+        ' of minutes until happy hour
+        CalculateHowLong = DateDiff(&quot;n&quot;, Time, mHappyHourBegin)
+    End If
+End Function<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Don't forget to declare methods that return values as Public<B> </B>Functions.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+You can see this code does almost the same thing as the WatchClock
+method, except instead of displaying a message box, it returns
+a value. The user could then use that value to take an action
+(such as displaying a message, updating a status label, or running
+some other code). Limiting the actions of your control in this
+way gives the user more flexibility.
+<H3><A NAME="TestingtheCalculateHowLongMethod">
+Testing the CalculateHowLong Method</A></H3>
+<P>
+To demonstrate that your new method returns the number of minutes
+until happy hour, do the following:
+<OL>
+<LI>Close the HappyHour control designer and open frmHHTestForm.
+<LI>Run the EXE project by clicking on the Start button on the
+toolbar, choosing Run, Start from the menu, or pressing the function
+key F5.
+<LI>Pause execution by clicking on the Break<B> </B>button on
+the toolbar or by using the keystroke combination Ctrl+Break.
+<LI>In the Immediate window, set the beginning time of happy hour
+by typing the code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+HappyHour1.HappyHourBegin = #5:00:00 PM#
+</PRE>
+</BLOCKQUOTE>
+<OL START=5>
+<LI>Set the ending time of happy hour by typing the following
+code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+HappyHour1.HappyHourEnd = #6:00:00 PM#
+</PRE>
+</BLOCKQUOTE>
+<OL START=6>
+<LI>Execute your method by typing the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Print HappyHour1.CalculateHowLong
+</PRE>
+</BLOCKQUOTE>
+<P>
+The number of minutes between now and happy hour should be displayed
+in the Immediate window, unless it is currently happy hour, in
+which case the value True will be displayed.
+<H2><A NAME="ImplementingStandardMethods"><FONT SIZE=5 COLOR=#FF0000>
+Implementing Standard Methods</FONT></A></H2>
+<P>
+Although methods tend to be used less often than properties, certain
+methods should always be available. As a minimum, you should consider
+exposing the following methods in any control you create:
+<UL>
+<LI>Click
+<LI>DblClick
+<LI>KeyDown
+<LI>KeyPress
+<LI>KeyUp
+<LI>MouseDown
+<LI>MouseMove
+<LI>MouseUp
+</UL>
+<P>
+In general, you should think about controls that are similar to
+your control and expose as many methods as similar controls expose.
+For example, if your control works like a command button, consider
+exposing as many of the command button's methods as possible (such
+as Move, Drag, and SetFocus). In general, try to surprise the
+user of your control as little as possible; if you leave something
+out, have a good reason for doing so.
+<P>
+If your control is comprised of constituent controls, you should
+consider exposing as many methods of those constituent controls
+as possible, as long as it makes sense to do so.
+<P>
+For example, in order to control the height, width, and placement
+of your control, you should expose a Move method. (You can simply
+expose Height, Width, Top, and Left properties, but a Move method
+is faster to execute and easier to code.)
+<P>
+Often, you'll find yourself merging the methods of two or more
+constituent controls embedded in your control. For example, if
+the HappyHour<B> </B>control had a Move<B> </B>method, it would
+control the Height<B> </B>and Width<B> </B>properties of both
+its constituent Label<B> </B>control as well as its PictureBox<B>
+</B>control.
+<P>
+Any method can be mapped from a constituent control to your UserControl,
+either manually or through the ActiveX Control Interface Wizard.
+See <A HREF="ch2.htm" >Chapter 2</A> &quot;Control Basics,&quot; for information on
+how to use the ActiveX Control Interface Wizard.
+<P>
+As a bare minimum, if your control is visible at runtime, it should
+expose a Refresh method. You can implement the Refresh method
+using the Refresh method of the UserControl object.
+<H2><A NAME="UsingMethodsSuppliedbytheContainer"><FONT SIZE=5 COLOR=#FF0000>
+Using Methods Supplied by the Container</FONT></A></H2>
+<P>
+Just as properties and events are provided by the Extender object
+of the container, a number of methods are provided by the container
+as well. Because these methods are provided by the container,
+users can call them to manipulate your control; you do not have
+to write code to expose these methods.
+<P>
+In Visual Basic, the following methods are provided by the container:
+<UL>
+<LI>Drag
+<LI>Move
+<LI>SetFocus
+<LI>ShowWhatsThis
+<LI>ZOrder
+</UL>
+<P>
+Because they are supplied by the container, you do not need to
+write any code to make these methods available in your control;
+they are always available when your control is placed in a Visual
+Basic form. Remember, though, that because these methods are provided
+by the control's container, you cannot depend on these methods
+being available to you in all containers.
+<P>
+For more information on the container, see <A HREF="ch7.htm" >Chapter 7</A> &quot;Interacting
+with the Container.&quot; For information on error-handling, see
+<A HREF="ch15.htm" >Chapter 15</A>, &quot;Debugging and Error Trapping.&quot;
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+In this chapter, you learned how to write public subroutines and
+functions that are exposed as methods in your control. In the
+next chapter, you'll learn how to take advantage of the container
+to provide additional functionality to your ActiveX control.
+<HR>
+
+<CENTER><P><A HREF="ch5.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch7.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

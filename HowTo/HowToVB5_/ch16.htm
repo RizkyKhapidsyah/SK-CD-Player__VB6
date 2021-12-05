@@ -1,0 +1,1088 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 16 -- Object-Oriented Programming</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;16</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Object-Oriented Programming</FONT>
+</H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#ObjectOrientedConcepts">
+Object-Oriented Concepts</A>
+<LI><A HREF="#Classes">
+Classes</A>
+<UL>
+<LI><A HREF="#CreatingaClass">
+Creating a Class</A>
+</UL>
+<LI><A HREF="#Collections">
+Collections</A>
+<UL>
+<LI><A HREF="#HowCollectionsWork">
+How Collections Work</A>
+<LI><A HREF="#CreatingaCollectionClass">
+Creating a Collection Class</A>
+<LI><A HREF="#PerformanceConsiderations">
+Performance Considerations</A>
+</UL>
+<LI><A HREF="#IncorporatingaClassinaControl">
+Incorporating a Class in a Control</A>
+<LI><A HREF="#BuildingInterfacesUsingtheImplementsKeyword">
+Building Interfaces Using the Implements Keyword</A>
+<LI><A HREF="#UsingFriendMethods">
+Using Friend Methods</A>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+The Basic programming language began as a <I>procedural</I> language,
+based on variables, function calls, and statements. It is evolving
+toward an <I>object-oriented</I> language, based on objects, properties,
+methods, and collections.
+<P>
+Visual Basic has always had support for objects, even though you
+couldn't always create objects in VB. The ability to create objects
+from classes was added in VB 4.0, while the ability to create
+an ActiveX object is new in VB 5.0.
+<P>
+But while purists would argue that Visual Basic isn't a fully
+object-oriented language (mainly because it doesn't have all the
+object-oriented features of C++, the 800-pound gorilla of object-oriented
+languages), it has become more object oriented over time.
+<P>
+You have already seen a number of object-oriented concepts at
+work in Visual Basic; indeed, ActiveX control creation itself
+demonstrates a number of object-oriented concepts, such as encapsulation.
+In the remainder of this chapter you'll see examples of Visual
+Basic's object-oriented features as they apply to control creation.
+<H2><A NAME="ObjectOrientedConcepts"><FONT SIZE=5 COLOR=#FF0000>
+Object-Oriented Concepts</FONT></A></H2>
+<P>
+An object-oriented system focuses on the elements of the problem
+(the objects) rather than the method of getting there (the procedures).
+<P>
+When designing an object-oriented system, you often find yourself
+working backward from the solution (for example, a fully functional
+inventory system for an ice cream factory) to the objects involved
+in that solution (a tub of ice cream, a freezer, a truck) to the
+business rules that govern those objects (a truck can hold 50
+tubs of ice cream, a freezer must be kept at 0 degrees Celsius).
+You may find that working backwards in this way represents a bit
+of a stretch if you're accustomed to procedural programming, but
+in time you'll probably find that focusing on the problem rather
+than the solution is a more natural way to program.
+<P>
+An object-oriented system contains language elements that provide
+the following:
+<UL>
+<LI>Abstraction, which entails reducing the complexity of a problem
+to an easy-to-understand metaphor instead of getting bogged down
+with the details of how the problem is solved.
+<LI>Polymorphism, which involves enabling an object to expose
+multiple interfaces. Polymorphism exists as a new feature in Visual
+Basic 5.0.
+<LI>Encapsulation, which entails grouping data and program logic
+together to minimize complexity and avoid having to track which
+functions access which data. You always know which functions access
+which data because the functions and data are encapsulated in
+the same construct. Data stored in properties accessed by Property
+Let and Property Get procedures is an example of encapsulation.
+<LI>Inheritance, the ability to create a new object from existing
+objects. It means that the new object you build inherits the properties
+and other elements of the existing object. You get a taste for
+inheritance with constituent controls in Visual Basic 5.0; they
+let you create new ActiveX controls out of existing controls.
+But inheritance as implemented in the Visual Basic language is
+limited.
+</UL>
+<P>
+So far in this book, you've seen how to build ActiveX controls
+that act as the basis for user-interface objects. In this chapter,
+you'll see how to use <I>classes</I>, elements of code that enable
+you to apply these object-oriented principles to your VB applications.
+<H2><A NAME="Classes"><FONT SIZE=5 COLOR=#FF0000>
+Classes</FONT></A></H2>
+<P>
+When you create a class, you're giving yourself the ability to
+instantiate objects in your application. But unlike ActiveX controls,
+objects created from classes:
+<UL>
+<LI>Generally do <I>not</I> have a user-interface component. Instead,
+classes are geared toward data processing and storage rather than
+user interface.
+<LI>Are not targeted at other developers. When you create a class
+in your application or control project, it's generally for your
+use somewhere else in that project. (The most notable exception
+to this is when you use a class to build an ActiveX DLL.)
+</UL>
+<P>
+Consider the ice cream factory example introduced earlier in this
+chapter. If you get a job as a programmer for an ice cream factory,
+there are certain elements of the business you know will change
+very infrequently, if ever: the freezing point of orange sherbet,
+or the number of quarts in a gallon, for example. These concepts
+are referred to as <I>business rules</I>. It makes sense to abstract
+these concepts into objects early in the game. If you do this,
+you'll be more efficient. You'll also suffer fewer (ice cream)
+headaches, because you won't have to rewrite the code that converts
+quarts to gallons in each new program you write; you'll simply
+add a reference to your already existing business rules contained
+in the classes you've authored. This goal of <I>code reuse</I>
+is another prime goal of object-oriented programming.
+<P>
+Much of the programming of classes in Visual Basic will be familiar
+to you from your work with ActiveX controls. For example, when
+you create a public subroutine in your class, it is exposed as
+a method of your object. You can also include Property Let and
+Property Get procedures in your class in order to expose properties
+of the objects created from the class.
+<P>
+Although you may get the impression that classes are a watered-down
+version of ActiveX controls, it happens that classes are a very
+relevant part of control creation. Many controls (such as the
+Data control, for example) expose their own object models. In
+order to implement such object models, you must understand how
+classes work.
+<H3><A NAME="CreatingaClass">
+Creating a Class</A></H3>
+<P>
+Every class you create exists in its own file, known as a <I>class
+module</I>. In this example, you'll create a class that will store
+and process Internet uniform resource locators (URLs). Later,
+we'll incorporate this class into a collection, and finally, you'll
+see how to incorporate the collection of URLs into an ActiveX
+control.
+<P>
+To create the class, do the following:
+<OL>
+<LI>Start a new project. In the Project Explorer, click on the
+project to which you wish to add a class.
+<LI>Select the menu command <B>Project, Add Class Module</B>.
+A new class module appears in the Project Explorer, as illustrated
+in Figure 16.1.<BR>
+<A HREF="f16-1.gif"><B>Figure 16.1 : </B><I>Class module in Project Explorer</I>.</A>
+<P>
+<LI>After creating a class, you should give the class a name.
+Do this in the Properties window, the same way you'd create a
+name for any other object. The example class we're going to build
+will store the properties of an Internet URL, so give the class
+the name URL, as illustrated in Figure 16.2.<BR>
+<A HREF="f16-2.gif"><B>Figure 16.2 : </B><I>Name property of class</I>.</A>
+<P>
+<LI>Double-click on the class in the Project Explorer to open
+its code window.
+<LI>You'll add properties to this class-a process astoundingly
+similar to adding properties to an ActiveX control. To do this,
+add the following code. Note that the DateCreated property is
+read-only, so in its Property Let procedure, instead of assigning
+the value to the variable mdatDateCreated, you raise an error.
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+
+Private mstrDescription As String
+Private mdatDateCreated As Date
+Private mstrURL As String
+
+Public Property Get Description() As String
+    Description = mstrDescription
+End Property
+
+Public Property Let Description(ByVal strNewValue As String)
+    mstrDescription = strNewValue
+End Property
+
+Public Property Get URL() As String
+    URL = mstrURL
+End Property
+
+Public Property Let URL(ByVal strNewValue As String)
+    mstrURL = strNewValue
+End Property
+
+Public Property Get DateCreated() As Date
+    DateCreated = mdatDateCreated
+End Property
+
+Public Property Let DateCreated(ByVal datNewValue As Date)
+    ' this value is read-only; raise an error
+    Err.Raise 512 + vbObjectError, &quot;URL&quot;, &quot;Property is read-only&quot;
+End Property
+</PRE>
+</BLOCKQUOTE>
+<OL START=6>
+<LI>This variable should be initialized automatically at the time
+the object is created; the Initialize event of the class enables
+you to do this. Enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Class_Initialize()
+    mdatDateCreated = Now
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=7>
+<LI>Finally, add a public subroutine to your class; this procedure
+will be exposed as a method of your object. This method will launch
+Internet Explorer, displaying the URL stored by your class:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Public Sub Navigate()
+
+    If mstrURL &lt;&gt; &quot;&quot; Then
+        Dim objExplorer As Object
+        Set objExplorer = CreateObject(&quot;InternetExplorer.Application&quot;)
+        objExplorer.Navigate mstrURL
+        objExplorer.Left = 20
+        objExplorer.Top = 20
+        objExplorer.Visible = True
+    Else
+        Err.Raise 1025 + vbObjectError, &quot;URL&quot;, _
+                  &quot;No URL has been specified.&quot;
+    End If
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+Now that you have a minimal class defined, you can test it in
+an application. To do this:
+<OL>
+<LI>Close the class's code window and switch to Form1.
+<LI>Place a command button on Form1. Double-click on the button
+to open its code window.
+<LI>In the command button's Click event, enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Command1_Click()
+    Dim MyURL As New URL
+
+    MyURL.Description = &quot;The News Babe Page&quot;
+    MyURL.URL = &quot;http://www.well.com/user/jeffreyp/newsbabe1.html&quot;
+    Debug.Print &quot;Created: &quot; &amp; MyURL.DateCreated
+    MyURL.Navigate
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+The Dim statement at the beginning of this procedure declares
+the object variable that will store the instance of the object
+defined by the URL class. (The rule in Visual Basic is that all
+object variables must be declared explicitly, even if your code
+has no Option Explicit.)
+<P>
+You can see that once the URL object has been instantiated, you
+can address its properties and methods just as you would any other
+object. The complexity involved in calling Internet Explorer as
+an Automation object has been abstracted behind your class' Navigate
+method; by placing the Automation code in a method of your class,
+you've essentially reduced the lines of code required to display
+a Web page from ten to three.
+<H2><A NAME="Collections"><FONT SIZE=5 COLOR=#FF0000>
+Collections</FONT></A></H2>
+<P>
+A <I>collection</I> is a group of related data elements. In Visual
+Basic, a collection represents a group of variables or objects.
+You use collections as a handy way to organize program data.
+<P>
+If you're accustomed to using arrays to store data in Visual Basic,
+you may want to consider using collections instead. Collections
+have a number of built-in tools that make manipulating data easier-and,
+in some cases, more efficient-than manipulating arrays.
+<P>
+Using collections is easier than using arrays because collections
+provide a predefined set of methods for manipulating data. For
+example, when you have an array of 10 elements and you want to
+add an 11th element, you have to write several
+lines of code, redimensioning the array and then adding the new
+element. The collection, in contrast, has an inherent Add method.
+You don't have to write any code to implement this method, so
+adding a new element to the collection requires a grand total
+of one line of code.
+<P>
+In the next sections, you'll get a look at how to add new usefulness
+to your URL class by building a class that contains a collection.
+<H3><A NAME="HowCollectionsWork">
+How Collections Work</A></H3>
+<P>
+You use the inherent methods of the collection to manipulate its
+members. (I know that sounds perverse; stick with me, it gets
+even better later on.) Collections have the properties and methods
+listed in Table 16.1.<BR>
+<P>
+<CENTER><B>Table 16.1 Properties and Methods of Collections</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=60%>
+<TR VALIGN=TOP><TD WIDTH=118><B>Element</B></TD><TD WIDTH=262><B>Description</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=118>Add method</TD><TD WIDTH=262>Adds an item to the collection
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=118>Delete method</TD><TD WIDTH=262>Removes an item from the collection
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=118>Item method</TD><TD WIDTH=262>Returns an element of the collection
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=118>Count property</TD><TD WIDTH=262>The number of items in the collection
+</TD></TR>
+</TABLE></CENTER>
+<P>
+If your collection is wrapped in a class module, you can extend
+the set of properties and methods of your collection, making it
+even more flexible (we'll do that later on in this chapter). For
+now, we'll implement a simple collection and expand upon it.
+<P>
+In this example, you'll take your first stab at using a collection
+to store a number of URLs. This first example won't be perfect,
+but it will demonstrate the rudiments of how collections work;
+we'll refine the example in the following sections of this chapter.
+<P>
+To set up your collection, modify the demonstration code in Form1
+so that rather than launching a browser, it adds a few URLs to
+a collection of URLs called colBookmarks. To do this, modify the
+existing code so it looks like this:
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+Dim colBookmarks As New Collection
+
+Private Sub Command1_Click()
+    Dim MyURL1 As New URL, MyURL2 As New URL, MyURL3 As New URL
+
+    MyURL1.Description = &quot;The News Babe Page&quot;
+    MyURL1.URL = &quot;http://www.well.com/user/jeffreyp/newsbabe1.html&quot;
+    'Debug.Print &quot;Created: &quot; &amp; MyURL1.DateCreated
+    'MyURL.Navigate
+
+    colBookmarks.Add MyURL1
+
+    MyURL2.Description = &quot;Electric Minds&quot;
+    MyURL2.URL = &quot;http://www.minds.com/&quot;
+
+    colBookmarks.Add MyURL2
+
+    MyURL3.Description = &quot;The Onion&quot;
+    MyURL3.URL = &quot;http://www.theonion.com/&quot;
+
+    colBookmarks.Add MyURL3
+
+    Debug.Print colBookmarks.Count
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+You declare the collection colBookmarks in the Declarations section
+of the form for two reasons: first, because it is an object variable,
+it must be explicitly declared somewhere; second, because it is
+a collection, you want its lifetime to be that of the form, not
+of the procedure. Declaring the variable in the Declarations section
+of the form, then, causes the collection to persist throughout
+the lifetime of the form.
+<H4>Experimenting with the Collection</H4>
+<P>
+At this point, try a few experiments to see how to use the methods
+of the collection. To do this:
+<OL>
+<LI>Run the project and click on the command button to execute
+your code.
+<LI>The collection is created, and the three URL objects are added
+to it. The Immediate window displays the number 3-the count of
+the collection, as illustrated in Figure 16.3.<BR>
+<A HREF="f16-3.gif"><B>Figure 16.3 : </B><I>Display of colBookmarks.Count in Immediate
+window</I>.</A>
+<P>
+<LI>Pause execution by selecting the menu command <B>Run,</B>
+<B>Break</B>.
+<LI>In the Immediate window, type the code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+? colBookmarks.Item(1).URL<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The question mark character is shorthand for the Print method.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<OL>
+<BR>The Immediate window prints the value of the URL property
+of the first member of the collection, as illustrated in Figure
+16.4.<BR>
+<A HREF="f16-4.gif"><B>Figure 16.4 : </B><I>Display of the URL property of an item
+in collection</I>.</A>
+</OL>
+<P>
+
+<OL START=5>
+<LI>Because the Item method is the default method of a collection,
+you can refer to items in the collection using a shorthand syntax,
+omitting the Item method. To see how this works, enter the code
+below. The Immediate window should return the same URL value as
+in the previous example.
+</OL>
+<BLOCKQUOTE>
+<PRE>
+?colBookmarks(1).URL<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Unlike arrays in Visual Basic, collections are one-based, which means that the first item in the collection is numbered 1. (In contrast, the first item in a default array is numbered 0.) There is a problem with using a collection in this manner, 
+however. To see this problem, type the following code in the Immediate window:</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<BLOCKQUOTE>
+<PRE>
+colBookmarks.Add &quot;Yadda yadda yadda.&quot;
+?colBookmarks.Count
+</PRE>
+</BLOCKQUOTE>
+<P>
+No error is returned, and the Immediate window reports the count
+of items in the collection to be four. This is a problem, because
+this is supposed to be a collection of URL objects, not a collection
+of random gibberish text strings.
+<P>
+You can avoid this problem by wrapping your collection in a class.
+Among the benefits of classes we've discussed earlier in this
+chapter is that putting collections in classes enables you to
+enforce <I>type-safety.</I> This prevents procedures in your code
+from incorrectly adding the wrong data types to your collections.
+<H3><A NAME="CreatingaCollectionClass">
+Creating a Collection Class</A></H3>
+<P>
+In order to type-safe your collection, you can place it in a class.
+To do this:
+<OL>
+<LI>Create a new class. Give this class the name Bookmarks. (Classes
+that act as collections are conventionally given a plural name,
+although you don't have to name your classes this way.)
+<LI>Double-click on the class in the Project Explorer to open
+its code window.
+<LI>Enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+Private mcolBookmarks As New Collection
+
+Public Property Get Count() As Long
+    Count = mcolBookmarks.Count
+End Property
+
+Public Function Add(theURL As URL)
+    mcolBookmarks.Add theURL
+End Function
+
+Public Function Item(ByVal varKey As Variant) As URL
+    Set Item = mcolBookmarks.Item(varKey)
+End Function
+</PRE>
+</BLOCKQUOTE>
+<P>
+Note that if you were building a real Bookmarks class, you'd also
+include code to wrap the collection's other methods, such as Remove.
+But this code will do for our demonstration.
+<P>
+You can see that these procedures access the private collection
+mcolBookmarks in much the way that an ActiveX control delegates
+properties and methods of its constituent controls. The difference
+in this method of accessing the collection, though, is that the
+Add and Item methods of the collection are strongly typed. That
+is, they will only accept URL objects as their input.
+<P>
+Also, note that at no time does the user of this class have direct
+access to the data stored in mcolBookmarks; she must instead go
+through the class's interface to get to that data. This is a good
+thing, because it provides your collection with a simple and safe
+interface. If something changes down the road (such as the addition
+of a new property of the URL object), you can be fairly certain
+that the change will not break existing code.
+<H4>Making the Item Method the Default</H4>
+<P>
+You'll want to make the Item method of your collection class the
+interface default of the class. This is so the following two lines
+of code will be the same:
+<BLOCKQUOTE>
+<PRE>
+    Bookmarks.Item(1).Navigate
+    Bookmarks.(1).Navigate
+</PRE>
+</BLOCKQUOTE>
+<P>
+In other words, you're adding another feature of the default collection
+object to your collection class.
+<P>
+You've seen this kind of thing before, when you set methods and
+properties of your control projects as the default. However, the
+way to do this for classes is slightly different than for controls.
+To set the Item method as the default procedure for your collection
+class:
+<OL>
+<LI>Make sure the code window for the Bookmarks class is open.
+<LI>Click in the code anywhere in the Item function.
+<LI>Choose the menu command <B>Tools, Procedure Attributes</B>.
+The Procedure Attributes dialog box appears.
+<LI>Click on the <B>Advanced</B> button.
+<LI>In the Procedure ID combo box, select (<B>Default</B>).
+<LI>Click on <B>OK</B>.
+</OL>
+<H4>Testing the Bookmarks Collection Class</H4>
+<P>
+The Bookmarks collection class is now ready to test:
+<OL>
+<LI>Close the Bookmark class's code window and return to Form1.
+<LI>Create a new command button on the form. In the command button's
+Click event, type the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Command2_Click()
+    Dim myMarks As New Bookmarks
+    Dim myURL As New URL
+    
+    With myURL
+        .Description = &quot;The News Babe Page&quot;
+        .URL = &quot;http://www.well.com/user/jeffreyp/newsbabe1.html&quot;
+    End With
+    
+    myMarks.Add myURL
+    Stop
+    
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=3>
+<LI>Run the code and click the command button. The code executes,
+then pauses at the Stop statement.
+<LI>In the Immediate window, type the following code. The Immediate
+window displays the Description property of the item in the collection.
+</OL>
+<BLOCKQUOTE>
+<PRE>
+?myMarks.Item(1).Description
+</PRE>
+</BLOCKQUOTE>
+<H3><A NAME="PerformanceConsiderations">
+Performance Considerations</A></H3>
+<P>
+Programmers often cast a wary eye on certain elements of object-oriented
+programming because they fear they're going to spend time adopting
+a new paradigm only to find their applications run dog-slow.
+<P>
+It is true that collections require more memory overhead than
+conventional arrays. This is because collections are variants,
+and variants always consume 16 bytes, no matter which type of
+data is stored in them. For example, if you use a variant to store
+a lowly integer&ETH;a data type that normally requires two bytes
+of storage&ETH;the variant still requires 16 bytes to store it.
+However, this increased memory consumption may not necessarily
+lead to a performance degradation, depending on how you use collections.
+<P>
+When comparing collections vs. arrays, the real measure of performance
+comes when you consider that you don't have to iterate through
+an entire collection to retrieve a particular value. Instead,
+you can use a For Each block, which is always more efficient than
+iterating through an array.
+<H2><A NAME="IncorporatingaClassinaControl"><FONT SIZE=5 COLOR=#FF0000>
+Incorporating a Class in a Control</FONT></A></H2>
+<P>
+Now that you have functional URL and Bookmarks classes, you can
+incorporate them into a control. Not only will this example demonstrate
+how you can use a class module as a component of a control project.
+It will also demonstrate how easy it is to re-use code in class
+modules. To do this:
+<OL>
+<LI>Save the files in the demonstration application you're working
+on. Give the URL class the filename URL.cls and give the Bookmarks
+class the filename Bookmarks.cls.
+<LI>Start a new control project. Give the control the name Hotlist.
+<LI>Add a constituent ListBox control to the control designer.
+This list box will store a list of Web pages.
+<LI>Right-click on the control project in the Project Explorer.
+The Project Explorer context menu appears.
+<LI>From the context menu, select <B>Add, Class Module</B>. The
+Class Module dialog box appears. Select the Existing tab. The
+dialog box looks like Figure 16.5.<BR>
+<A HREF="f16-5.gif"><B>Figure 16.5 : </B><I>Add Class Module dialog box</I>.</A>
+<P>
+<LI>Use the dialog box to add the Properties and URL classes to
+your control project. After you've done this, the Project Explorer
+should look like Figure 16.6.<BR>
+<A HREF="f16-6.gif"><B>Figure 16.6 : </B><I>Project Explorer with classes</I>.</A>
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Make sure you add these classes to your control project, not to the EXE test project.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=7>
+<LI>In the Properties window, change the Instancing properties
+of the two classes to 2-PublicNotCreatable. This will allow you
+to instantiate objects defined by these classes from within your
+control project.
+<LI>Double-click on the code designer to open its code window.
+Add the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+Private mbkmBookmarks As New Bookmarks
+
+Private Sub UserControl_Resize()
+    List1.Move 0, 0, ScaleWidth, ScaleHeight
+End Sub
+
+Public Sub AddURL(strDescription As String, strURL As String)
+    Dim urlNew As New URL
+
+    With urlNew
+        .Description = strDescription
+        .URL = strURL
+    End With
+    
+    mbkmBookmarks.Add urlNew
+    List1.AddItem urlNew.Description
+    
+End Sub
+
+Private Sub List1_DblClick()
+    mbkmBookmarks.Item(CLng(List1.ListIndex) + 1).Navigate
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+You can see that the AddURL subroutine (which, because it is public,
+is exposed as a method of the HotList control) adds the URL to
+the Bookmarks collection and displays the description of the URL
+in the constituent list box.
+<P>
+In the DblClick event of the constituent list box, you can see
+that the ListIndex property of the list box has to be converted
+into a long integer and incremented by 1 before it can be used
+to retrive an item from the collection. The reasons for this are:
+<UL>
+<LI>The ListIndex property is 0-based, while a collection's index
+is 1-based.
+<LI>When you're referring to the elements of a collection by number,
+you should always explicitly convert that reference to a number.
+This is because there is a way to refer to a member of a collection
+by key (not covered in this book). A key can be a string or other
+data type. When you use a numeric index, the collection knows
+you're referring to the ordinal number of the item in the collection
+rather than its key.
+</UL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Although the user doesn't have access to the URL object in this example, there's no reason why you couldn't give the user access to a URL object similar (or identical) to the URL object in the UserControl project. That way, instead of adding items to 
+your HotList procedurally (using the AddURL method) your control would have a more fully object-oriented interface. I chose to provide access to the Bookmarks collection through a method rather than by adding an object because it greatly simplified this 
+example.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+To test your control, place an instance of the HotList control
+on the EXE project form, then place the following code in the
+form's Load event:
+<BLOCKQUOTE>
+<PRE>
+Private Sub Form_Load()
+    HotList1.AddURL &quot;The News Babe Page&quot;, _
+                    &quot;http://www.well.com/user/jeffreyp/newsbabe1.html&quot;
+    HotList1.AddURL &quot;The Onion&quot;, &quot;http://www.theonion.com/&quot;
+    HotList1.AddURL &quot;Home Page&quot;, _
+                    &quot;http://www.well.com/user/jeffreyp/activex/&quot;
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+Then run the EXE project. When the project runs, double-click
+on one of the items in the hot list. Internet Explorer should
+launch, displaying the page you chose. Because it stores URLs
+in a collection, the HotList control should support a hypothetically
+unlimited number of URLs.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>If you're looking for more information on object-oriented programming in VB, you might want to check out Deborah Kurata's Doing Objects In Microsoft Visual Basic 4.0. This unique book covers not only the nuts-and-bolts of programming using classes in 
+Visual Basic, but the just-as-important design principles behind object-oriented programming that every programmer should know about.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="BuildingInterfacesUsingtheImplementsKeyword"><FONT SIZE=5 COLOR=#FF0000>
+Building Interfaces Using the Implements Keyword</FONT></A></H2>
+<P>
+An <I>interface</I>, as you know, is the set of properties and
+methods exposed by an object. You've learned that the interface
+of a programmable software component can't be changed for fear
+of losing backward compatibility with existing code. If you developed
+an enhanced version of a control or class that omitted support
+for a particular property or method, code based on that component
+would break.
+<P>
+So how, then, do you modify or enhance the interface of an existing
+component? One way is to build multiple implementations of an
+interface based on a type library or abstract class.
+<P>
+A <I>type library</I> is created with a utility called mktyplib,
+which is found in the ActiveX Software Development kit. (The mktyplib
+utility, like most of the ActiveX SDK, is targeted primarily at
+developers using C++.)
+<P>
+As a Visual Basic developer, you will probably find it easier
+to create abstract classes. An <I>abstract class</I> is a class
+module that contains declarations for the class's interface but
+no code to implement the interface elements. The particulars of
+how each interface element is implemented are left to the classes
+that implement the abstract class.
+<P>
+Once you have an abstract class in your project, you can refer
+to it in other classes by using the Implements keyword. For example,
+let's say you need to build a class to handle your ice cream factory.
+You know you're going to transport ice cream to customers in vehicles
+(ice cream trucks). There are different kinds of ice cream trucks,
+but all ice cream trucks have a number of common properties, such
+as size, carrying capacity, and number of wheels.
+<P>
+The Implements statement, which is new to Visual Basic 5.0, enables
+your object to exercise the object-oriented property of <I>polymorphism</I>.
+Polymorphism means that an object can be manipulated using more
+than one interface-a useful thing, because it means that you can
+build new interfaces for your objects without disturbing the old
+ones. Leaving old interfaces in place means that new versions
+of your object won't break the old versions.
+<P>
+In this example, you'll build an abstract class to represent an
+ice cream truck, then build classes that implement the abstract
+class. This example will demonstrate how easy it is to write multiple
+interfaces to a single abstract class. To do this:
+<OL>
+<LI>Create a new EXE project. Add two class modules to the project.
+Name the first class ITruck and the second class SmallDeliveryTruck.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The letter &quot;I&quot; prefixing the name of an abstract interface class is an ActiveX convention; it's done this way to remind the programmer that this class is designed to provide an interface for other classes. You are free to call your classes 
+anything you want, but for this example we'll stick with the convention.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=2>
+<LI>Declare the extremely abbreviated interface of the ITruck
+class by entering the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Public Sub LoadTruck()
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=3>
+<LI>You're done with the ITruck class for now. Close the code
+window and open the code window for the SmallDeliveryTruck class.
+<LI>Use the Implements keyword to designate that this class is
+an implementation of the ITruck class. Do this by typing the following
+code into the SmallDeliveryTruck class's code window:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+Implements ITruck
+</PRE>
+</BLOCKQUOTE>
+<OL START=5>
+<LI>Next, you have to write the code to implement each element
+of the ITruck interface. The rule here is that you have to implement
+every element of the ITruck class, or Visual Basic will scold
+you and refuse to run your program. This should not be particularly
+difficult in this demonstration application, since ITruck has
+only one interface member, the LoadTruck method. Enter the following
+code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub ITruck_LoadTruck()
+    Debug.Print &quot;Truck Loaded.&quot;
+End Sub<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>This simplified example prints to the Immediate window when the LoadTruck method is called; your real-world implementation of the LoadTruck method would obviously include code that performed whatever processing that needed to be done to implement the 
+loading of a truck.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=6>
+<LI>Now that you've got an abstract class and an implementation
+of that class, you can take a stab at using the class in an application.
+Close the SmallDeliveryTruck class's code window and open the
+code window for Form1.
+<LI>In Form1's Load event, type the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Form_Load()
+    Dim MySmallTruck As New SmallDeliveryTruck
+    Dim TruckAtLoadingDock As ITruck
+
+    Set TruckAtLoadingDock = MySmallTruck
+    TruckAtLoadingDock.LoadTruck
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=8>
+<LI>Run the code. The LoadTruck event of the ITruck object is
+executed, displaying text in the Immediate window.
+</OL>
+<P>
+We're now at the point, finally, where you can begin to see the
+usefulness of multiple interfaces. Let's say that your ice cream
+factory has started using a new, larger kind of delivery truck.
+Your application must represent the new kind of truck with a class
+that is a new implementation of the ITruck interface. To do this:
+<OL>
+<LI>Add a new class module to your project. Call this class BigDeliveryTruck.
+<LI>Double-click on the class module to open its code window.
+<LI>In its code window, enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+Implements ITruck
+
+Private Sub ITruck_LoadTruck()
+    Beep
+    MsgBox &quot;Attention! The big truck is now being loaded!&quot;
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=4>
+<LI>Close the code window and return to the Load event of Form1.
+Modify the code so it looks like this:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Form_Load()
+    'Dim MySmallTruck As New SmallDeliveryTruck
+    Dim MyBigTruck As New BigDeliveryTruck
+    Dim TruckAtLoadingDock As ITruck
+    
+    Set TruckAtLoadingDock = MyBigTruck
+    TruckAtLoadingDock.LoadTruck
+    
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=5>
+<LI>Run the code. You can see that this time, when your procedure
+executes the code TruckAtLoadingDock.LoadTruck, the BigDeliveryTruck
+version of the LoadTruck method is executed.
+</OL>
+<P>
+You can see from this example that by implementing multiple interfaces
+of classes, you enable your application to grow and change without
+the intense level of grief that is usually associated with changing
+a software design after it has been initially written.
+<H2><A NAME="UsingFriendMethods"><FONT SIZE=5 COLOR=#FF0000>
+Using Friend Methods</FONT></A></H2>
+<P>
+You can declare methods as Friend so private data members can
+be accessed from other objects that know how to access them safely.
+Friend procedures are not an object-oriented concept as much as
+they are an exception to object-oriented rules. 
+<P>
+A Friend method can be executed by another procedure in the same
+class as the method, but not by a procedure outside the class.
+But unlike a private procedure (which also can't be accessed from
+outside the class in which it resides), a Friend procedure has
+access to data that exists in other objects of the same type.
+<P>
+For example, say you have a MidsizedDeliveryTruck class. Because
+your fleet of mid-sized delivery trucks has a special loader device
+that enables a driver to dump all the tubs of ice cream into another
+truck at the flick of a switch, you decide to write a software
+class to emulate the behavior of the mid-sized ice cream truck.
+To see an example of how you might write such a class, do the
+following:
+<OL>
+<LI>Create a new EXE project.
+<LI>Add a class module to the project. Name the class MidsizedDeliveryTruck.
+<LI>Type the following code in the class's code window:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+Private mlngTubs As Long
+
+Public Property Get Tubs() As Long
+    Tubs = mlngTubs
+End Property
+
+Public Property Let Tubs(ByVal lngNewValue As Long)
+    mlngTubs = lngNewValue
+End Property
+
+Public Sub SwapTubs(TargetTruck As MidsizedDeliveryTruck)
+    ' Takes all the tubs in the current
+    ' truck and moves them to a new truck.
+
+    If mlngTubs &gt; 0 Then
+        TargetTruck.Transfer mlngTubs, TargetTruck
+    End If
+
+End Sub
+
+Friend Sub Transfer(lngTubs As Long, Truck As MidsizedDeliveryTruck)
+    ' Can be called from another BigDeliveryTruck
+    ' object, but not from a form or another
+    ' type of object.
+
+    Debug.Print &quot;Transferred &quot; &amp; lngTubs &amp; &quot; tubs.&quot;
+    mlngTubs = 0
+    Truck.Tubs = lngTubs
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+In this code, the public subroutine SwapTubs (exposed as a method
+of the MidsizedDeliveryTruck class) performs validation only;
+it hands off the actual work of swapping tubs to the Friend procedure
+called Transfer. Transfer is not a publicly accessible method
+of this class; it can only be called from other procedures in
+the class.
+<P>
+The Transfer subroutine, meanwhile, takes responsiblity for setting
+the number of tubs in the current truck object to 0 while setting
+the number of tubs in the target truck object to the appropriate
+number. To see how this code works:
+<OL>
+<LI>Close the class and open Form1.
+<LI>In Form1's Load event, type the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Form_Load()
+    Dim RedTruck As New MidsizedDeliveryTruck
+    Dim BlueTruck As New MidsizedDeliveryTruck
+
+    RedTruck.Tubs = 20
+    RedTruck.SwapTubs BlueTruck
+    Debug.Print &quot;BlueTruck now has &quot; &amp; BlueTruck.Tubs &amp; &quot; tubs.&quot;
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=3>
+<LI>Run the code, then look at the Immediate window. You should
+be able to see that the SwapTubs method moved all the tubs from
+RedTruck to BlueTruck by means of the Friend subroutine Transfer.
+</OL>
+<P>
+Of course, instead of using a Friend procedure, you could instead
+place the code that performed the work of transferring tubs into
+the public SwapTubs method-or simply make the Transfer method
+public instead of a Friend procedure. But this would mean that
+the user of this class would have more control over exactly how
+many tubs were transferred, something you might want to prohibit.
+You can see that by using a Friend procedure in this way, you
+get more control over the contexts in which your code can be used.
+<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Although we used a class module in this example for the sake of simplicity, you can use Friend procedures in your ActiveX control projects as well. There is no syntactical difference between Friend procedures in classes and ActiveX control projects.</I>
+
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+In this chapter, we covered the object-oriented features of Visual
+Basic 5.0. We discussed object-oriented programming in conceptual
+terms, then demonstrated them with an ActiveX project that contained
+its own object model created with Visual Basic classes.
+<P>
+In the next chapter, we'll take a look at some of the database
+features of Visual Basic 5.0 and demonstrate how you can make
+your ActiveX control project database-aware.
+<HR>
+
+<CENTER><P><A HREF="ch15.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch17.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

@@ -1,0 +1,495 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 2 -- Control Basics</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;2</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Control Basics</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#IsanActiveXControl">
+Is an ActiveX Control?</A>
+<UL>
+<LI><A HREF="#DifferencesbetweenOCXControlsandActiveXControls">
+Differences between OCX Controls and ActiveX Controls</A>
+<LI><A HREF="#ContextsinWhichYouCanUseActiveXControls">
+Contexts in Which You Can Use ActiveX Controls</A>
+</UL>
+<LI><A HREF="#YourControlsInterface">
+Your Control's Interface</A>
+<UL>
+<LI><A HREF="#Properties">
+Properties</A>
+<LI><A HREF="#Events">
+Events</A>
+<LI><A HREF="#Methods">
+Methods</A>
+</UL>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+This chapter covers the basic concepts of controls: events, properties, and
+methods.
+<P>
+If you're an intermediate to advanced Visual Basic programmer,
+you might be able to get away with just skimming this chapter,
+since you already have a handle on how VB works. However, this
+chapter will cover a few new topics, such as the difference between
+OCX and ActiveX components and the various contexts in which you
+can use ActiveX controls. In addition, this chapter outlines how
+the old, familiar topics pertain to control creation. This chapter
+is also something you can show your boss when she asks you what
+this kooky ActiveX thing is all about.
+<H2><A NAME="IsanActiveXControl"><FONT SIZE=5 COLOR=#FF0000>
+Is an ActiveX Control?</FONT></A></H2>
+<P>
+In the beginning, there were VBXes. And Visual Basic programmers
+saw them, and said, &quot;Yea, verily, we can use these to provide
+plug-in programmable objects for our Visual Basic applications.
+Yah-hoo.&quot;
+<P>
+The VBX, or Visual Basic Extension, was the first type of programmable
+component used in Visual Basic. An entire industry of small software
+development companies sprung up around this specification. Visual
+Basic programmers were overjoyed because they could beg, borrow,
+steal, or (in most cases) buy custom controls that they could
+then drop into their projects.
+<P>
+But, as always happens, things started changing. Visual Basic
+4.0 came out, the 32&#173;bit world began to take over, and Microsoft
+re-architected VBXes for the 32-bit world, renaming them OCXes.
+Later, when the Internet came along, they repositioned them again,
+renamed them ActiveX controls, and gave developers the ability
+to embed them in Web pages.
+<P>
+VBX, OCX, ActiveX-it's all essentially the same alphabet soup.
+However, there are a few subtle differences. Briefly, the differences
+are:
+<UL>
+<LI>VBX is a 16-bit software component generally usable under
+16-bit versions of Visual Basic.
+<LI>OCX is a 32-bit software component usable under Visual Basic
+4.0 and later, as well as some other development environments,
+such as Visual C++, Microsoft Access, and Borland Delphi.
+<LI>An ActiveX<I> </I>component is also a 32-bit software component
+usable under in the same contexts as an OCX control, but also
+usable in Microsoft Internet Explorer 3.0. (As well as any other
+Web browser that might hypothetically support ActiveX, such as
+Netscape Navigator-more on that later.)
+</UL>
+<P>
+There's more to it than that, but these are good working definitions
+if you're just trying to get a handle on the evolution of custom
+controls. In the next few sections of this chapter we'll go a
+little bit more into the details of what an ActiveX control is
+and how ActiveX controls relate to other component technologies,
+past and present.
+<H3><A NAME="DifferencesbetweenOCXControlsandActiveXControls">
+Differences between OCX Controls and ActiveX Controls</A></H3>
+<P>
+Although there are enough OCX and ActiveX to make some people
+think that an ActiveX control is just an OCX with a name that
+can be trademarked, there are actually some important differences.
+Every ActiveX control is also an OCX, although not every OCX is
+an ActiveX control.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Many of the enhancements in the ActiveX architecture are under the hood, shielded, like so much basic Windows API technology, from the Visual Basic developer. For this reason, it's easy for a VB programmer to think of an ActiveX control as nothing more 
+than an OCX with a fancy name. If you want the complete story-perhaps more complete than you'd ever want-on the basic technology behind ActiveX, check out the ActiveX Software Development Kit (SDK). This is a very detailed, very technical set of 
+specifications, descriptive documents and code examples, mostly aimed at C++ programmers. The PC version of the ActiveX SDK is on the Microsoft Web site at <A HREF="http://www.microsoft">http://www.microsoft</A> .com/intdev/sdk/. The Macintosh version of 
+the ActiveX SDK is located at <A HREF="http://www.microsoft.com/intdev/sdk/mac/">http://www.microsoft.com/intdev/sdk/mac/</A></I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H4>ActiveX Controls Are Light</H4>
+<P>
+ActiveX controls are supposed to be lighter (smaller, faster,
+less greasy) than OCX controls. This is to facilitate downloading
+them over networks and the Internet. But there's no hard-and-fast
+rule that says that ActiveX controls <I>have</I> to be lighter
+than their OCX progenitors. In fact, creating an ActiveX control
+using Visual Basic forces you to distribute a fairly large file:
+the Visual Basic virtual machine.
+<P>
+Fortunately, users only need to get this file the first time they
+install or download a file using Visual Basic. For more information
+on this, see <A HREF="ch12.htm" >Chapter 12</A>, &quot;Distributing Your Control.&quot;
+<H4>ActiveX Works with the Internet</H4>
+<P>
+ActiveX controls designed to be used on the Internet in the context
+of a Web browser are not supposed to have unrestricted access
+to things like the user's file system or system registry. You
+have the ability to designate whether an ActiveX control you create
+meets this requirement. If you don't do this, users will receive
+a warning message from the browser when encountering your control
+on a Web page.
+<P>
+This is not to say that ActiveX controls can't<B> </B>perform
+file input/output. It doesn't even mean that ActiveX controls
+destined for use on the Internet can't perform file input/output.
+It just means that in order to deploy your controls on the Net,
+you need to spend a little more time considering all the things
+a malicious or incompetent Web page designer might do with your
+control.
+<P>
+To denote that a control is permissible for use on the Net, you
+can mark the control you develop as <I>script safe</I><B> </B>(meaning
+there's nothing anyone can do with the control in a script that
+will make it do bad things to a person's computer) and/or <I>initialization
+safe</I> (which means there are no parameters you can pass to
+the control that will cause it to do bad things to a person's
+computer).
+<P>
+For more information on script safety and initialization safety,
+see <A HREF="ch13.htm" >Chapter 13</A>, &quot;Using Your Control on the Web.&quot;
+<H4>ActiveX Is Multiplatform, Sorta</H4>
+<P>
+As of this writing, the ActiveX SDK (the collection of documents
+and code that enables C programmers to develop ActiveX components)
+is available for Windows and the Macintosh. Microsoft has also
+announced UNIX support for ActiveX, slated to arrive in 1997.
+<P>
+As of this writing, Microsoft had just released a beta of Internet
+Explorer 3.0 for the Macintosh. This version of Internet Explorer
+is supposed to support ActiveX controls-eventually. It may very
+well support ActiveX by the time you read this.
+<P>
+There is also a beta of Microsoft Internet Explorer 3.0 out for
+16-bit Windows (i.e., Windows 3.1). This version does not support
+ActiveX controls, which would make sense, since ActiveX is a 32-bit
+thing.
+<H3><A NAME="ContextsinWhichYouCanUseActiveXControls">
+Contexts in Which You Can Use ActiveX Controls</A></H3>
+<P>
+It's important to understand all the contexts in which your control
+might be used, for testing as well as marketing purposes. From
+the testing perspective, if your ActiveX control works fine in
+Visual Basic 4.0 but blows up in Microsoft Access 95, you obviously
+have a problem. From the marketing perspective, if you're creating
+a commercial control, your market increases if you can state confidently
+that your control will work in all of the applications and development
+environments that support ActiveX.
+<P>
+As of this writing, you can use ActiveX controls in these contexts:
+<UL>
+<LI>Microsoft Visual Basic 4.0
+<LI>Microsoft Visual C++
+<LI>Microsoft Visual Basic 5.0 
+<LI>You can use ActiveX controls in all editions of Visual Basic
+5.0, including the Control Creation Edition (see <A HREF="ch8.htm" >Chapter 8</A> &quot;Constituent
+Controls,&quot; for more on this).
+<LI>Microsoft Access 2.0 supports 16- and 32-bit OCX controls,
+although with less robustness than you'd probably like. (I consider
+myself to be pretty handy with Access, yet I was never able to
+get Access 2.0 to do anything meaningful with OCXes, and it wasn't
+for lack of trying.) The 16-bit OCX is pretty much an orphan technology
+at this point.
+<LI>Microsoft Access 95. You can embed ActiveX controls on forms
+and program them using Access's programming language, Access Visual
+Basic for Applications. Support for custom controls is much more
+robust than under Access 2.0.
+</UL>
+<P>
+For Access power-users, there are several good books with material
+on using OCXes and ActiveX controls. There's <I>Access 97 Power
+Programming</I>, by F. Scott Barker, Que, 1996. There's also <I>Access
+97 Unleashed</I>, by Dwayne Gifford et al., Sams, 1996. The previous
+editions of both of these books talk about OCX (or OLE). Finally,
+there's <I>Mastering Access 97 Development</I>, by Alison Balter,
+from Sams, 1997. 
+<UL>
+<LI>Microsoft Internet Explorer 3.0 for Windows 95 and Windows
+NT 4.0. You can use the VBScript or JavaScript languages to manipulate
+ActiveX controls in an HTML Web page. See <A HREF="ch13.htm" >Chapter 13</A>, &quot;Deploying
+Your Control On The Web,&quot; for more information on how to
+do this.
+<LI>Microsoft Visual FoxPro 3.0 
+<LI>Microsoft Visual FoxPro 5.0. A good reference is <I>Special
+Edition Using Visual FoxPro</I>, by Michael Antonovich, from Que,
+1996. 
+</UL>
+<P>
+In the future, you will be able to use ActiveX controls in these
+contexts:
+<UL>
+<LI>Microsoft Office 97. Microsoft has incorporated the Visual
+Basic for Applications (VBA) 5.0 engine in Microsoft Office applications
+such as Access, Powerpoint, and Excel.
+<LI>Third-party products containing VBA 5.0. Because Microsoft
+is licensing VBA 5.0 to other software development companies,
+it's likely that you'll be able to use ActiveX controls in their
+products, too. For example, the graphics application, Visio, which
+has traditionally been very close in following Microsoft's OLE
+initiatives, is one of the products slated to support VBA 5.0.
+(The version of Visio containing VBA 5.0 may have been released
+by the time you read this.)
+<LI>Microsoft Internet Explorer 3.0 for Windows 3.1. Microsoft
+has stated that the 16-bit version of Microsoft Internet Explorer
+will support ActiveX in some form, possibly by the time you read
+this.
+<LI>Microsoft Internet Explorer 3.0 for the Macintosh. This product
+is in beta as of this writing; it is scheduled to be completed
+in 1997.
+<LI>Microsoft Internet Explorer 3.0 for UNIX. This product is
+supposed to be released in mid-1997.
+<LI>Netscape Navigator. Netscape has announced that they will
+include support for ActiveX controls in a future product, although
+when this product will appear and what form it will take is anybody's
+guess. You are supposed to be able to use ActiveX controls with
+a Netscape browser using a plug-in called ScriptActive, produced
+by NCompass Laboratories (<A HREF="http://www.ncompasslabs.com">http://www.ncompasslabs.com</A>).
+</UL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>It seems to me that using a Netscape plug-in to view ActiveX content is a little like standing in line to breathe air. Just download MS Internet Explorer, for Pete's sake! NCompass does have a cool line of ActiveX controls, though, so their site is 
+worth checking out.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>What Is a User?</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+In traditional software development, the person writing the code is the developer and the person using the software is the user. But in the world of component development, while you're still the developer, your user is actually another developer. Say you 
+use Visual Basic Control Creation Edition to create WhizzyWidgets, an add-in ActiveX control. Later, Jill Programmer incorporates WhizzyWidgets into her magnum opus, CowWare 1.0, an automated dairy farm management system, written in Visual Basic. Jill then 
+sells a copy of CowWare 1.0 to Farmer Brown.</BLOCKQUOTE>
+<BLOCKQUOTE>
+Now then. You are the ActiveX control developer. Jill is the EXE developer. However, because she uses the ActiveX component you developed, from your perspective, Jill is also a user. Farmer Brown is nothing to you, but to Jill, he's a user.</BLOCKQUOTE>
+<BLOCKQUOTE>
+To avoid this confusion, this book will use the term user as shorthand to mean &quot;the user of the ActiveX control you develop.&quot; When and if I talk about Farmer Brown and it's not obvious what I'm talking about, I'll refer to him as the end user. 
+And if I need to refer to Jill Programmer as distinct from Farmer Brown, end user, I'll use the term &quot;programmer.&quot;</BLOCKQUOTE>
+<BLOCKQUOTE>
+A similar terminology problem arises when you talk about an ActiveX control's interface. To most people, an interface is the same as a graphical user interface-that is, the part of your application the user sees. But from a programming perspective, the 
+interface of your control is the set of properties, events, and methods that can be accessed. In this book, when I refer to your control's interface, I'm talking about its properties and methods. When I specifically mean graphical user interface, I'll use 
+that term unless I'm obviously talking about a control interface.</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H2><A NAME="YourControlsInterface"><FONT SIZE=5 COLOR=#FF0000>
+Your Control's Interface</FONT></A></H2>
+<P>
+The interface of a control isn't just the graphical user interface.
+To a developer, the word interface means <I>programming interface</I>.
+A programming interface is the set of programming procedures used
+to gain access to an object's features. In the ActiveX world,
+a control's programming interface is comprised of properties,
+methods, and events.
+<H3><A NAME="Properties">
+Properties</A></H3>
+<P>
+A <I>property</I> can be defined as any element of an object that
+can be altered, either directly (through code) or indirectly (through
+the actions of an end user). Properties of controls tend to be
+persistent throughout the lifetime of an application. Unlike variables,
+which persist only for the lifetime of the procedure or module
+in which they are declared, properties don't change unless they're
+explicitly altered.
+<P>
+Consider a command button. A command button is a control. Because
+it is a Visual Basic control, it is also a type of object. This
+object has such properties as Width, Height, and Caption.
+<P>
+Every control in Visual Basic belongs to a <I>class</I>, a basic
+template from which the control is derived. The class of a command
+button is called CommandButton; the class of picture is the PictureBox
+class, and the class of a form is called Form.. A class, then,
+is like a cake mold, and the individual controls you create in
+your Visual Basic projects are like individual servings of cake
+created with the same mold. 
+<P>
+They may not have the exact same properties, but they were all
+created from the same mold.
+<P>
+You use Visual Basic 5.0 to create your own custom classes of
+controls, which users can then <I>instantiate </I>in their projects.
+Instantiating a control means that you've taken a control class
+(such as CommandButton) and created an instance of a control from
+it. So when you get right down to it, you're not creating controls,
+but rather, you're developing control classes. These distinctions
+may seem nit-picky now, but it helps to get them straight early
+on because they can get a bit tricky later.
+<H4>Programming Properties</H4>
+<P>
+Once a control is instantiated in a project, you can alter its
+properties using code that looks like this:
+<BLOCKQUOTE>
+<PRE>
+Command1.Caption = &quot;Click Me!&quot;
+</PRE>
+</BLOCKQUOTE>
+<P>
+If you are developing a new type of command button that plays
+a sound every time an end user clicks it (as we'll do in Chapter
+11, &quot;Making Windows API and DLL Calls&quot;), you can add
+a few new properties pertaining to the sound. These could include
+a Sound or SoundFile property, to denote the name of the sound
+file to play when the user clicks the button. You might even add
+a few more properties to govern the manner in which the sound
+should be played.
+<H4>Implementing Property Set, Property Let, and Property Get
+</H4>
+<P>
+Control creation in Visual Basic gives you the freedom to implement
+any Visual Basic code as a property in your control. You can implement
+properties in your control by using the <I>Property Set</I>, <I>Property
+Let</I>, and <I>Property Get</I> statements.
+<P>
+A Property Set statement is run when a user assigns an object
+to a property of your control. The Picture property of a PictureBox
+control, for example, is assigned using a Property Set.
+<P>
+A Property Let statement is executed when a user assigns a value
+to a property of your control.
+<P>
+A Property Get statement is run when a user reads a property of
+your control. For example, consider the code:
+<BLOCKQUOTE>
+<PRE>
+Sub StoreStatus()
+  Dim strStatus As String
+  strStatus = ctlYourFunControl.Text
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+Whenever the user assigns the variable strStatus to the Text property
+of ctlYourFunControl, the Property Get procedure of YourFunControl
+is executed. The user doesn't have access to this function, of
+course-it's compiled into the ActiveX control.
+<P>
+Now consider what happens when a value is assigned to a property,
+as in the following code:
+<BLOCKQUOTE>
+<PRE>
+Sub GetCaption()
+  ctlYourFunControl.Text = &quot;3.14159&quot;
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+The Property Let procedure of YourFunControl is executed when
+the control's Text value is assigned. The Property Let would then
+ensure that the value you assigned was stored in a variable. At
+this time, the Property Let could also validate or otherwise manipulate
+the value the user assigned to it.
+<P>
+For more information on how these statements work, see Chapter
+4, &quot;Control Properties.&quot;
+<H3><A NAME="Events">
+Events</A></H3>
+<P>
+An <I>event</I> can be defined as something that happens during
+the lifetime of your application. A user clicking a command button
+is an example of an event. Examples of other events include a
+database validation, the application loading or shutting down,
+and a text box receiving input from a user. 
+<P>
+Every event can be associated with an piece of code, called an
+<I>event procedure</I>. Visual Basic programs are said to be <I>event-driven</I>,
+because the code that drives their functionality, particularly
+those functions that are bound to the graphical user interface,
+tend to be triggered by events. Accordingly, one measure of the
+robustness of your control is the number of events that can be
+triggered.
+<P>
+You implement events in your control by using the Event statement.
+When a procedure needs to trigger an event, it does so by executing
+the RaiseEvent statement.
+<P>
+For more information on how to implement events in your control,
+see <A HREF="ch5.htm" >Chapter 5</A> &quot;Handling and Raising Events.&quot;
+<H3><A NAME="Methods">
+Methods</A></H3>
+<P>
+<I>Methods</I> are the way a programmer causes your control to
+take an action or perform work. There is a thin syntactical line
+between properties and methods. If you think of a property as
+an adjective, think of a method as a verb.
+<P>
+Consider the Visible property, a standard property of most controls.
+This property could be implemented as a Hide method. But you wouldn't
+want to do this, because Visual Basic programmers expect controls
+to have a Visible property rather than a Hide method.
+<P>
+Other issues to consider are conciseness (that is, how difficult
+is it for a user to call your function) and maintainability (how
+difficult is it for you to understand and manage what's going
+on with your control). For example, it might seem more concise
+to write:
+<BLOCKQUOTE>
+<PRE>
+MyCommandButton.Visible = False
+</PRE>
+</BLOCKQUOTE>
+<P>
+rather than:
+<BLOCKQUOTE>
+<PRE>
+MyCommandButton.Hide
+</PRE>
+</BLOCKQUOTE>
+<P>
+At least, you'd think this would be more concise. But if you implement
+the Visible property of a control as a Hide method, you'd then
+have to implement a Show method as well. So perhaps it's not so
+concise after all.
+<P>
+In many cases it's a judgment call as to whether you implement
+a feature of your control as a property or a method. The rule
+I use goes along with the &quot;property as noun, method as verb&quot;
+analogy. If the feature I'm working on seems more verb-ish, I'll
+implement it as a method. If it seems more like a adjective, it
+goes in as a property.
+<P>
+I also pay attention to how other controls implement properties
+and methods, particularly inherent Windows controls. If every
+single Windows control implements a Visible property rather than
+a Hide method, then you probably want your control to have a Visible
+property too.
+<P>
+You implement methods in your control by using the Event statement.
+For more information on how methods work, see <A HREF="ch6.htm" >Chapter 6</A> &quot;Control
+Methods.&quot;
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+This chapter discussed the history of the ActiveX control technology
+and how it fits into Visual Basic and other development environments,
+past, present, and future. We also reviewed the basic concepts
+behind controls, and how those concepts change when your perspective
+goes from control user<I> </I>to control developer.
+<P>
+In <A HREF="ch3.htm" >Chapter 3</A> we'll put these concepts to work, building a basic
+control step by step.
+<HR>
+
+<CENTER><P><A HREF="ch1.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch3.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

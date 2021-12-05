@@ -1,0 +1,858 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 11 -- Making Windows API and DLL Calls</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;11</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Making Windows API and DLL Calls</FONT>
+</H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#DeclaringDLLCalls">
+Declaring DLL Calls</A>
+<LI><A HREF="#SampleProjectTheSoundButtonControl">
+Sample Project: The SoundButton Control</A>
+<UL>
+<LI><A HREF="#UsingResources">
+Using Resources</A>
+<LI><A HREF="#CreatingaResourceScript">
+Creating a Resource Script</A>
+<LI><A HREF="#CompilingYourResourceFile">
+Compiling Your Resource File</A>
+<LI><A HREF="#BeyondClicksnd">
+Beyond Clicksnd</A>
+</UL>
+<LI><A HREF="#SampleProjectTheMenuPicControl">
+Sample Project: The MenuPic Control</A>
+<UL>
+<LI><A HREF="#DesigningtheMenuPicControl">
+Designing the MenuPic Control</A>
+<LI><A HREF="#HowChangeMenuWorks">
+How ChangeMenu Works</A>
+<LI><A HREF="#ImplementingMenuPicsProperties">
+Implementing MenuPic's Properties</A>
+<LI><A HREF="#CallingChangeMenu">
+Calling ChangeMenu</A>
+<LI><A HREF="#TestingMenuPic">
+Testing MenuPic</A>
+</UL>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+Visual Basic&nbsp;is easy to learn because it takes difficult
+Windows concepts and reduces them to easy-to-understand abstractions.
+Similarly, ActiveX controls are easy to program because they wrap
+program complexity in the easy-to-understand Visual Basic paradigm
+of properties, events, and methods.
+<P>
+There is a price to pay for this simplification, though. Using
+Visual Basic represents a trade-off between ease of use and programming
+power. Fortunately, Visual Basic enables you to delve deeper into
+the world of Windows through the use of the Windows Application
+Programming Interface, or API.
+<P>
+Most of the topics surrounding low-level programming with the
+Windows API are beyond the scope of this book. The quintessential
+reference to the Windows API for Visual Basic users clocked in
+at over 1500 pages in its last incarnation. But hopefully this
+chapter will point you in the right direction and give you an
+idea of what's possible outside the realm of plain vanilla Visual
+Basic.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>If you've used Visual Basic to make calls to the Windows API before, congratulations. You'll have a leg up on this chapter. But whether you've used the Windows API or not, I have tried to include examples in this chapter that will be meaningful and 
+relevant to control creation.</I>
+</BLOCKQUOTE>
+<BLOCKQUOTE>
+<I>For VB programmers, the best reference to the Windows API is Daniel Appleman's Visual Basic Programmer's Guide to the Win32 API (Ziff-Davis Press, 1996). If you ever plan on doing serious work with Visual Basic, you need this book. (There is also a 
+16-bit version of the book if you're still working with 16-bit Windows.)</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H2><A NAME="DeclaringDLLCalls"><FONT SIZE=5 COLOR=#FF0000>
+Declaring DLL Calls</FONT></A></H2>
+<P>
+Anything that happens in Windows ultimately takes place as a result
+of a program calling an element of the Windows API. 
+<P>
+The Windows API is comprised of a number of <I>dynamic-link libraries</I>,
+or DLLs. In 32-bit Windows, the core Windows API DLLs are:
+<UL>
+<LI>gdi32.dll-The graphic display interface API
+<LI>kernel32.dll-The API that handles low-level stuff like memory
+and task management
+<LI>user32.dll-The API that handles windows and messages (some
+of which are accessible to the Visual Basic programmer as events)
+</UL>
+<P>
+There are a few other APIs, and more are being added all the time
+to handle new operating system extensions such as e-mail, networking,
+and new types of hardware peripherals.
+<P>
+In order to use a Windows API procedure in Visual Basic, you must
+first declare it. API calls are declared in the Declarations section
+of a module. The generic syntax of an API call looks like this:
+<BLOCKQUOTE>
+<PRE>
+Declare Function TheAPICall &quot;gdi32&quot; (param1 As String) As Long
+</PRE>
+</BLOCKQUOTE>
+<P>
+This made-up example is a declaration to an API function called
+TheAPICall. This function exists in the file gdi.dll. It is a
+function that returns a long integer. And it takes one parameter,
+called param1, a String.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>By convention, you do not spell out the entire name of the DLL in which the API is contained for Windows system APIs. However, for calls to functions in non-system DLLs, you usually will spell out the full DLL filename and, optionally, a directory path 
+to the DLL. By the way, there's no difference between calling a Windows API DLL and calling a DLL that is not a part of the Windows DLL. The Declare<B> </B>statement works for both types of calls.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+One thing you notice fairly quickly about Windows DLL calls is
+that they're usually quite strongly typed; that is, all the parameters
+and function calls have data types. This is because the language
+they're written in (C or C++) is itself strongly typed. Additionally,
+there is no such thing as a variant in the world of DLLs; the
+variant is a Visual Basic animal.
+<P>
+You want to double- and triple-check your function declarations
+when placing calls to DLLs in Visual Basic. Mistakes in the declaration
+of API calls is one of the fastest ways to crash your program.
+<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The wise Visual Basic programmer almost never types API function declarations in directly. Instead copy and paste them in as needed from a reference library of DLL calls. Windows 4.0 contains a utility called API Viewer that enables you to list, view, 
+and copy Visual Basic declarations for Windows API calls. The beta version of Visual Basic 5.0 used for this book did not contain a new version of this utility, but it's a safe bet that Microsoft will include it in the final release. There are also 
+third-party component libraries that expose the Windows API in an object-oriented fashion. I haven't used any of these extensively, so I can't recommend any of them, but if you're interested, you might want to check out Sheridan Software's WinAPI Oblets 
+(<A HREF="http://www.shersoft.com/products/oblets/obgen.htm">http://www.shersoft.com/products/oblets/obgen.htm</A>) or Desaware's Spyworks (<A HREF="http://www.desaware.com/desaware/spyhome.htm">http://www.desaware.com/desaware/spyhome.htm</A>). Desaware, 
+by the way, is Daniel Appleman's company; he's the guy who wrote the tremendous book on using Windows API calls in Visual Basic that I plugged earlier in this chapter.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H2><A NAME="SampleProjectTheSoundButtonControl"><FONT SIZE=5 COLOR=#FF0000>
+Sample Project: The SoundButton Control</FONT></A></H2>
+<P>
+To get you started on a project that makes a simple API call,
+you'll create an enhanced command button control. The button you
+create will make a clicking sound (using Windows' multimedia API)
+whenever it is clicked. To do this:
+<OL>
+<LI>Create a new control project. On the control designer, add
+a single command button control. Set the command button's Top
+and Left properties to zero.
+<LI>In the UserControl's Properties window, change the name of
+the UserControl object to SoundButton.
+<LI>Double-click on the UserControl<B> </B>to open a code window.
+The first code you'll enter will be the API call to play a sound.
+This code requires a few constant declarations as well. Enter
+the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Const SND_SYNC = &amp;H0
+Const SND_ASYNC = &amp;H1
+Const SND_NODEFAULT = &amp;H2
+Const SND_LOOP = &amp;H8
+Const SND_NOSTOP = &amp;H10
+
+Private Declare Function sndPlaySound Lib &quot;WINMM.DLL&quot; _ 
+    Alias &quot;sndPlaySoundA&quot; _
+    (ByVal lpszSoundName As String, ByVal uFlags As Long) As Long
+</PRE>
+</BLOCKQUOTE>
+<OL START=4>
+<LI>Add a Click event by placing the following declaration in
+the Declarations section of the UserControl code window:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Public Event Click()
+</PRE>
+</BLOCKQUOTE>
+<OL START=5>
+<LI>Make the Click<B> </B>event the default event for your control
+by selecting the menu command Tools, Procedure Attributes. Select
+the Click event from the Name combo box, then click on Advanced.
+Activate the User<B> </B>Interface<B> </B>Default checkbox. The
+dialog box will look like Figure 11.1.<BR>
+<A HREF="f11-1.gif"><B>Figure 11.1 :</B> <I>Procedure Attributes screen</I>.</A>
+<P>
+<LI>Click on OK.
+<LI>Next, enter the code that will play the sound whenever the
+button is clicked. Be sure to replace the filename c:\windows\clicksnd.wav
+with the correct path to the file clicksnd.wav on the CD-ROM that
+accompanies this book.
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Command1_Click()
+SoundName$ = &quot;c:\windows\clicksnd.wav&quot;
+   wFlags% = SND_ASYNC Or SND_NODEFAULT
+   x% = sndPlaySound(SoundName$, wFlags%)
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=8>
+<LI>Finally, add some standard code to handle resizing and the
+control's Caption<B> </B>property.
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_InitProperties()
+    Caption = Extender.Name
+End Sub
+
+Public Property Get Caption() As String
+    Caption = Command1.Caption
+End Property
+
+Public Property Let Caption(ByVal NewCaption As String)
+    Command1.Caption = NewCaption
+End Property
+
+Private Sub UserControl_Resize()
+    Command1.Width = Width
+    Command1.Height = Height
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+To test the enhanced button control, close the designer and place
+an instance of the control on an EXE project form. Run the EXE
+project, then click the button. You should be able to hear a clicking
+sound each time you click the button (assuming your PC has a sound
+card installed).<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The clicking sound, incidentally, was made by me. I did it by clucking into a microphone. I'm a master of the stupid sound effect. Impressed? I knew you would be.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="UsingResources">
+Using Resources</A></H3>
+<P>
+You may find it useful to include <I>resource files </I>along
+with your control. A resource file is a file containing one or
+more <I>resources</I><FONT FACE="Times">-</FONT>a piece of data
+that is compiled along with your control or VB application. A
+resource can be a string, a bitmap, a sound file<FONT FACE="Times">-</FONT>nearly
+any kind of data.
+<P>
+Because it requires a sound file to work properly, the SoundButton
+control is a prime candidate for the use of a resource file. If
+the .WAV file it uses for its click sound is ever moved or deleted,
+the control will bite the dust. Including the sound as a resource,
+rather than a file, means that it will be far less likely that
+the control will fail to make its pleasant, soothing click sound
+each time it is clicked.
+<H4>Using the Resource Compiler</H4>
+<P>
+In order to provide a resource for use with your application,
+you must first compile it with a special utility called a <I>resource
+compiler</I>.
+<P>
+The full version of Visual Basic 4.0 contains a resource compiler,
+rc.exe. (It doesn't get copied to your hard disk when you install
+VB; it resides on the Visual Basic CD-ROM in the \tools\resource
+folder.) There are 16- and 32-bit versions of this compiler; make
+sure you use the 32-bit one when creating resources to be included
+in your ActiveX control.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>It's likely that rc.exe or a tool like it will be included with the full version of Visual Basic 5.0, although I can't tell you for sure whether that's the case, because as I write this, the full version of VB 5 hasn't been released yet. (By the way, 
+hello all you people in the future! How's the weather up there?) A resource compiler was not scheduled to be  included with the Control Creation Edition of VB5 as of this writing. However, the compiler that ships with Visual C++ is the exact same one that 
+ships with Visual Basic, so if you have access to VC++, you can use those and everything should work just peachy.</I>
+</BLOCKQUOTE>
+<BLOCKQUOTE>
+<I>Also note that resource files created by 16- and 32-bit compilers are different. This means that you won't be able to use resource files created in the resource compiler of the 16-bit version of Visual C++ in Visual Basic.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="CreatingaResourceScript">
+Creating a Resource Script</A></H3>
+<P>
+In order to compile a resource, you must have a script that describes
+what should go into the file. This file can be created in a text
+editor such as Notepad. The file can contain references to more
+than one resource, although this example only requires the sound
+file clicksnd.wav.
+<P>
+The resource file is on the CD-ROM that accompanies this book
+as clicksnd.rc. Here's what's in the file:
+<BLOCKQUOTE>
+<PRE>
+// clicksnd.rc
+// Jeffrey P. McManus (jeffreyp@sirius.com)
+// December 12, 1996
+
+// WAV resources
+
+CLICKSND     WAVE     DISCARDABLE     &quot;Clicksnd.wav&quot;
+</PRE>
+</BLOCKQUOTE>
+<P>
+The first few lines of the .RC file are comments, set off by double
+slashes. The last line of the file indicates which file to include
+in the compiled resource file. CLICKSND is the <I>resource ID</I>
+of the resource; it's what you'll later use to retrieve the resource
+from the compiled resource file in your program.
+<P>
+Although our example .RC file only contains one resource, you
+can add as many more resources as you want, as long as each one
+has its own description in the .RC file and no two resources have
+the same resource ID.
+<P>
+The next entry, WAVE, indicates that the file that's being included
+is a .WAV audio resource. If this resource were a string, you'd
+use the descriptor STRING.
+<P>
+DISCARDABLE indicates to the host application that it is OK to
+remove this resource from memory during the course of the program's
+execution.
+<P>
+Finally, Clicksnd.wav is the name of the sound file that is to
+be compiled into the resource file.
+<H3><A NAME="CompilingYourResourceFile">
+Compiling Your Resource File</A></H3>
+<P>
+Now that you have your sound file and your resource script set
+up, you need to compile it into a resource file. To do this:
+<OL>
+<LI>On the Windows taskbar, click on Start.
+<LI>On the taskbar menu, select Run.
+<LI>Type the path and filename to the 32-bit resource compiler,
+the switch -r, and the path and filename of your resource script.
+For example, if you're running the resource compiler directly
+from the Visual Basic CD-ROM and your system recognizes the CD-ROM
+as drive F:, the command line is:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+f:\tools\resource\rc32\rc.exe -r c:\resource\clicksnd.rc<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=569><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD WIDTH=569>
+<BLOCKQUOTE>
+<I>The file clicksnd.wav needs to be in the same folder as the resource script clicksnd.rc.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=4>
+<LI>Click on OK. A command prompt window briefly pops up, then
+disappears. A new file, Clicksnd.res, appears in the folder along
+with the resource script. This is the resource file you'll use
+in your control.
+</OL>
+<H4>Using the Resource in Your Control</H4>
+<P>
+To use the resource in your control, you must first add it to
+your control's project. To do this:
+<OL>
+<LI>In the Project Explorer, right-click on Project1.
+<LI>Project Explorer's context menu pops up. Click on Add, then
+click on Add File.
+<LI>The Add File dialog box appears. Select the file Clicksnd.res
+on the CD-ROM that accompanies this book (or the one you just
+compiled, if you followed the previous demonstration), then click
+on Open.
+<LI>The resource appears in the Project Explorer, as illustrated
+in Figure 11.2.<BR>
+<A HREF="f11-2.gif"><B>Figure 11.2 :</B> <I>Clicksnd.res in Project Explorer</I>.</A>
+</OL>
+<P>
+Next, you'll have to change the declaration you used for the API
+call sndPlaySound previously. This is because you're going to
+pass a byte array to it instead of a string (the name of the .WAV
+file on disk). So the parameter should be declared As Any instead
+of As String.
+<P>
+Additionally, you remove the ByVal before the SoundName because
+you're no longer passing the parameter by value; instead, you're
+passing a reference to the array that contains the actual data.
+(In the declaration, I changed the name of the parameter from
+SoundName to SoundData to reflect this.) The new version of the
+declaration should look like this:
+<BLOCKQUOTE>
+<PRE>
+Private Declare Function sndPlaySound _
+    Lib &quot;winmm&quot; Alias &quot;sndPlaySoundA&quot; _
+    (SoundData As Any, _
+    ByVal uFlags As Long) As Long
+</PRE>
+</BLOCKQUOTE>
+<P>
+Next you need to write code to access the sound file compiled
+in the resource file. To begin, you'll need to declare a variable
+to store it in. Type the following code in the Declarations section
+of the UserControl's code module:
+<BLOCKQUOTE>
+<PRE>
+' byte array for storing binary file
+
+Private bSound() As Byte
+</PRE>
+</BLOCKQUOTE>
+<P>
+The variable bSound is a byte array. The byte array stores the
+return value of the Visual Basic LoadResData function. LoadResData
+retrieves a binary resource from a compiled resource file and
+returns a byte array.
+<P>
+The reason bSound is declared at the module level is because it
+must not go out of scope before the sound is done playing. If
+the user chooses to play the sound asynchronously, the sound could
+go on for hours, long after the PlayRes procedure and all of its
+variables have gone out of scope.
+<P>
+Here's the code that actually plays the sound. The code belongs
+in the Click event of the constituent CommandButton in your control;
+you should delete or comment out the existing code before adding
+the new code. When you're done, the event procedure will look
+like this:
+<BLOCKQUOTE>
+<PRE>
+Private Sub Command1_Click()
+
+' ***** vastly inferior version
+'    SoundName$ = &quot;c:\windows\clicksnd.wav&quot;
+'    x% = sndPlaySound(SoundName$, wFlags%)
+' ***** end of vastly inferior version
+
+    bSound = LoadResData(&quot;Clicksnd&quot;, &quot;WAVE&quot;)
+    wFlags% = SND_NODEFAULT Or SND_SYNC Or SND_MEMORY
+
+    sndPlaySound bSound(0), wFlags%
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+Voila. If you run the EXE project test form and click, it should
+make the clicky sound just like it did before. But the difference
+is, this time the sound file does not have to exist on disk<FONT FACE="Times">-</FONT>it
+exists in your project, ready to be compiled into an EXE or OCX.
+The project no longer requires that the file clicksnd.wav exist
+on disk anywhere.
+<H3><A NAME="BeyondClicksnd">
+Beyond Clicksnd</A></H3>
+<P>
+There are a number of other uses for resource files beyond embedding
+a sound file in your application. You can use resources to store
+graphics, for example, although it might make more sense to store
+graphics in a PictureBox control, since Visual Basic has many
+features for handling graphics built into the language.
+<P>
+You can also use resource files to store strings. This makes particular
+sense in situations where your control must be <I>localized</I>,
+or translated into international languages. For more information
+on localization, see <A HREF="ch12.htm" >Chapter 12</A>, &quot;Distributing Your Control.&quot;
+<H2><A NAME="SampleProjectTheMenuPicControl"><FONT SIZE=5 COLOR=#FF0000>
+Sample Project: The MenuPic Control</FONT></A></H2>
+<P>
+The SoundButton control is a fairly simple demonstration of how
+to use a Windows API call to perform a task not normally available
+to a Visual Basic programmer. In this next section you'll create
+a control that makes use of several calls to the core Windows
+API.
+<P>
+The MenuPic<B> </B>control acts as a wrapper for a set of Windows
+API functions that control the drawing of menus. The purpose of
+the control is to replace a particular menu with a bitmap of your
+choice. This mimics the functionality of the menus in the new
+Visual Basic 5.0 IDE, which includes bitmaps that serve as a cue
+to toolbar buttons. The MenuPic control exposes three main properties:
+<UL>
+<LI>Picture, which is delegated to its single constituent PictureBox
+control
+<LI>Menu, a long integer that designates the menu you wish to
+change
+<LI>MenuItem, a long integer that designates the item in the menu
+you wish to change.
+</UL>
+<P>
+To use the MenuPic control, you place an instance of the control
+on a form that has a menu, then you set the control's Menu and
+MenuItem properties to tell it which menu to change. Finally,
+you assign a graphic to the control's Picture<B> </B>property.
+The existing menu item will be replaced by the graphic of your
+choice (both at design-time and at runtime).
+<H3><A NAME="DesigningtheMenuPicControl">
+Designing the MenuPic Control</A></H3>
+<P>
+The visual design of the MenuPic control consists of nothing more
+than a constituent PictureBox control, called Picture1. In order
+to make the control appear invisible at runtime, you set the UserControl's
+InvisibleAtRuntime property to True.
+<P>
+The MenuPic's Picture property is delegated to Picture1's Picture
+property; the picture stored in the PictureBox is assigned to
+the menu through an API call.
+<P>
+Once you've created the MenuPic control with its constituent PictureBox
+control, you can begin entering code. Begin by entering a code
+module to the project. Code modules are where you store global
+declarations (such as API declarations) that are accessible from
+any part of your project.
+<P>
+To add a code module to your project:
+<OL>
+<LI>In the Project Explorer, right-click on your control project.
+<LI>From the Context menu, select the menu command Add, Module.
+<LI>A code module is added to your project.
+<LI>In the Properties window, give this code module the name MenuAPIs.
+<LI>Double-click on the MenuAPIs module in the Project Explorer
+to open its code window.
+</OL>
+<P>
+You can now begin entering API call declarations in the MenuAPIs
+code window. Here are the API call declarations for the MenuPic
+project:
+<BLOCKQUOTE>
+<PRE>
+Public Const MF_BITMAP = &amp;H4
+Public Const MF_BYPOSITION = &amp;H400
+
+Declare Function GetMenu Lib &quot;user32&quot; (ByVal hwnd As Long) As Long
+Declare Function GetSubMenu Lib &quot;user32&quot; (ByVal hMenu As Long, _
+    ByVal nPos As Long) As Long
+Declare Function GetMenuItemID Lib &quot;user32&quot; (ByVal hMenu As Long, _
+    ByVal nPos As Long) As Long
+Declare Function ModifyMenuByNum Lib &quot;user32&quot; Alias &quot;ModifyMenuA&quot; _
+    (ByVal hMenu As Long, ByVal nPosition As Long, _
+    ByVal wFlags As Long, ByVal wIDNewItem As Long, _
+    ByVal lpstring As Long) As Long
+</PRE>
+</BLOCKQUOTE>
+<P>
+Here's a brief summary of what these API calls do:
+<UL>
+<LI>GetMenu gets a <I>handle</I> to a menu bar given a particular
+window. You can think of a handle as the internal name of an element
+of the window's interface. Windows, bitmaps, hardware devices,
+and menus, as well as other things, all have handles.
+<LI>GetSubMenu gets a handle to a particular menu in a menu bar
+(such as the File menu, for example). You make this API call after
+making the GetMenu call.
+<LI>GetMenuItemID returns the unique internal identification number
+of a <I>menu item</I>. (A menu item is one particular element
+in a menu; for example, the File<B> </B>menu is a <I>submenu</I>,
+and the File Print command is a menu item.) You need the menu
+item ID to make a change to the menu item.
+<LI>ModifyMenuByNum is the procedure that does most of the work.
+The function takes a menu item ID (as well as a number of other
+parameters) and modifies it, either changing its text, or, in
+the case of the MenuPic control, replacing it with a bitmap.
+</UL>
+<P>
+Because it has to be called from several places in the control,
+I put the menu-changing code into a private subroutine, called
+ChangeMenu. This code belongs in the UserControl's code window.
+Here is the code for the ChangeMenu subroutine:
+<BLOCKQUOTE>
+<PRE>
+Private Sub ChangeMenu()
+    If Picture1.Picture = 0 Then
+        'nothing to do yet
+        Exit Sub
+    End If
+    
+    Dim lngTopMenuHandle As Long
+    Dim lngSubMenuHandle As Long
+    Dim lngMenuID As Long
+    Dim result As Long
+
+    ' Get a handle to this form's top menu
+    lngTopMenuHandle = GetMenu(Extender.Parent.hwnd)
+
+    ' Get a handle to its submenu
+    ' Syntax: GetSubMenu(top_menu_handle, entry_position)
+    lngSubMenuHandle = GetSubMenu(lngTopMenuHandle, mlngMenu)
+
+    ' Gets the menu ID
+    ' Syntax: GetMenuItemID(menu_handle, entry_position)
+    lngMenuID = GetMenuItemID(lngSubMenuHandle, mlngMenuItem)
+
+    ' Stick the picture in the menu
+    ' Syntax: ModifyMenuBynum(menu_handle, entry_position, _
+'    flags, ID_new_item, string)
+result = ModifyMenuBynum(lngSubMenuHandle, mlngMenuItem, _
+                             MF_BITMAP Or MF_BYPOSITION, _
+                             lngMenuID, _
+                             Picture1.Picture)
+
+    Debug.Print &quot;ChangeMenu: Success: &quot; &amp; result
+
+End Sub<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>When you're writing subroutines like ChangeMenu, remember to make them private, rather than public. When you make a public subroutine in a UserControl, it is exposed to the user as a method of your control.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="HowChangeMenuWorks">
+How ChangeMenu Works</A></H3>
+<P>
+In order to get access to a menu item so the ModifyMenuByNum function
+can do its work, ChangeMenu has to do the following, in order:
+<OL>
+<LI>Get a handle to the form that the control resides on.
+<LI>Given that handle, get a handle to that form's menu bar.
+<LI>Given that handle, get a handle to the menu you want to alter.
+<LI>Given that handle, get the menu item ID of the menu item you
+want to alter.
+</OL>
+<P>
+You can see that the ChangeMenu procedure starts by getting the
+window handle of the control's parent by inspecting the HWnd property
+of the Extender's Parent object. This is a powerful trick that
+enables you to access properties of the form on which your control
+resides.
+<P>
+After ChangeMenu has retrieved the window handle of your control's
+parent form, it feeds it to the GetMenu API call. GetMenu returns
+the handle to the menu that resides on the form.
+<P>
+Once you've got a handle to the menu, you can feed that to the
+GetSubMenu API, which returns a handle to the individual menu.
+<P>
+You then feed GetSubMenu's return value to the GetMenuItemID API
+call, which gives you the ID number of the item in the submenu
+you're interested in messing with.
+<P>
+Finally you can do the actual work<FONT FACE="Times">-</FONT>calling
+the ModifyMenuByNum function to make the change to the menu.
+<P>
+Complicated, ain't it? Almost makes you wish there were an ActiveX
+control to encapsulate all these hairy function calls.
+<H3><A NAME="ImplementingMenuPicsProperties">
+Implementing MenuPic's Properties</A></H3>
+<P>
+The Menu and MenuItem properties are simple long integers that
+have no direct effect on the control's appearance (they serve
+only to supply parameters to the ModifyMenuByNum<B> </B>API call;
+there are no new concepts here, so they shouldn't require any
+explanation). 
+<P>
+To implement these properties, enter the following code into MenuPic's
+code window::
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+Private mlngMenu As Long
+Private mlngMenuItem As Long
+
+' The meat and potatoes
+Public Property Get Menu() As Long
+    Menu = mlngMenu
+End Property
+
+Public Property Let Menu(ByVal New_Menu As Long)
+    mlngMenu = New_Menu
+    PropertyChanged &quot;Menu&quot;<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>More Fun With Modifymenubynum</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+By the way, ModifyMenuByNum can be used to make other kinds of changes to menus, as well. For example, you can use it to change the text of a menu. But you probably wouldn't want to do that, and here's why: changes you make to menus using the Windows API 
+short-circuit the Visual Basic Menu object you normally use to create and manage menus in VB. </BLOCKQUOTE>
+<BLOCKQUOTE>
+To demonstrate this, create a menu with the caption Ringbo, then use the MenuPic control to assign the Photon Lock graphic to it. Then use the Immediate window to inspect the Caption property of the menu. You should be able to see that the caption is still 
+officially Ringbo. Watch out for this little anomaly when you start monkeying with menus in Visual Basic forms.</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<BLOCKQUOTE>
+<PRE>
+    ChangeMenu
+End Property
+
+Public Property Get MenuItem() As Long
+    MenuItem = mlngMenuItem
+End Property
+
+Public Property Let MenuItem(ByVal New_MenuItem As Long)
+    mlngMenuItem = New_MenuItem
+    PropertyChanged &quot;MenuItem&quot;
+    ChangeMenu
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+There are, of course, a number of additional enhancements you
+could make to this control. For example, making the user choose
+what menu to change by having them type in a number isn't the
+most elegant way of going about it. Ideally, you'd let the user
+pick from a list of available menus; this might be best done in
+a custom property sheet.
+<H3><A NAME="CallingChangeMenu">
+Calling ChangeMenu</A></H3>
+<P>
+You've already placed calls to ChangeMenu in the Property Let
+procedure. This causes the menu to change when the user assigns
+a Picture to the MenuPic property. However, ChangeMenu must also
+be called in a few other situations as well.
+<P>
+The &quot;normal&quot; time when the menu needs to be changed
+is when the application is first started. If you were programming
+this as a normal VB application, you might put the ChangeMenu
+code in the form's Load event. But since you're working with a
+UserControl instead of a form, you have to do it a little differently.
+<P>
+If you put a call to ChangeMenu in the UserControl's Paint event,
+the menu will be changed at design time. But because the control
+is invisible at runtime, it raises no Paint events then. The menu
+won't be changed at runtime. So you have a problem.
+<P>
+My solution to this problem was to take advantage of the fact
+that the UserControl's container undergoes a palette shift at
+the time the container application is run. You can trap this event
+by placing code into the AmbientChanged event of the UserControl.
+<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Using the AmbientChanged event in this way seems like an inelegant way to accomplish what you're trying to do with this control. There may very well be a better way to do it, but it worked reliably for me. Maybe a future enhancement to control creation 
+in Visual Basic will include a new UserControl event that will correspond more closely with the initialization of the container application.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+The code looks like this:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_Paint()
+    ' changes the menu at design time only
+    ChangeMenu
+End Sub
+
+Private Sub UserControl_AmbientChanged(PropertyName As String)
+    ' this is a hack, but it works.
+    If PropertyName = &quot;Palette&quot; Then
+        ChangeMenu
+    End If
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<H3><A NAME="TestingMenuPic">
+Testing MenuPic</A></H3>
+<P>
+To test the MenuPic control, do the following:
+<OL>
+<LI>Close its code window and its control designer.
+<LI>Open a test EXE project form. Name it frmMPTest.
+<LI>Create a menu for the form by using the menu editor. To open
+the menu editor, use the menu command Tools, Menu Editor, or use
+the keyboard shortcut Ctrl+E.
+<LI>The menu editor appears. Type in the name of the top-level
+menu, &amp;Weapons, and its name, mnuWeapon, then click Next.
+<LI>Click on the right-arrow button to indent the next entry into
+a submenu. Give this menu item the caption &amp;Photon Lock, and
+name it mnuPhotonLock. Click on Next.
+<LI>Give the next menu item the caption &amp;Fire Photons and
+the name mnuFirePhotons. The menu editor should look like Figure
+11.3.<BR>
+<A HREF="f11-3.gif"><B>Figure 11.3 :</B> <I>The completed Menu Editor window</I>.</A>
+<p>
+<LI>Click on OK to close the menu editor. The Weapons menu appears
+on the form.
+<LI>Place a MenuPic control on the form.
+<LI>Assign the graphic photon.bmp (from the CD-ROM that accompanies
+this book) to the MenuPic control's Picture property. You can
+place the control anywhere on the form that's convenient, since
+it will be invisible at runtime. The form should look like Figure
+11.4.<BR>
+<A HREF="f11-4.gif"><B>Figure 11.4 :</B> <I>Form with MenuPic control</I>.</A>
+<p>
+<LI>By default, MenuPic1's Menu property is set to 0 and its MenuItem
+property is set to 0, so it's going to affect the first menu item
+in the first menu on the form, which just so happens to be the
+menu you want to change. Click on the Weapons menu to confirm
+that this is the case. Your form should look like Figure 11.5.
+<BR>
+<A HREF="f11-5.gif"><B>Figure 11.5 :</B> <I>The altered menu</I>.</A>
+<p>
+<LI>Run the project using the Run, Start menu command or the function
+key F5. You should be able to see that the menu is still altered,
+but the MenuPic control itself is invisible.
+</OL>
+<P>
+This example gives you a sense of how easy you can make it for
+users to access advanced functionality. By wrapping the functionality
+of Windows API calls in an ActiveX control, you provide new features
+for users while keeping them rooted in the world of Visual Basic
+objects, properties, and methods.
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+In this chapter you learned how to place calls to the Windows
+API in Visual Basic, as well as some of the pitfalls of API calls
+particular to control creation. In the next chapter, you'll learn
+how to compile and distribute your control to users.
+<HR>
+
+<CENTER><P><A HREF="ch10.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch12.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

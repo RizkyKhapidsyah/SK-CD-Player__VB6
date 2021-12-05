@@ -1,0 +1,1201 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 13 -- Deploying Your Control on the Web</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;13</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Deploying Your Control on the Web</FONT>
+</H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#HostingaWebSite">
+Hosting a Web Site</A>
+<LI><A HREF="#FortheNetImpaired">
+For the Net-Impaired</A>
+<LI><A HREF="#ObtainingtheActiveXControlPad">
+Obtaining the ActiveX Control Pad</A>
+<LI><A HREF="#CrashCourseonHTMLandVBScript">
+Crash Course on HTML and VBScript</A>
+<UL>
+<LI><A HREF="#AboutHTML">
+About HTML</A>
+<LI><A HREF="#AboutVBScript">
+About VBScript</A>
+</UL>
+<LI><A HREF="#UsingtheActiveXControlPad">
+Using the ActiveX Control Pad</A>
+<LI><A HREF="#TestingYourControlinaWebBrowser">
+Testing Your Control in a Web Browser</A>
+<UL>
+<LI><A HREF="#AddingVBScriptCodetotheWebPage">
+Adding VBScript Code to the Web Page</A>
+<LI><A HREF="#ExtraCredit">
+Extra Credit</A>
+</UL>
+<LI><A HREF="#MakingItWorkwithNetscape">
+Making It Work with Netscape</A>
+<LI><A HREF="#UsingtheSetupWizardinanInternetContext">
+Using the Setup Wizard in an Internet Context</A>
+<LI><A HREF="#CABFilesandCODEBASETags">
+CAB Files and CODEBASE Tags</A>
+<UL>
+<LI><A HREF="#UsingtheCODEBASETag">
+Using the CODEBASE Tag</A>
+<LI><A HREF="#GUIDs">
+GUIDs</A>
+</UL>
+<LI><A HREF="#SafetyConsiderations">
+Safety Considerations</A>
+<UL>
+<LI><A HREF="#Scriptsafe">
+Script-safe</A>
+<LI><A HREF="#InitializationSafe">
+Initialization-Safe</A>
+</UL>
+<LI><A HREF="#LicensingIssuesontheWeb">
+Licensing Issues on the Web</A>
+<UL>
+<LI><A HREF="#UsingtheLpktoolUtility">
+Using the Lpk_tool Utility</A>
+</UL>
+<LI><A HREF="#SigningYourCode">
+Signing Your Code</A>
+<UL>
+<LI><A HREF="#ObtainingaSoftwarePublishersCertificate">
+Obtaining a Software Publisher's Certificate</A>
+</UL>
+<LI><A HREF="#UsingSigncodetoSignYourCABFile">
+Using Signcode to Sign Your.CAB File</A>
+<UL>
+<LI><A HREF="#TestingtheSignedCABFile">
+Testing the Signed .CAB File</A>
+</UL>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+This chapter will discuss methods of getting your control on the
+World Wide Web. We'll cover not only the method of distributing
+your controls to Web users, but also the basics of the VBScript,
+the scripting language that enables you to program ActiveX controls
+that you've embedded in your Web pages.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Appendix A gives information on online references pertaining to Visual Basic that you might want to check out, including a Web page for this book.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="HostingaWebSite"><FONT SIZE=5 COLOR=#FF0000>
+Hosting a Web Site</FONT></A></H2>
+<P>
+In order to have a place where users can view your Web pages (and
+download ActiveX controls), you need access to a <I>Web server</I>,
+a computer connected to the Internet that runs software designed
+to send Web pages to other users' computers.
+<P>
+For individuals, the easiest way to locate a Web page on a Web
+server is to obtain an Internet Service Provider (ISP) that offers
+space on their Web server as part of their basic service package.
+With this kind of setup, you don't have to worry about maintaining
+the technical details of the Internet connection; the ISP does
+it all for you. However, you may have to pay the ISP extra if
+your site is very large or very popular; check with your service
+provider for details on that.
+<P>
+If you have more sophisticated requirements, you may wish to set
+up your own Web server. Microsoft gives its Web server software
+away free as a part of the Windows NT Server operating system;
+there are a number of other Web server packages available from
+a variety of vendors.
+<P>
+Note that your Web server need not be hooked up to the Internet-at-large
+to be effective. Web servers designed to serve the needs of individuals
+within a department or organization are gaining popularity as
+a way to distribute information within corporations.
+<P>
+This chapter assumes that you have access to some kind of Web
+server and that you have the ability to place files on it.
+<H2><A NAME="FortheNetImpaired"><FONT SIZE=5 COLOR=#FF0000>
+For the Net-Impaired</FONT></A></H2>
+<P>
+If you're not hooked up to the Internet already, this chapter
+still has relevance to you. Much of what is discussed in this
+chapter has relevance both to the Internet and to <I>intranets</I>
+(defined as private networks using technology standards developed
+on the Internet).<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>I personally can't stand the term intranet, since to a software developer, there is no such thing as an intranet. Your software either adheres to Internet standards and makes use of Internet technologies, or it doesn't. So this book won't make much of a 
+distinction between the greater Internet and your intranet. Bear in mind that essentially anything having to do with Internet technologies is also applicable to intranets.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+Even if you're totally Net-impaired, you should be able to use
+and test most of the demonstrations in this chapter using a stand-alone
+machine. If you use Windows NT Server 3.51 or 4.0, you can use
+the free Internet Information Server (IIS) software; if you're
+on Windows 95, you'll want to investigate the Personal Web Server
+that comes with Microsoft FrontPage 97.
+<H2><A NAME="ObtainingtheActiveXControlPad"><FONT SIZE=5 COLOR=#FF0000>
+Obtaining the ActiveX Control Pad</FONT></A></H2>
+<P>
+You start your ActiveX Web odyssey by obtaining a copy of ActiveX
+Control Pad. This is a tool you can use to put together Web pages;
+it's specifically geared toward building pages that contain ActiveX
+controls controlled with the VBScript language. I use this tool
+to test ActiveX controls in Web pages because it's free, it's
+fast, and it's no-nonsense. It also has some nice features for
+automatically inserting VBScript code into your HTML Web pages.
+<P>
+You can, of course, use other tools (including Microsoft FrontPage
+and plain old Windows Notepad) to build Web pages containing ActiveX
+controls, if you like. And while the Web page examples in this
+chapter were created with the ActiveX Control Pad, you shouldn't
+have too much trouble tailoring the discussion to your development
+tool of choice, since the underlying HTML code is the same.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>You can obtain a free copy of the ActiveX Control Pad from the Microsoft Web site at <A HREF="http://www.microsoft.com/workshop/author/cpad/">http://www.microsoft.com/workshop/author/cpad/.</A></I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="CrashCourseonHTMLandVBScript"><FONT SIZE=5 COLOR=#FF0000>
+Crash Course on HTML and VBScript</FONT></A></H2>
+<P>
+Once you've obtained and set up the ActiveX control pad, you're
+ready to get started sticking your control into a Web page and
+writing code to make it do its magic.
+<P>
+In this demonstration, you'll use a combination of two Web technologies<FONT FACE="Times">-</FONT>HTML
+and VBScript<FONT FACE="Times">-</FONT>in order to embed a SoundButton
+control in a Web page.
+<H3><A NAME="AboutHTML">
+About HTML</A></H3>
+<P>
+Hypertext Markup Language (HTML) is the language that defines
+the appearance of World Wide Web pages. You don't have to know
+much of anything about HTML to get through this chapter, but you
+will need to know something about it to set up and maintain a
+Web site. Fortunately, it's not hard to learn.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The greatest books on how to get started with HTML are written by Laura Lemay. Her Teach Yourself Web Publishing with HTML 3.2 in 14 Days (Sams.net, 1996) and Teach Yourself Web Publishing with HTML 3.2 in a Week (Sams.net, 1996) are essential. (The 
+&quot;In a Week&quot; title is a lighter-weight version of the &quot;In 14 Days&quot; book, which is comprehensive.) If you have not done so already, go acquire one or the other immediately.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="AboutVBScript">
+About VBScript</A></H3>
+<P>
+VBScript is a Microsoft extension to HTML. You can use VBScript
+to program ActiveX controls inside a Web page, among other things.
+<P>
+VBScript is a subset of Visual Basic. It lacks many of the features
+of the Visual Basic language, because it is optimized for speed
+and safety over the public Internet. (See the section titled &quot;Safety
+Considerations&quot; later in this chapter for more about safety
+on the Internet.)<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>This section is (obviously and necessarily) an extremely limited discussion of the capabilities of VBScript. For more information on how to use VBScript, check out the Microsoft VBScript Web site at <A 
+HREF="http://www.microsoft.com/vbscript">http://www.microsoft.com/vbscript</A>, or check out the title Teach Yourself VBScript in 21 Days by Keith Brophy and Timothy Koets (Sams.net, 1996). It didn't actually take me 21 days to get through their book, and 
+if you know Visual Basic already, it shouldn't take you that long, either.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H2><A NAME="UsingtheActiveXControlPad"><FONT SIZE=5 COLOR=#FF0000>
+Using the ActiveX Control Pad</FONT></A></H2>
+<P>
+Now that you have the two-bit backgrounder on HTML and VBScript,
+here's a brief demonstration of how to use an ActiveX control
+in a Web page. This demonstration assumes that you have Microsoft
+Internet Explorer 3.01, the ActiveX Control Pad, and the SoundButton
+control installed on your machine. (If you didn't compile and
+install the SoundButton control back in <A HREF="ch12.htm" >Chapter 12</A>, there is an
+installable version of the control on your CD-ROM.)<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The current version of Microsoft Internet Explorer for Windows 95 and Windows NT is 3.01. This update is supposed to fix some ActiveX-related problems, but Microsoft is a little cagey on exactly what those problems are. At any rate, if you have an older 
+version, download the update. It ain't exactly the most expensive software in the world.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+In this demonstration, you'll create an HTML Web page that will
+contain an embedded SoundButton control. The point of this demonstration
+is not to have a fully functional Web page right off the bat,
+but just to make the control appear in the browser. To do this:
+<OL>
+<LI>Launch the ActiveX Control Pad. (By default, the ActiveX Control
+Pad is installed to c:\program files\ActiveX Control Pad\ped.exe
+on your computer.) The application displays an untitled page,
+as illustrated in Figure 13.1.
+
+<BR>
+<A HREF="f13-1.gif"><B>Figure 13.1 :</B> <I>ActiveX Control Pad</I>.</A>
+<BR>
+<BR>
+What you're looking at is a skeletal HTML page. It contains the
+minimal elements of a Web page,<FONT FACE="Times"> </FONT>comprised
+mostly of <I>tags</I> denoting page structure and formatting elements.
+(For example, &lt;BODY&gt; is a tag that exists in most HTML pages;
+it denotes the start of the main body of text in a Web page.)
+<BR>
+<BR>
+The text that appears between the &lt;TITLE&gt; and &lt;/TITLE&gt;
+tags will appear in the browser's title bar when the page is viewed.
+To customize this default page, begin by changing this text:
+<P>
+</OL>
+
+<OL START=2>
+<LI>Click-drag across the text <B>New Page</B> to select it. Overtype
+it with the words <B>SoundButton Example</B>.
+<LI>Next, insert some text in the body of the Web page. To do
+this, click between the &lt;BODY&gt; and &lt;/BODY&gt; tags. Type
+the text:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+&lt;p&gt;This page demonstrates the SoundButton control. 
+Not only does the SoundButton control emit a pleasant sound, 
+but it can perform useful actions in a web page.&lt;/p&gt;
+</PRE>
+</BLOCKQUOTE>
+<P>
+Be sure to remember to type the &lt;p&gt; tag at the beginning
+and the &lt;/p&gt; at the end of the sentence. This tag pair indicates
+that this is a paragraph, so that a paragraph break will be inserted
+after the text. The HTML should look like Figure 13.2.
+<P>
+<A HREF="f13-2.gif"><B>Figure 13.2 :</B> <I>Web page with text</I>.</A>
+<P>
+Next you'll insert the SoundButton control in the page you're
+editing. To do this:
+<OL>
+<LI>At the end of the document, press <B>Enter</B> a few times
+to open up some space.
+<LI>From the ActiveX Control Pad menu, select <B>Edit, Insert</B>
+ActiveX Control.
+<LI>Scroll through the list until you find MySoundButton.SoundButton.
+Click on it, then click on <B>OK</B>.
+<LI>A visual design form (similar in appearance to a Visual Basic
+form) and a property sheet appear.
+<LI>In the Properties sheet, change the SoundButton's Caption
+property to <B>Click Me!</B>, then click on <B>Apply</B> (or press
+<B>Enter</B>). The screen should look like Figure 13.3.
+<LI>Click on the Properties window's close button in its upper
+right corner, then close the Edit ActiveX Control window the same
+way.
+<LI>Save the page using the menu command <B>File, Save</B>. Give
+the page the file name SoundButton.htm.
+</OL>
+<A HREF="f13-3.gif"><B>Figure 13.3 :</B> <I>SoundButton properties</I>.</A>
+<P>
+The ActiveX Control Panel has inserted the following code in your
+document:
+<BLOCKQUOTE>
+<PRE>
+&lt;OBJECT ID=&quot;SoundButton1&quot; WIDTH=84 HEIGHT=36
+ CLASSID=&quot;CLSID:7E0B5DF2-576C-11D0-9A3B-204C4F4F5020&quot;&gt;
+    &lt;PARAM NAME=&quot;_ExtentX&quot; VALUE=&quot;2223&quot;&gt;
+    &lt;PARAM NAME=&quot;_ExtentY&quot; VALUE=&quot;953&quot;&gt;
+    &lt;PARAM NAME=&quot;Caption&quot; VALUE=&quot;Click Me!&quot;&gt;
+&lt;/OBJECT&gt;
+</PRE>
+</BLOCKQUOTE>
+<P>
+This is the code that makes the ActiveX control show up on the
+Web page. Here's a brief description of the lines of code that
+were inserted:
+<UL>
+<LI>The &lt;OBJECT&gt; tag is an HTML tag that directs the Web
+browser to embed a software component into the page.
+<LI>The ID parameter is similar to the Name property of a Visual
+Basic control.
+<LI>The WIDTH and HEIGHT parameters dictate the dimensions of
+the control.
+<LI>The CLASSID tag is the GUID of the control. (The concept of
+the GUID was introduced in <A HREF="ch12.htm" >Chapter 12</A>.)
+<LI>The PARAM tags set initial values for the control's properties;
+they are the equivalent of design-time properties. (The only settable
+property of the SoundButton control is Caption; the _ExtentX and
+_ExtentY properties are internal to the ActiveX Control Pad.)
+</UL>
+<P>
+That's it. At this point your control is ready for testing (even
+though it doesn't really do anything yet). Leave the ActiveX Control
+Pad open for now; in the next section you'll bring up Microsoft
+Internet Explorer and try out your HTML page.
+<H2><A NAME="TestingYourControlinaWebBrowser"><FONT SIZE=5 COLOR=#FF0000>
+Testing Your Control in a Web Browser</FONT></A></H2>
+<P>
+Now that you have a minimal HTML test page with a copy of your
+ActiveX control embedded into it, you can see how it looks in
+a Web browser. To test the Web page you're developing:
+<OL>
+<LI>Leave the ActiveX Control Pad open and launch Microsoft Internet
+Explorer.
+<LI>In Internet Explorer, choose the menu command <B>File,</B>
+<B>Open</B>.
+<LI>The Open dialog box appears. Click on <B>Browse</B> and locate
+the file SoundButton.htm you saved in the first step, then click
+on <B>Open</B>.
+<LI>In the Open dialog box, click on <B>OK</B>. The Web page opens,
+displaying the Potential Safety Violation dialog box illustrated
+in Figure 13.4.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The exact message you see when loading a control is dependent on your Web browser's security settings. The message displayed here is what you'd see when your browser's security is set to Medium. To change your browser's security settings, in Internet 
+Explorer choose the menu command View, Options, then select the Security tab, then click on the Safety button.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=5>
+<LI>If you were opening a page on the Internet, this would be
+a problem, but because you're opening your own control, it's no
+big deal. (We'll deal with this warning, what it means, and how
+to resolve it later in the chapter.) For now, click on <B>Yes
+to All</B> to proceed.
+<LI>The Web page opens, as Figure 13.5 illustrates.
+</OL>
+<P>
+This page doesn't do much of anything, but if you click on the
+Click Me! button, you will be treated to the pleasant clicking
+sound you've grown so accustomed to.
+<P>
+<A HREF="f13-4.gif"><B>Figure 13.4 :</B> <I>Potential safety violation dialog box</I>.</A>
+<P>
+<A HREF="f13-5.gif"><B>Figure 13.5 :</B> <I>SoundButton Control in the browser window</I>.</A>
+<P>
+In the next demonstration, you'll return to the ActiveX Control
+Pad to make the page do something more useful.
+<H3><A NAME="AddingVBScriptCodetotheWebPage">
+Adding VBScript Code to the Web Page</A></H3>
+<P>
+Now that you have a rudimentary Web page, it's time to make it
+more functional. To do this, you'll add a VBScript procedure to
+it using the ActiveX Control Pad. To do this:
+<OL>
+<LI>Leave Microsoft Internet Explorer running. Switch back to
+the ActiveX Control Pad. You should still have the file Soundbutton.htm
+open in the ActiveX Control Pad.
+<LI>From the ActiveX Control Pad Tools menu, select Script Wizard.
+<LI>The Script Wizard appears, as illustrated in Figure 13.6.
+<P>
+<A HREF="f13-6.gif"><B>Figure 13.6 :</B> <I>ActiveX Control Pad Script Wizard</I>.</A>
+<P>
+
+<LI>You'll use the Script Wizard to create an event procedure
+in the SoundButton control's Click event. This code will execute
+whenever a user clicks on this SoundButton. To do this, double-click
+on SoundButton1 in the Select an Event panel of the Script Wizard,
+then select Click.
+<LI>In the Insert Actions panel on the right side of the Script
+Wizard, double-click on Go To Page...
+<LI>The Enter A Page dialog box appears. Type the following URL:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+<A HREF="http://www.mcp.com/
+">http://www.mcp.com/
+</A></PRE>
+</BLOCKQUOTE>
+<OL START=7>
+<LI>Click on <B>OK</B>. The Script Wizard looks like Figure 13.7.
+<LI>Click on <B>OK</B> to close the Script Wizard. The following
+code is added to your document:
+<p>
+<A HREF="f13-7.gif"><B>Figure 13.7 :</B> <I>Script Wizard with event procedure</I>.</A>
+</ol>
+<BLOCKQUOTE>
+<PRE>
+    &lt;SCRIPT LANGUAGE=&quot;VBScript&quot;&gt;
+&lt;!-
+Sub SoundButton1_Click()
+Window.location.href = &quot;http://www.mcp.com/zdpress/&quot;
+end sub
+-&gt;
+</PRE>
+</BLOCKQUOTE>
+<P>
+You can see that with the exception of the &lt;SCRIPT&gt; tag
+and HTML comment tags (the &lt;!- and -&gt; tags), the code is
+quite similar to a Visual Basic event procedure.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The &lt;!- and -&gt; tags are HTML comment tags. In a normal HTML Web page, these tags mark the beginning and end of a comment; normally they are not interpreted by a browser. However, when a Web page contains a script, the body of the script is usually 
+placed inside comment tags in order to keep Web browsers that don't understand the script (in this case, every browser in the world except Microsoft Internet Explorer 3.0) from displaying the lines of code that comprise the script as literal text in the 
+Web page. The ActiveX Control Pad inserts these comment tags for you, but if you ever get to the point where you can hand-code VBScript, be sure not to forget these tags, or else your page will look goofy in non-Microsoft browsers.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+To test this procedure, do the following:
+<OL>
+<LI>In the ActiveX Control Pad, re-save the Web page by choosing
+the <B>File, Save</B> command (or by using the keystroke shortcut
+<B>Ctrl+S</B>).
+<LI>Leave the ActiveX Control Pad open. Switch to Internet Explorer.
+<LI>In Internet Explorer, reload the page by selecting the menu
+command <B>View, Refresh</B>.
+<LI>When the Potential Safety Violation dialog appears, ignore
+it by clicking <B>Yes to All</B>. The Web page refreshes.
+<LI>Click on the <B>Click Me!</B> button. It looks the same as
+before, but this time when you click it, you not only hear the
+pleasant clicking sound, but the Web browser also loads the stylish
+and engaging Ziff-Davis Press home page.
+</OL>
+<P>
+Well, that's it. You've created a test page that successfully
+tests the two elements of the SoundButton control's interface
+(its Click event and its Caption property) as well as its feature-set
+enhancement (the pleasant clicking sound).<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>A script debugger for VBScript Web pages is available free from Microsoft. You can use this tool to check the syntax of Web pages you create that include VBScript code. You can download this tool from the Microsoft Web site at <A 
+HREF="http://www.microsoft.com/workshop/prog/scriptie">http://www.microsoft.com/workshop/prog/scriptie.</A></I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="ExtraCredit">
+Extra Credit</A></H3>
+<P>
+If you want, you can insert a few more lines of HTML code in your
+page to enhance it. To do this, replace the &lt;BODY&gt; tag with
+the following HTML code:
+<BLOCKQUOTE>
+<PRE>
+&lt;BODY bgcolor=CCFFCC&gt;
+&lt;FONT FACE=&quot;Trebuchet MS, Ariel, Helvetica&quot;&gt;
+&lt;h1&gt;SoundButton Control Test&lt;/h1&gt;
+</PRE>
+</BLOCKQUOTE>
+<P>
+Here's a brief explanation of what the new HTML code does:
+<UL>
+<LI>The new BODY tag now has a bgcolor component that instructs
+the browser to render this page with a soothing green background
+color. (The CCFFCC value is a hexadecimal triplet that works similar
+to Visual Basic's RGB function; it provides a color by specifying
+red, green, and blue values. For example, pure red is FF0000,
+blue is 0000FF, and white is FFFFFF.)
+<LI>The FONT FACE tag tells the browser to display the page's
+text in one of the fonts indicated. (The reason why it lists three
+fonts is because not everyone has the same fonts installed on
+their computers. So the browser tries Trebuchet MS first, then
+Ariel, then Helvetica. If none of these three fonts are available
+on the client machine, or if the browser is not capable of displaying
+fonts, the browser will display a default font.)
+<LI>Finally, the &lt;H1&gt; tag indicates that the following text
+is a header and should accordingly appear larger and more emphasized
+on the page. The &lt;/H1&gt; tag shuts off the display of the
+header font.
+</UL>
+<P>
+To test this, save the HTML file, switch to MS Internet Explorer,
+and refresh the page. It should look something like Figure 13.8
+(although the exact color and font you see will depend on what
+you have installed on your system).
+<P>
+<A HREF="f13-8.gif"><B>Figure 13.8 :</B> <I>Greatly enhanced SoundButton test page</I>.</A>
+<P>
+From here, you could go on to build a complete Web site based
+on SoundButton controls, clicking yourself silly in short order.
+But there are a few enhancements you need to make to the distribution
+of the SoundButton control<FONT FACE="Times">-</FONT>specifically,
+addressing the issue of the Potential Safety Violation warning,
+but also handling the actual installation of the control over
+the Net. I'll address those issues later in this chapter.
+<H2><A NAME="MakingItWorkwithNetscape"><FONT SIZE=5 COLOR=#FF0000>
+Making It Work with Netscape</FONT></A></H2>
+<P>
+I know what you're saying. You're saying, &quot;Well, Jeffrey,
+this may be all well and good, but the minute a Netscape user
+hits my page, the whole thing is going to go kablooey.&quot; Am
+I right? Well, friends, gather 'round, because I'm going to show
+you a way to display an ActiveX control that will look like an
+ActiveX control to a Microsoft Internet Explorer user and like
+a hyperlink to a Netscape Navigator user (or a user of any one
+of a number of other fine browsers).
+<P>
+The home page for this book (<A HREF="http://www.well.com/user/jeffreyp/activex/">http://www.well.com/user/jeffreyp/activex/</A>)
+contains a list of links to ActiveX-related resources. Originally,
+this list was a conventional list of hypertext links. But the
+more I worked with the pleasant-sounding SoundButton control,
+the more I liked the idea of a clicky hypertext button. So I decided
+to replace the hyperlinks with SoundButtons. Here's how I did
+it.
+<P>
+Originally, the HTML code that produced hypertext links on the
+book's home page looked like this:
+<BLOCKQUOTE>
+<PRE>
+&lt;a href=&quot;author.html&quot;&gt;About the Author&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;errata.html&quot;&gt;Errata&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;xlinks.html&quot;&gt;ActiveX Resources&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;vblinks.html&quot;&gt;Visual Basic Resources&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;../vbscript/index.html&quot;&gt;VBScript Links&lt;/a&gt;&lt;br&gt;
+</PRE>
+</BLOCKQUOTE>
+<P>
+&lt;a href=&quot;http://www.mcp.com/zdpress&quot;&gt;Ziff-Davis
+Press&lt;/a&gt;
+<P>
+But that was boring, and I'm a novelty freak, so
+I started replacing the hyperlinks with buttons. Here's what this
+looks like for the first hyperlink:
+<BLOCKQUOTE>
+<PRE>
+&lt;OBJECT ID=&quot;sbnAuthor&quot; WIDTH=83 HEIGHT=24
+CLASSID=&quot;CLSID:7E0B5DF2-576C-11D0-9A3B-204C4F4F5020&quot;&gt;
+        &lt;PARAM NAME=&quot;Caption&quot; VALUE=&quot;Author&quot;&gt;
+&lt;a href=&quot;author.html&quot;&gt;About the Author&lt;/a&gt;
+&lt;/OBJECT&gt;&lt;br&gt;
+</PRE>
+</BLOCKQUOTE>
+<P>
+Although most of this could have been done with the ActiveX Control
+Pad, there is one extra twist that makes the page compatible with
+non-Microsoft browsers:<FONT FACE="Times"> </FONT>the hyperlink
+tag embedded <I>inside</I> the OBJECT tag. This works because
+whenever a browser can't figure out what to do with a particular
+tag, it generally tosses the tag out, ignoring it completely.
+In the case of the OBJECT tag, non-Microsoft browsers can't figure
+out what to do with the SoundButton control, so it displays the
+part of the OBJECT tag it <I>does</I> understand: the hyperlink.
+Microsoft browsers get the ActiveX control interface, other browsers
+get the conventional hyperlink interface, and your Web page is,
+once again, safe for democracy.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>You can view the underlying HTML of any Web page by going to the page, then choosing the menu command View, Source. This is a great way to get information on real-world usage of HTML and to answer the question &quot;How'd they do that?&quot; when you're 
+viewing a page.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="UsingtheSetupWizardinanInternetContext"><FONT SIZE=5 COLOR=#FF0000>
+Using the Setup Wizard in an Internet Context</FONT></A></H2>
+<P>
+In order to distribute your control over the Internet, you must
+create a special type of compressed installable file. The Setup
+Wizard (introduced in <A HREF="ch12.htm" >Chapter 12</A>) has an option that enables you
+to build such files. To see how this works:
+<OL>
+<LI>Launch the application Setup Wizard the same way you did in
+<A HREF="ch12.htm" >Chapter 12</A> (by closing VB5 and selecting the Setup Wizard from
+the Windows Taskbar's VB5 program group).
+<LI>The Introduction screen appears. Click on <B>Next</B>.
+<LI>Click on <B>Browse</B> to locate the project file for the
+SoundButton project, Ctrl_SoundButton.vbp.
+<LI>In the Options panel, click on <B>Create Internet</B> <B>Download
+Setup</B>. The What's New icon appears, providing you with a hypertext
+jump to information on downloadable software from Microsoft. (This
+hypertext jump is actually just a link to <A HREF="http://www.microsoft.com/vbasic/">http://www.microsoft.com/vbasic/.</A>)
+<LI>Click on <B>Next</B>. A disturbing momentary delay takes place,
+after which the Internet Distribution Location screen appears.
+If you have direct access to a Web server from your LAN (or if
+your local machine is itself a Web server), then select a public
+directory you have access to. If you don't have access to a Web
+server at this point, don't worry. Select a directory that's convenient,
+and you can move the downloadable file into place later.
+<LI>Click on <B>Next</B>. The Internet Package screen appears,
+as illustrated in Figure 13.9. In this screen, you do two important
+things. You designate the server from which users will download
+support files (such as the dreaded Visual Basic Virtual Machine).
+And you mark your components as safe for initialization and scripting.
+</OL>
+<P>
+<A HREF="f13-9.gif"><B>Figure 13.9 :</B> <I>Internet Package screen</I>.</A><BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>For more information on component safety, see the topic Safety Considerations later in this chapter.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=7>
+<LI>For now, leave the Download from Microsoft Web Site option
+button selected. This will enable users to download support files
+(such as the Visual Basic Virtual Machine) from Microsoft's Web
+site rather than yours, thereby conserving bandwidth and disk
+space on your Web server. (The down side to this is that every
+user of your control must be connected to the Internet; in a corporate
+intranet situation, you might instead choose to distribute these
+support files from an intranet Web server.)
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>You can get information on locally hosting Visual Basic support files on the Microsoft Web site at <A HREF="http://www.microsoft.com/vbasic/controls/webmastr/cabs.htm">http://www.microsoft.com/vbasic/controls/webmastr/cabs.htm.</A> You would want to 
+look into this information if you are planning to deploy your controls across a corporate intranet or if your users are otherwise restricted from downloading the Visual Basic distributables from www.microsoft.com.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=8>
+<LI>To mark your components as safe for initialization and scripting,
+click on the <B>Safety</B> button.
+<LI>The Safety dialog box appears. Select the Safe for initialization
+and Safe for scripting checkboxes, as illustrated in Figure 13.10.
+<LI>Click on <B>OK</B>. You are returned to the Internet Package
+screen. Click on <B>Next</B>.
+<LI>The ActiveX Components screen appears. Since your control
+does not make use of any constituent controls, there is nothing
+to do here. Click on <B>Next</B>.
+<LI>The File Summary screen appears, displaying a list of files
+that will be distributed with your control. Click on <B>Next</B>,
+then click on <B>Finish</B>.
+<LI>The Setup Wizard compresses the files and displays a dialog
+box indicating that it has finished.
+</OL>
+<P>
+<A HREF="f13-10.gif"><B>Figure 13.10:</B> <I>Safety dialog box</I>.</A>
+<P>
+In the directory you selected to serve as the repository for your
+controls, you should have a .CAB file, as well as a few other
+files I'll describe in the next section.
+<H2><A NAME="CABFilesandCODEBASETags"><FONT SIZE=5 COLOR=#FF0000>
+CAB Files and CODEBASE Tags</FONT></A></H2>
+<P>
+You should now be able to see that the directory you selected
+back in step 5 of the Setup Wizard process has been filled with
+files<FONT FACE="Times">-</FONT>specifically, a .CAB file and
+an .HTM file, as well as a subdirectory called Support that contains
+the original, uncompressed version of the control along with a
+few other files.
+<P>
+The .CAB file is the important one. This is a compressed file
+that contains your .OCX file and any other files required for
+your control to run. (Absent from this file are support files,
+such as the Visual Basic Virtual machine, for reasons discussed
+in the demonstration.) Because they're compressed and they don't
+include Visual Basic and Windows support files, .CAB files tend
+to be fairly small.They're perfect for placing on a Web page without
+slowing the download process too much, although the exact size
+of your control's .CAB file will obviously depend on the size
+and complexity of your control.
+<P>
+The .HTM file is important, too, because it shows you exactly
+what HTML code needs to be written in order to embed your control
+in a Web page. This is going to be old hat to you, assuming you
+followed the ActiveX Control Pad demonstration earlier in this
+chapter. But just for your edification, here are the contents
+of SNDBTN.HTM:
+<BLOCKQUOTE>
+<PRE>
+&lt;HTML&gt;
+&lt;!-   If any of the controls on this page require licensing, 
+you must create a license package file.
+       Run LPK_TOOL.EXE in the tools directory to create the 
+required LPK file.
+
+&lt;OBJECT CLASSID=&quot;clsid:5220cb21-c88d-11cf-b347-00aa00a28331&quot;&gt;
+      &lt;PARAM NAME=&quot;LPKPath&quot; VALUE=&quot;LPKfilename.LPK&quot;&gt;
+&lt;/OBJECT&gt;
+-&gt;
+
+&lt;OBJECT
+       classid=&quot;clsid:7E0B5DF2-576C-11D0-9A3B-204C4F4F5020&quot;
+       id=SoundButton
+       codebase=&quot;sndbtn.CAB#version=1,0,0,0&quot;&gt;
+&lt;/OBJECT&gt;
+&lt;/HTML&gt;
+</PRE>
+</BLOCKQUOTE>
+<P>
+Since SoundButton isn't a commercial file, you don't need to worry
+about the licensing part (see the section later in this chapter
+about distributing licensed controls). The other code should be
+familiar to you, except for the CODEBASE tag, which I'll explain
+next.
+<H3><A NAME="UsingtheCODEBASETag">
+Using the CODEBASE Tag</A></H3>
+<P>
+When you deploy your ActiveX control on the Internet, you need
+to provide a way for the Web browser to find the binary .OCX file
+in situations where the user's machine doesn't already have it.
+<P>
+You use a &lt;CODEBASE&gt; tag to do this. A &lt;CODEBASE&gt;
+tag is part of the &lt;OBJECT&gt; tag; it tells the Web browser
+where to download the software component. The value of a CODEBASE
+tag can be an .OCX file, but it's more commonly a .CAB file. The
+location of a file in a CODEBASE tag can be on a disk drive on
+your LAN, or it can be a URL.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>This may seem obvious, but it's worth stating explicitly: If your Web browser runs across a Web page that contains an ActiveX control that is already installed on your system, it won't bother to re-download the control. This is a great thing, because it 
+means that Web browsers don't have to re-download your ActiveX component each time they visit your page. This behavior is in contrast to Java components, which must be downloaded fresh each time you hit the page into which they are embedded. There is an 
+emerging Java technology specification called Java Beans that seeks to make Java applets behave like ActiveX controls in this respect.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+You can see that at the end of the CODEBASE tag, the VERSION parameter
+was added. This is important because it directs the Web browser
+to download the latest version of the ActiveX control if it needs
+to.
+<P>
+For example, let's say you make enhancements to the SoundButton
+control, releasing version 2.0. You update all the HTML files
+on your Web site so the CODEBASE tag refers to version 2.0 of
+the control. Later, a user who has version 1.0 of the SoundButton
+control on her computer hits one of your Web pages. Because the
+CODEBASE tag indicates that the HTML page requires SoundButton
+2.0, her browser knows to download the new version before rendering
+the Web page.
+<P>
+Note that when a browser downloads and installs a new version
+of a control, it overwrites any previous version the end user
+has installed on his or her computer. This is one reason why it's
+important that your control maintain a consistent, backward-compatible
+interface across versions, so that upgrading to a newer version
+of the control doesn't break existing applications.
+<H3><A NAME="GUIDs">
+GUIDs</A></H3>
+<P>
+The GUID used as an argument to the CODEBASE tag is generated
+at the time the control is compiled. The GUID of a particular
+control should never change after the control is released, even
+if you release a new version of the control. (To enforce this,
+you turn binary compatibility on when compiling the control; for
+more information on this, see <A HREF="ch12.htm" >Chapter 12</A>.)
+<P>
+It goes without saying that to avoid transcription errors, you
+should avoid typing a GUID directly into the OBJECT tag. Use the
+ActiveX Control Wizard, or copy and paste the OBJECT tag in from
+the sample HTML file generated by the Setup Wizard.
+<H2><A NAME="SafetyConsiderations"><FONT SIZE=5 COLOR=#FF0000>
+Safety Considerations</FONT></A></H2>
+<P>
+<I>Safety</I> refers to a control's ability to cause harm to an
+end-user's computer. A control is said to be safe if it is incapable
+of performing such actions as filling the user's hard drive, shutting
+down the user's computer, and filling memory.
+<P>
+It is your responsibility as the control's author to devote mental
+resources to determining if your control is safe. This is particularly
+the case if your control is signed, because signed controls include
+your or your company's name. If you certify a control as safe
+and it's really not, end users can figure out who you are through
+your code signature, find you, hunt you down, and gnaw on your
+limbs.
+<H3><A NAME="Scriptsafe">
+Script-safe</A></H3>
+<P>
+Script-safe controls are certified by the control author (you)
+to be incapable of damaging a machine no matter what the script
+does. Put another way, when you certify a control as script-safe,
+you're saying that no scripting command can possibly cause your
+control to harm someone's computer.
+<H3><A NAME="InitializationSafe">
+Initialization-Safe</A></H3>
+<P>
+Controls that are initialization-safe are certified to not cause
+problems on an end user's machine no matter what wacky values
+the control's initial properties (in its PARAM tags) are set to.
+<P>
+For example, consider a control that has a Picture property. If
+you permit a user to assign the Picture property of your control
+to a 9GB picture file, it's going to download that file and hang
+the user's machine. If your control has the ability to save to
+a file (something that isn't possible to do using scripting, but
+<I>is</I> possible to do using Visual Basic and is therefore possible
+to do using an ActiveX control), you need to make sure that the
+control can't overwrite a file (such as a vital operating system
+file) or fill the end user's hard drive with files.
+<P>
+Does safety mean you can't build ActiveX controls with properties
+that can be freely set? No, it just means you can't distribute
+such controls on the Net and mark them as safe. Does safety mean
+that you can't use unsafe constituent controls in your ActiveX
+control? Again, no. The degree of safety provided by your control
+is a function of the elements its interface provides.
+<H2><A NAME="LicensingIssuesontheWeb"><FONT SIZE=5 COLOR=#FF0000>
+Licensing Issues on the Web</FONT></A></H2>
+<P>
+When you distribute licensed controls over the Web, you must contend
+with additional issues, most of which stem from the fact that
+on the Web, there is no such thing as design-time.
+<P>
+The solution to this problem is to create a license package file
+that temporarily checks out a license to the Web browser. This
+license is held in memory, enabling the Web browser to display
+the control, but it does not permit the user to then use your
+control in a development environment such as Visual Basic (unless,
+of course, the user has purchased a licensed version of your control
+and installed it on his computer).<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>For your control to support licensing, you must specify a licensing option at the time the control is compiled. See <A HREF="ch12.htm" >Chapter 12</A> for information on how to do this.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+You'll recall from the previous section that the Setup Wizard
+put the following license package-related code in the SoundButton
+control's sample HTML file:
+<BLOCKQUOTE>
+<PRE>
+&lt;!-   If any of the controls on this page require licensing, 
+you must create a license package file.
+       Run LPK_TOOL.EXE in the tools directory to create the 
+required LPK file.
+
+&lt;OBJECT CLASSID=&quot;clsid:5220cb21-c88d-11cf-b347-00aa00a28331&quot;&gt;
+       &lt;PARAM NAME=&quot;LPKPath&quot; VALUE=&quot;SoundButton.LPK&quot;&gt;
+&lt;/OBJECT&gt;
+-&gt;
+</PRE>
+</BLOCKQUOTE>
+<P>
+If the SoundButton control were a licensed control, you would
+be required to include this HTML at the top of any Web page in
+which a SoundButton control resided. You'd also be required to
+create and store the file SoundButton.LPK (the SoundButton control's
+license package file) on the Web server along with the .CAB file
+for your control. The following section describes how to create
+a license package file.
+<H3><A NAME="UsingtheLpktoolUtility">
+Using the Lpk_tool Utility</A></H3>
+<P>
+The Lpk_tool utility enables you to create a license package (.LPK)
+file. To create an .LPK file for the SoundButton control, do the
+following:
+<OL>
+<LI>Locate and run the Lpk_tool utility, Lpk_tool.exe. If you
+have the ActiveX Software Development Kit, you'll find this file
+in the \inetsdk\bin\i386 directory.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The Lpk_tool utility used in this book was taken from the ActiveX Software Development Kit because the beta version of Visual Basic used for testing the examples in this book did not contain it. However, it is likely that the Lpk_tool utility will be 
+included with the final, shipping version of Visual Basic 5.0.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=2>
+<LI>The utility runs, displaying a list of all the controls that
+are registered on your system. Select the SoundButton control,
+then click on Add. The screen should look like Figure 13.11.
+<LI>The control moves to the Controls in license package list.
+At this point, you could move additional controls to the list
+if you wish; this is necessary if you plan to add additional licensed
+controls to the Web page you wish to design, because you must
+include all the controls on a given Web page in a single .LPK
+file.
+<LI>For now, this is the only control you need to add to create
+this .LPK file, so click on <B>Save &amp; Exit</B>.
+<LI>A file dialog appears, prompting you to save the .LPK file.
+Name the file SoundButton.lpk and save it into the same directory
+as you saved sndbtn.cab earlier.
+<LI>After you save the file, a message box appears informing you
+that the license package file was successfully created and that
+the utility is terminating. The license package file, SoundButton.lpk,
+is created on your disk.
+</OL>
+<P>
+<A HREF="f13-11.gif"><B>Figure 13.11:</B> <I>Lpk_tool utility</I>.</A>
+<H2><A NAME="SigningYourCode"><FONT SIZE=5 COLOR=#FF0000>
+Signing Your Code</FONT></A></H2>
+<P>
+So you've got a compiled control, you've marked it as safe for
+scripting and safe for initialization, you've made it into a .CAB
+file, you've put it on a Web server, and you've purchased it the
+cutest little pair of footed jammies with bunny ears. You may
+think your life is complete, but there's something missing<FONT FACE="Times">-</FONT>you
+<I>still</I> don't have everything you need to put your control
+on the public Internet.
+<P>
+In order to distribute your controls over the Web, you must digitally
+<I>sign</I> your control. Signing your control embeds information
+that connects you, the software developer (or software development
+company), with the file you're distributing. The theory here is
+that if your name is associated with the software you write, it's
+less likely that you'll write controls that will reformat people's
+hard drives, shut down their computers, or stomp through downtown
+Tokyo crushing buildings and breathing fire. Digital signing,
+then, is a way of keeping ActiveX control developers from unleashing
+destructive control abominations upon the Internet landscape.
+<P>
+The process of digitally signing code is known as <I>Authenticode</I>.
+In order to digitally sign a control created in Visual Basic,
+you must go through the following steps:
+<UL>
+<LI>Obtain a Software Publisher's Certificate. This is an electronic
+signature you apply to your binary files that marks you as its
+author. Microsoft does not issue these certificates; you must
+go to a third party (known as a certificate authority, or CA)
+to obtain one. Check out the page <A HREF="http://www.microsoft.com/">http://www.microsoft.com/</A> intdev/
+security/authcode/certs.htm for the latest information on certificate
+authorities.
+<LI>Use the Signcode utility to apply your digital certificate
+to your downloadable .CAB file.
+</UL>
+<H3><A NAME="ObtainingaSoftwarePublishersCertificate">
+Obtaining a Software Publisher's Certificate</A></H3>
+<P>
+The first step to getting your signed controls on the Web is to
+sign up with a certificate authority. As of this writing, there
+is only one certificate authority, Verisign, although there may
+be more authorities by the time you read this book. The Verisign
+page is at <A HREF="http://digitalid.verisign.com/">http://digitalid.verisign.com/.</A> 
+<P>
+The starting point to obtain a digital ID is <A HREF="http://digitalid.verisign.com/codesign.htm.
+If">http://digitalid.verisign.com/codesign.htm.
+If</A> you're an individual software developer, you want to get a
+Class 2 certificate, which as of this writing costs $20 a year.
+If you're registering a company that produces software, you'll
+need to obtain a Class 3 certificate, which costs $400 a year.
+Also, if you are based outside of the U.S. or Canada, you can't
+get a Class 2 certificate.
+<P>
+The Verisign Web pages tell you exactly what you need to get signed
+up. The process to receive a digital ID is arranged in a series
+of steps; each Web page tells you what's required in detail, and
+it's pretty hard to mess up. The steps are:
+<OL>
+<LI>Choose which kind of digital ID you want. If you're an individual,
+choose Class 2; if you're representing a business, choose Class
+3.
+<LI>Supply some information about yourself. If you're an individual,
+you just need to give them some information about yourself. If
+you're registering a company, you'll need to supply information
+about your organization.
+<LI>Pay the annual fee. You can do this online by supplying your
+Visa or Mastercard number.
+<LI>Confirm that the information you entered is correct.
+<LI>Read and agree to the Software Publisher's Pledge. (Placing
+your right hand over your heart at this stage is, I believe, optional.)
+<LI>Submit the information to Verisign.
+</OL>
+<P>
+After you've supplied this information, Verisign will e-mail you
+a digital ID personal identification number (PIN) that you'll
+need to activate your digital ID. (Doing it this way verifies
+that the e-mail address you gave them is valid.) When you receive
+this PIN, you return to Verisign's Web site, enter the PIN, and
+your digital ID request is complete.
+<P>
+At this point, the request process generates two files on your
+machine: a <I>credential file</I> and a <I>private key</I>. Because
+it can be made to work like a signature, you should store the
+private key on a disk that is not connected to the Net. (I keep
+mine on a floppy, with a backup in my safe deposit box at my bank.)
+<P>
+The credential file contains information about who you are, such
+as whether you're an individual or a business and what your e-mail
+address is. Both the credential file and the private key are used
+by the signing utility when you sign your file.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Authenticode should not be looked at as an airtight security system for ActiveX objects. Instead, it's a way to make developers more accountable for the effects of the software they create. The premise is that a developer will devote more effort into 
+debugging and safety verification if that developer can be identified through Authenticode. Authenticode is based on two concepts: integrity and authenticity. The premise of authenticity dictates that if your name is attached to the code you're 
+distributing, it's less likely to contain a virus or other destructive code. The principle of integrity covers situations where your code might be altered by a malicious third party. But just because the code is authentic doesn't mean it doesn't contain 
+bugs, for example.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="UsingSigncodetoSignYourCABFile"><FONT SIZE=5 COLOR=#FF0000>
+Using Signcode to Sign Your.CAB File</FONT></A></H2>
+<P>
+Once you've obtained a software publisher's certificate, you can
+use the Signcode utility to digitally sign your files. Signcode
+is a utility that comes with the ActiveX SDK (on my machine, it's
+installed into the \inetsdk\bin\i386 directory).<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The Signcode utility used in this book was taken from the ActiveX Software Development Kit because the beta version of Visual Basic used for testing the examples in this book did not contain it. However, it is likely that this utility will be included 
+with the final, shipping version of Visual Basic 5.0.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+When you run Signcode, it launches the Code Signing Wizard, as
+illustrated in Figure 13.12.
+<P>
+<A HREF="f13-12.gif"><B>Figure 13.12:</B> <I>Code Signing Wizard</I>.</A>
+<P>
+To sign your code using Code Signing Wizard, do the
+following:
+<OL>
+<LI>Click on <B>Next</B> to move past the initial screen. The
+second Code Signing Wizard screen appears.
+<LI>In the field &quot;Which program would you like to sign?&quot;
+enter the path and filename to your control's .CAB file. Use the
+Browse button if you don't feel like typing the full path.
+<LI>In the &quot;What would you like to call this program?&quot;
+field, type the full name of the control.
+<LI>In the &quot;Where can people find more information about
+it?&quot; field, type the name of the control's URL, if one exists.
+The screen should look like Figure 13.13.
+<LI>Click on <B>Next</B>. The next screen asks you how you want
+to sign your control. In this screen, you need to specify the
+location of your credentials file and your private key. Enter
+this information. The screen should look like Figure 13.14.
+<LI>Click on <B>Next</B>. The Code Signing Wizard will display
+a screen verifying the information you supplied. Make sure everything
+is correct, click on <B>Next</B>, then click on <B>Sign</B>.
+</OL>
+<P>
+<A HREF="f13-13.gif"><B>Figure 13.13:</B> <I>Code Signing Wizard with the details filled
+in</I>.</A>
+<P>
+<A HREF="f13-14.gif"><B>Figure 13.14:</B> <I>Code Signing Wizard screen with credential
+and private key information</I>.</A>
+<P>
+The wizard will read the files it needs to read, then it will
+alter your .CAB file to accommodate the digital signature. When
+it's done, it will display a message saying that it successfully
+signed the program.
+<H3><A NAME="TestingtheSignedCABFile">
+Testing the Signed .CAB File</A></H3>
+<P>
+The easiest way to test a signed ActiveX control is to load it
+through Microsoft Internet Explorer. If the control hasn't been
+installed on your computer before and it has been signed properly,
+your digital certificate will appear after the control is downloaded,
+as Figure 13.15 illustrates.
+<P>
+When this certificate appears, it confirms your identity to the
+end users of your control.
+<P>
+<A HREF="f13-15.gif"><B>Figure 13.15:</B> <I>SoundButton control certificate</I>.</A><BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>If the control has been installed on your computer before and you want to uninstall it for the purpose of testing a Web installation, use the Regsvr32 utility. This utility is described in <A HREF="ch12.htm" >Chapter 12</A>.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+In this chapter you learned how to embed an ActiveX control into
+an HTML Web page using the ActiveX Control Pad. You also saw how
+to create a .CAB file, a compressed file that enables Web users
+to seamlessly download your ActiveX control with a Web browser.
+<P>
+In the next chapter, you'll take this crazy Internet thing one
+step further, creating Internet-aware controls that transmit data
+over the Net and have the ability to remotely download their properties.
+<HR>
+
+<CENTER><P><A HREF="ch12.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch14.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

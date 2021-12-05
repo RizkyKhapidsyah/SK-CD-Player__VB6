@@ -1,0 +1,511 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 17 -- Database Access</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;17</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Database Access</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#VisualBasicDataAccess">
+Visual Basic Data Access</A>
+<UL>
+<LI><A HREF="#UsingaMicrosoftAccessDatabase">
+Using a Microsoft Access Database</A>
+<LI><A HREF="#OtherDataSourcesAccessibletotheDataControl">
+Other Data Sources Accessible to the Data Control</A>
+<LI><A HREF="#MoreChoicesUsingOpenDatabaseConnectivity">
+More Choices: Using Open Database Connectivity</A>
+<LI><A HREF="#DataAwareControlsinVisualBasic">
+Data-Aware Controls in Visual Basic</A>
+<LI><A HREF="#HowDatabaseAccessWorks">
+How Database Access Works</A>
+</UL>
+<LI><A HREF="#ProvidingDataAwarenessinYourActiveXControl">
+Providing Data Awareness in Your ActiveX Control</A>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+For business users, database access is one of the most compelling - and
+easy-to-implement features of Visual Basic. Even if you're not
+a captain of industry, using VB as a way to display and edit information
+in a database is easy and powerful.
+<P>
+This chapter is split into two sections. The first section deals
+with how data access works in Visual Basic. The second deals with
+how to set up your ActiveX control to connect to a database.
+<H2><A NAME="VisualBasicDataAccess"><FONT SIZE=5 COLOR=#FF0000>
+Visual Basic Data Access</FONT></A></H2>
+<P>
+There are a number of ways to connect your application to a database
+in Visual Basic. This chapter is concerned with the simplest:
+connecting ActiveX controls to a database using the Visual Basic
+Data control.
+<P>
+But if you've never used Visual Basic before, you should know
+that there are a number of other database programming topics not
+directly related to control creation. Briefly summarized, they
+are:
+<UL>
+<LI>Data Access Objects (DAO)-An object model for referring to
+databases in Visual Basic code. Using DAO, you can create Recordset
+objects, which can then be manipulated programmatically. For example,
+you might use DAO to create a custom database report in Visual
+Basic or perform regular automated queries based on preprogrammed
+criteria.
+<LI>Remote Data Objects (RDO)-A way of accessing client-server
+data from Visual Basic. Remote data objects are geared toward
+data processing rather than the user-interface. Visual Basic provides
+a custom control, the RemoteData control, for accessing client-server
+databases; the Data control is to the RemoteData control as DAO
+is to RDO.
+</UL>
+<H3><A NAME="UsingaMicrosoftAccessDatabase">
+Using a Microsoft Access Database</A></H3>
+<P>
+Database access has been a part of VB's feature set for quite
+some time. Since VB 3.0, Visual Basic has included the Microsoft
+Access database engine, which gives you a number of benefits:
+<UL>
+<LI>You can use Access's powerful and intuitive development environment
+to develop a database.
+<LI>Both Microsoft Access and Visual Basic users can access your
+database simultaneously.
+<LI>If you're an experienced Access developer, you will find that
+much of the code you've written in Access is usable in Visual
+Basic. This is because Access includes a dialect of Visual Basic
+known as Visual Basic for Applications. In many cases you can
+copy and paste code directly between Access and Visual Basic.
+</UL>
+<P>
+As of the time you're reading this, the current version of Access
+is Microsoft Access 97; it is part of the Microsoft Office 97
+suite. Visual Basic has the ability to access Microsoft Access
+databases created with versions of Access as early as Access 2.0.
+<H3><A NAME="OtherDataSourcesAccessibletotheDataControl">
+Other Data Sources Accessible to the Data Control</A></H3>
+<P>
+If for some reason you can't or don't wish to use a Microsoft
+Access database, you have a plethora of other options. The Access
+engine supports a number of other database formats as well, such
+as Paradox and the dBASE format used by FoxPro and a number of
+other database management applications.
+<P>
+You use the Connect property of the data control to designate
+which type of database you wish to connect to. Choices of database
+formats provided by the Connect property include:
+<UL>
+<LI>Microsoft Access (the default)
+<LI>dBASE III, IV, or 5.0
+<LI>Excel versions 3.0 to 7.0
+<LI>FoxPro versions 2.0 through 3.0
+<LI>Lotus WK1, WK3, and WK4 formats
+<LI>Paradox versions 3.0 through 5.x
+<LI>Text files
+</UL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>Database Access And The Control Creation Edition</B>
+</TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+Although the Visual CCE enables you to create controls that are data-aware, it doesn't include database access. This can put you in the unamusing position of being able to create a control that you cannot test. The control may work fine; you just can't 
+connect it to a data control to prove this fact for yourself, at least not in the CCE.</BLOCKQUOTE>
+<BLOCKQUOTE>
+Database access is available in the Professional and Enterprise editions of Visual Basic. If you're a user of the Professional or Enterprise editions of Visual Basic 4.0 and you haven't upgraded yet, you're in luck, because you can use those editions of VB 
+to test your control. (And, of course, you can use the control in any of the retail editions of Visual Basic 5.0.) It is a hassle, yes, because you have to switch back and forth between two different versions of VB, but whaddya want for 
+nothing?</BLOCKQUOTE>
+<BLOCKQUOTE>
+Even if you don't have an edition of VB that can test your data-aware control, you can still follow along through this chapter to learn how to create such a control. You'll just need to skip over the parts where you test your control.</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>These data sources are the sources that were supported natively by the Visual Basic 4.0 data control. It's likely that this list will expand somewhat in the shipping version of VB 5.0, possibly (for example) to include data files created by Microsoft 
+Excel 97.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H3><A NAME="MoreChoicesUsingOpenDatabaseConnectivity">
+More Choices: Using Open Database Connectivity</A></H3>
+<P>
+If the native database formats available to you aren't enough,
+you can also connect to a database using a Windows technology
+called Open Database Connectivity (ODBC). ODBC provides a set
+of drivers that enables your application to access a data source
+no matter what format that data source is in. You can access any
+ODBC data source from a Visual Basic Data control.
+<P>
+If your application needs to access a client-server database (such
+as Oracle or Sybase), an ODBC driver is one part of the equation
+that connects your application to the database. But ODBC isn't
+just for client-server connections; there are ODBC drivers for
+many applications that store and process data<FONT FACE="Symbol">-</FONT>even
+for applications that are not relational databases. For example,
+there is an ODBC driver for Microsoft Excel, enabling you to access
+data stored in an Excel spreadsheet as if it were stored in a
+relational database. (The Microsoft Excel format is also supported
+natively by the VB data control as well.)
+<P>
+The good news is that from the control creation perspective, none
+of this matters. This is because the data source is abstracted
+at such a high level that your control only sees a record source
+and a field, as you'll see in the sections that describe data-aware
+controls later in this chapter.
+<H3><A NAME="DataAwareControlsinVisualBasic">
+Data-Aware Controls in Visual Basic</A></H3>
+<P>
+Visual Basic comes with a number of data-aware controls. You can
+use these controls as examples of how data-aware controls behave;
+you can also use these controls as constituent controls of your
+control project. The data-aware controls that come with all versions
+of Visual Basic are:
+<UL>
+<LI>TextBox
+<LI>PictureBox
+<LI>Label
+<LI>CheckBox
+</UL>
+<P>
+The Professional and Enterprise editions of Visual Basic include
+these additional data-aware controls:
+<UL>
+<LI>RichTextBox
+<LI>DBGrid
+<LI>DBList
+<LI>DBCombo
+</UL>
+<P>
+There are also a number of data-aware third-party controls. For
+example, data-aware grids, which can display two-dimensional lists
+of data displayed in rows and columns, are particularly abundant.
+<H3><A NAME="HowDatabaseAccessWorks">
+How Database Access Works</A></H3>
+<P>
+You connect an ActiveX control to a database through the Data
+control. The Data control handles the connection between the application
+and the database, while the ActiveX control displays the data
+and permits the user to edit the data that it displays.
+<P>
+The Visual Basic Data control is illustrated in Figure 17.1.
+<P>
+<A HREF="f17-1.gif"><B>Figure 17.1 :</B> <I>Visual Basic Data control</I>.</A>
+<P>
+You only need to set two properties of the Data control to connect
+it to a data source: the DatabaseName and RecordSource properties.
+These properties are outlined in Table 17.1.
+<P>
+In addition to providing a connection to the database, the Data
+control provides a user interface for a form that contains data-aware
+controls. The four buttons in the Data control are illustrated
+in Figure 17.2.
+<P>
+<A HREF="f17-2.gif"><B>Figure 17.2 :<I> </I></B><I>Data control buttons</I>.</A>
+<P>
+When the user is navigating through the recordset using the Data
+control, she has the ability to edit records (unless the Data
+control's ReadOnly property has been set to True). When an edit
+occurs, the edit is saved to the database as soon as the user
+moves to a different record or when your application executes
+the Update method of the Data control's Recordset object.<BR>
+<P>
+<CENTER><B>Table 17.1 Properties Of The Data Control</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=124>DatabaseName</TD><TD WIDTH=462>The name of the database. This can be a file on disk (for a Microsoft Access database), a directory (for a dBASE-style database), or an ODBC data source (for a client-server database or other type 
+of database not directly supported by Visual Basic).
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=124>RecordSource</TD><TD WIDTH=462>The name of the table in the database to which the Data control is connected. For relational databases, this can be the name of a table, a query stored in the database, or a text string in 
+Structured Query Language (SQL).
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+In addition to navigating through the recordset, you can use the
+Data control to create a new record. When the Data control's EOFAction
+property is set to 2-New Record, you can create a new record by
+clicking on the Move Last button, then clicking on the Move Next
+button. This behavior mimics the behavior of the navigation buttons
+in Microsoft Access, which also create new records when the user
+moves past the last record in a recordset.
+<H3>Properties of Data-Aware Controls</H3>
+<P>
+A control that can be connected to a data control is said to be
+<I>bound</I> or <I>data-aware</I>.</A> Data-aware controls expose
+the DataSource and DataField properties, as shown in Table 17.2.
+<BR>
+<P>
+<CENTER><B>Table 17.2 Properties Of Data-Aware Controls</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=124>DataSource</TD><TD WIDTH=462>The name of the Data control that maintains the connection to the database
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=124>DataField</TD><TD WIDTH=462>The name of the field of the table in the database to which the control is bound
+</TD></TR>
+</TABLE></CENTER>
+<P>
+When a control is bound to a data control, the data displayed
+is dependent on what's in the database. For example, a bound TextBox
+control's Text property is almost never set by the developer.
+Instead, the developer sets the DataSource and DataField properties
+and the Text property is set by the Data control.
+<P>
+So in summary, the steps a developer goes through to create a
+database application based on the Visual Basic Data control are:
+<OL>
+<LI>Create a Data control on a form.
+<LI>Set the Data control's DatabaseName property to point to the
+location of the database file.
+<LI>Set the Data control's RecordSource property to refer to the
+database table or query you wish to use.
+<LI>Create one or more bound controls on the form.
+<LI>Set the controls' DataSource property to refer to the Data
+control.
+<LI>Set the controls' DataField property to refer to the field
+in the database. 
+</OL>
+<P>
+One of the advantages of setting up a database application in
+this way is that you can often create an application that requires
+a grand total of zero lines of code to provide basic functionality.
+<H2><A NAME="ProvidingDataAwarenessinYourActiveXControl"><FONT SIZE=5 COLOR=#FF0000>
+Providing Data Awareness in Your ActiveX Control</FONT></A></H2>
+<P>
+Giving your ActiveX control the ability to connect to a data control
+is a fairly straightforward process involving the ever-popular
+Procedure Attributes dialog box.
+<P>
+To demonstrate this, you'll create a data-aware control that will
+graphically display the value of a database field. This control
+will be used by an ice cream factory to provide a visual display
+of different types of ice cream for a production-tracking database
+application. To do this:
+<OL>
+<LI>Create a new control project. Give the UserControl the name
+DataPicture.
+<LI>Add a constituent Picture control to the control designer.
+Give this control the name picDisplay.
+<LI>Change the AutoSize property of the control to True. Change
+the BorderSize property of the control to 0 None. Set the Picture
+control of the property to the file type.bmp, found on the CD-ROM
+that accompanies this book.
+<LI>Set the Top and Left properties of picDisplay to zero.
+<LI>Add four more Picture controls to the control designer. Name
+them picChocolate, picIce, picSherbert, and picNull.
+<LI>Set the Picture properties of the four new controls to chocolate.bmp,
+ice.bmp, sherbert.bmp, and type.bmp, respectively.
+<LI>Set the Visible property of picChocolate, picIce, picSherbert,
+and picNull to False. This will make the controls invisible at
+runtime. Your control designer should look something like Figure
+17.3.
+</OL>
+<P>
+<A HREF="f17-3.gif"><B>Figure 17.3 :</B> <I>DataPicture control designer</I>.</A>
+<P>
+Next you'll enter code to make the picture displayed by the control
+change according to the contents of the database field. To do
+this, enter the following code in the Click event of picDisplay:
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+Private mvDataValue As Variant
+
+Public Property Get DataValue() As Variant
+    DataValue = mvDataValue
+End Property
+
+Public Property Let DataValue(ByVal vNewValue As Variant)
+    mvDataValue = vNewValue
+    Select Case vNewValue
+        Case Null
+        picDisplay.Picture = picNull.Picture
+        
+        Case 0
+        picDisplay.Picture = picChocolate.Picture
+        
+        Case 1
+        picDisplay.Picture = picIce.Picture
+        
+        Case 2
+        picDisplay.Picture = picSherbert.Picture
+        
+        Case Else
+        picDisplay.Picture = picNull.Picture
+        
+    End Select
+    
+    ' ***** Very important for data-bound properties
+    PropertyChanged &quot;DataValue&quot;
+    
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+You can see that this code simply switches the picture displayed
+by picDisplay to the appropriate type of ice cream. There are
+no new concepts in this code, although you'll want to note that
+the PropertyChanged statement (which you should include in a Property
+Let statement anyway) is particularly important. This is because
+it triggers a database update in a data-aware control.
+<P>
+Next, add code that will enable the user to change the value of
+the field to which the control is bound. For this control, the
+user can change the value of the field by clicking on the control,
+so enter the following code in picDisplay's Click event:
+<BLOCKQUOTE>
+<PRE>
+Private Sub picDisplay_Click()
+    Select Case mvDataValue
+        Case 0
+        DataValue = 1
+        
+        Case 1
+        DataValue = 2
+        
+        Case 2
+        DataValue = 0
+        
+        Case Else
+        DataValue = 0
+        
+    End Select
+    
+    PropertyChanged &quot;DataValue&quot;
+    
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+This procedure also contains nothing conceptually new; it simply
+cycles through the available pictures, changing the value of the
+database field each time the user clicks on the control until
+the user has selected the value he wants.
+<P>
+Now enter a Resize event for the UserControl. This procedure will
+resize the UserControl to conform to the dimensions of the constituent
+picture control picDisplay:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_Resize()
+    ' Make the UserControl match picDisplay
+    ' because picDisplay is AutoSized
+    UserControl.Height = picDisplay.Height
+    UserControl.Width = picDisplay.Width
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+Finally, to enable your control to connect to a data control,
+you must designate one of the properties of your control as bindable.
+Binding a control to a field in the database means that whenever
+the bound property of your control changes, Visual Basic writes
+the new value back to the database field to which your control
+is bound.
+<P>
+To mark the DataValue property as bindable to a database field,
+do the following:
+<OL>
+<LI>Select the menu command <B>Tools, Procedure Attributes</B>.
+<LI>The Procedure Attributes dialog box appears. Click on the
+<B>Advanced</B> button. The dialog box expands.
+<LI>Select the checkbox labeled Property is data bound. Then select
+the checkbox labeled This property binds to data field. The Procedure
+Attributes dialog box looks like Figure 17.4.<BR>
+
+<A HREF="f17-4.gif"><B>Figure 17.4 :</B> <I>Procedure Attributes dialog box</I>.</A>
+<BR>
+<BR>
+<LI>Click on <B>OK</B>. The DataValue property is marked as a
+bindable property.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>At this point, if you're going to test your control in a container other than Visual Basic 5.0, you'll need to compile your control using the File, Make menu command.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+Your data-aware control is now complete. To test it:
+<OL>
+<LI>Close the code window and close the control designer.
+<LI>Open the EXE form.
+<LI>Place a Data control on the EXE form. Remember, the Data control
+is only available in the Professional or Enterprise edition of
+Visual Basic; if you only have Visual Basic 4.0, that will suffice.
+<LI>Set the Data control's DatabaseName property to icecream.mdb.
+This Microsoft Access database is on the CD-ROM that accompanies
+this book.
+<LI>Set the Data control's RecordSource property to tblIceCream.
+<LI>Add three labels and three text boxes to the form so that
+it looks like Figure 17.5. Name the text boxes txtFactory, txtDate,
+and txtQuantity.<BR>
+<A HREF="f17-5.gif"><B>Figure 17.5 :</B> <I>Running data-Access application</I>.</A>
+<P>
+<LI>Set the DataSource property of all three text boxes to Data1.
+<LI>Set the DataField property of txtFactory to the field Factory.
+Set the DataField property of txtDate to the field Date. Set the
+DataField property of txtQuantity to the field Quantity.
+<LI>Run the application to make sure that everything is hooked
+up correctly. You should be able to browse data from the database
+through the interface you've just built, as illustrated in Figure
+17.5, above.
+<LI>Now add an instance of the DataPicture control to the form.
+Set the control's DataSource property to Data1, and set its DataField
+property to IceCreamType.
+
+<LI>Run the application. You should be able to see that for each production
+record, a different type of ice cream appears. The value that
+is stored in the database field is a long integer, but the value
+displayed by the control is a type of ice cream, as illustrated
+in Figure 17.6.
+<BR>
+
+<A HREF="f17-6.gif"><B>Figure 17.6 :</B> <I>Application with DataPicture control</I>.</A>
+<BR>
+<BR>
+<LI>In one of the records, click on the DataPicture control to
+see that you can change the ice cream type. If you click several
+times, the control cycles through the available types. Any change
+you make to the data is saved to the database.
+</OL>
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+In this chapter, you learned about how database access works in
+Visual Basic. We went through the various options for hooking
+up to a database available to the Visual Basic developer and demonstrated
+how to add database features to your ActiveX control.
+<HR>
+
+<CENTER><P><A HREF="ch16.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch18.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

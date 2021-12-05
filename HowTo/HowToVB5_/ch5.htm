@@ -1,0 +1,630 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 5 -- Handling and Raising Events</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;5</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Handling and Raising Events</FONT>
+</H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#CreatingCustomEvents">
+Creating Custom Events</A>
+<UL>
+<LI><A HREF="#UnderstandingtheSyntaxofEventandRaiseEvent">
+Understanding the Syntax of Event and RaiseEvent</A>
+<LI><A HREF="#CreatinganEvent">
+Creating an Event</A>
+<LI><A HREF="#CreatinganEventThatIncludesaParameter">
+Creating an Event That Includes a Parameter</A>
+<LI><A HREF="#RaisingEventsofConstituentControls">
+Raising Events of Constituent Controls</A>
+<LI><A HREF="#ProvidingStandardEvents">
+Providing Standard Events</A>
+<LI><A HREF="#SpecifyingaDefaultEvent">
+Specifying a Default Event</A>
+<LI><A HREF="#UnderstandingContainerProvidedEvents">
+Understanding Container-Provided Events</A>
+</UL>
+<LI><A HREF="#EventsoftheUserControlObject">
+Events of the UserControl Object</A>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+When your control raises an event, it gives programmers an opportunity to
+do something interesting. Controls with rich event models represent
+the difference between a do-nothing file viewer and a fully-featured
+piece of component software. This chapter discusses how to create
+custom events in your ActiveX control.
+<P>
+Additionally, this chapter discusses the events triggered by the
+UserControl object itself.
+<H2><A NAME="CreatingCustomEvents"><FONT SIZE=5 COLOR=#FF0000>
+Creating Custom Events</FONT></A></H2>
+<P>
+Unlike custom properties, which were available in VB 4.0 classes,
+custom events are a new feature in Visual Basic 5.0. Events are
+a way to permit users to write code to hook into things that your
+control does.
+<P>
+For example, consider the HappyHour control we started building
+in <A HREF="ch3.htm" >Chapter 3</A> This control, which is comprised of a PictureBox
+and a Caption control, is designed to reside in a Web page. In
+order to receive regularly updated graphical and textual information,
+the HappyHour control might be modified to reload picture or text
+information on a regular basis-every fifteen minutes, for example.
+In order to give users of your control the ability to run other
+code in response to this, you instruct your control to raise an
+event, called Updated, to be triggered every time the control
+has finished re-downloading new data.
+<P>
+The user could then hook into the Updated event to cause some
+other action to take place in her program; an audio beep, or perhaps
+a pop-up dialog box or other interface element to let the user
+know that the data has been updated.
+<H3><A NAME="UnderstandingtheSyntaxofEventandRaiseEvent">
+Understanding the Syntax of Event and RaiseEvent</A></H3>
+<P>
+You create a custom event using an event declaration in the Declarations
+section of a code module. Similar to a variable declaration, an
+event declaration denotes the name of the event procedure and,
+optionally, any parameters that are passed to it.
+<P>
+After you've declared a custom event, you can trigger the event
+using the RaiseEvent statement. The syntax of an event declaration
+looks like this:
+<BLOCKQUOTE>
+<PRE>
+Public Event <I>EventName</I>([ByVal <I>variable</I> As <I>datatype</I>])
+</PRE>
+</BLOCKQUOTE>
+<P>
+Once you've declared an event, you can refer to it in your code
+by using the RaiseEvent statement. The syntax of the RaiseEvent
+statement looks like this:
+<BLOCKQUOTE>
+<PRE>
+RaiseEvent event_name
+</PRE>
+</BLOCKQUOTE>
+<P>
+The argument event<I>_</I>name must, of course, be the same as
+the name of the event in the event<B> </B>declaration.
+<H3><A NAME="CreatinganEvent">
+Creating an Event</A></H3>
+<P>
+In this section you'll add an event to the HappyHour project.
+This project is an updated version of the HappyHour control discussed
+in <A HREF="ch3.htm" >Chapter 3</A> (In case you skipped over the walk-through in Chapter
+3, the HappyHour control is designed to provide graphical and
+textual notification to members of a company that it is time for
+happy hour.)
+<P>
+The major change in this version of the HappyHour control is the
+addition of a Timer<B> </B>control and two new properties, HappyHourStart
+and HappyHourEnd. Since the addition of these new elements of
+the control don't introduce any significant new elements to the
+HappyHour control, I've included them for you in the updated version
+of the HappyHour control on your CD-ROM.
+<P>
+The HappyHourStart and HappyHourEnd properties store user-defined
+start and end times for HappyHour. For the purposes of our demonstration,
+we'll assume that happy hour begins at 5:00 PM and ends at 6:00
+PM (although the way it's set up, the user can change that to
+any values she wants).
+<P>
+In order to implement this, the user sets the HappyHourStart property
+to 5:00 PM and the HappyHourEnd property to 6:00 PM.
+<P>
+The Timer control checks the system time once per second, comparing
+the current time against the user-set values for HappyHourStart
+and HappyHourEnd. If it's happy hour, the control fires the HappyHourStart
+event. The user can then use the HappyHourStart event to do anything
+she wants-make the computer play a sound or change the Picture
+and Caption properties of the control. To do this:
+<OL>
+<LI>Open the control designer for the HappyHour control. (This
+control project is on the CD-ROM that accompanies this book.)
+You should be able to see that in this version of the control,
+a Timer<B> </B>has been added to the control (Figure 5.1).
+<LI>Double-click on the control designer to open its code window.
+<LI>Using the Object combo box at the top of the code window,
+switch to the General section of the code. This should move your
+cursor to the top of the code window, if you're in Full Module
+view.
+<LI>Insert the HappyHourStart event declaration by writing the
+following code in the Declarations section of the code window:
+</OL>
+<P>
+<A HREF="f5-1.gif"><B>Figure 5.1 :</B> <I>Revised version of the HappyHour control</I>.</A>
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+
+Public Event HappyHourStart()
+</PRE>
+</BLOCKQUOTE>
+<P>
+Your event has now been declared and is eligible to be used in
+your code. Since this event will be raised as a condition of the
+current time, you'll write code to raise the event in the Timer<B>
+</B>event of the Timer<B> </B>control. To do this:
+<OL>
+<LI>Using the Object combo box, switch to the code for Timer1.
+<LI>The Timer event procedure appears. (This is the only event
+raised by the Timer control.) Add the code in the listing below.
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Timer1_Timer()
+' Triggered once per second.
+' Compares current time to
+' happy hour time. If it's happy
+' hour, raise the HappyHourStart event.
+
+' bail out if it's already happy hour
+    If mHappyHour Then
+        Exit Sub
+    End If
+
+' bail out if happy hour hasn't
+' been defined yet
+    If mHappyHourBegin = &quot;&quot; Or mHappyHourEnd = &quot;&quot; Then
+        Exit Sub
+    End If
+
+' check to see if it's happy hour now
+    If Time &gt; CDate(mHappyHourBegin) And Time &lt; CDate(mHappyHourEnd)_
+Then
+        mHappyHour = True
+        RaiseEvent HappyHourStart
+    Else
+        mHappyHour = False
+    End If
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+The variable mHappyHour<B> </B>is an internal flag that indicates
+to the Timer<B> </B>event whether it's currently happy hour or
+not. This flag exists because it wouldn't make sense for the HappyHour<B>
+</B>control to raise the HappyHourStart<B> </B>event once per
+second during happy hour; instead, if the Timer<B> </B>event sees
+that it is happy hour already, it aborts without raising the HappyHourStart<B>
+</B>event.
+<H4>Testing The HappyHourStart Event</H4>
+<P>
+Once you've entered the above code, you can test it by going through
+the following steps:
+<OL>
+<LI>Set your computer's system clock to 5:00 PM. You can do this
+by using the Date/Time settings in Control Panel.
+<LI>Close the HappyHour control designer, if it is open.
+<LI>Open HHTestForm<B>.</B>frm, the EXE project test form for
+the HappyHour<B> </B>project.
+<LI>Double-click on HappyHour1. The HappyHourStart event should
+appear in the code window. Enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub HappyHour1_HappyHourStart()
+    HappyHour1.Caption = &quot;It is now happy hour!&quot;
+    Set HappyHour1.Picture = LoadPicture(&quot;d:\Code\Chapter 05\_ 
+HappyHour2\After\happy.bmp&quot;)
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=5>
+<LI>Launch the program by clicking on the Run button on the toolbar,
+or by pressing the function key F5.
+<LI>As soon as the program runs, the HappyHour control should
+immediately trigger the HappyHourStart event and change the picture
+and caption. The running program should look like Figure 5.2.
+</OL>
+<P>
+<A HREF="f5-2.gif"><B>Figure 5.2 :</B> <I>Test program after the HappyHourStart event
+is triggered</I>.</A>
+<H3><A NAME="CreatinganEventThatIncludesaParameter">
+Creating an Event That Includes a Parameter</A></H3>
+<P>
+Sometimes it's useful for events raised by a control to pass additional
+information to event procedures. Controls do this in the form
+of <I>event parameters</I>. Most events do not have parameters,
+but it's useful to include them when necessary.
+<P>
+For example, consider the MouseDown<B> </B>event of most interface
+controls. It is not enough that Visual Basic simply indicates
+that the user has pressed the mouse key. Your program must also
+know where and how the mouse was clicked.
+<P>
+This is why the MouseDown event receives the parameters of Button,
+Shift, X<B>,</B> and Y. You should be familiar with these types
+of events already, but to illustrate this more clearly, the code
+below gives an example of the first line of a MouseDown event
+procedure for a PictureBox control.
+<BLOCKQUOTE>
+<PRE>
+Private Sub Picture1_MouseDown(Button As Integer, Shift As Integer, _
+    X As Single, Y As Single)
+</PRE>
+</BLOCKQUOTE>
+<P>
+The Button parameter tells the event which mouse button was pressed.
+The Shift<B> </B>parameter tells whether a key on the keyboard
+(either Shift, Ctrl, Alt, or some combination of these) was pressed.
+The X and Y parameters tell the event where on the PictureBox<B>
+</B>control the user pressed the mouse.
+<P>
+When events raised by your control pass arguments in this way,
+the RaiseEvent<B> </B>procedure specifies what the parameters
+are. To create an event that passes parameters in your example
+project, begin by declaring a HappyHourChanged event:
+<BLOCKQUOTE>
+<PRE>
+Public Event HappyHourChanged (bHappyHourStatus As Boolean)
+</PRE>
+</BLOCKQUOTE>
+<P>
+Next, modify the Timer event of Timer1 to raise the new HappyHourChanged
+event, rather than the HappyHourStart<B> </B>event, using this
+code:
+<BLOCKQUOTE>
+<PRE>
+Private Sub Timer1_Timer()
+' Triggered once per second.
+' Compares current time to
+' happy hour time. if it's happy
+' hour, raise the appropriate event.
+
+' happy hour hasn't been set yet
+If mHappyHourBegin = &quot;&quot; Or mHappyHourEnd = &quot;&quot; Then
+    Exit Sub
+End If
+
+' check to see if it's happy hour now
+    If Time &gt; CDate(mHappyHourBegin) And Time &lt; CDate(mHappyHourEnd)_
+Then
+        
+        If mHappyHour = False Then
+            RaiseEvent HappyHourChanged(True)
+            mHappyHour = True
+        Else
+            ' it's already happy hour
+        End If
+    Else
+        If mHappyHour = True Then
+            RaiseEvent HappyHourChanged(False)
+            mHappyHour = False
+        End If
+    End If
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+The Timer event still evaluates whether it's happy hour, but now
+instead of merely triggering the HappyHourStart event (which would
+lock the employees of our company into a perpetual state of happiness),
+it calls the HappyHourChanged event, passing the event the Boolean
+parameter of True or False depending on whether it's happy hour
+or not.
+<P>
+You can now take advantage of that Boolean parameter in the HappyHourChanged
+event. To do this:
+<OL>
+<LI>Close the control designer and open the HHTestForm project
+on the CD-ROM that accompanies this book.
+<LI>Double-click on HappyHour1 to open its code window.
+<LI>Delete the event procedure HappyHourStart.
+<LI>In the HappyHourChanged event procedure, enter the following
+code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub HappyHour1_HappyHourChanged(HappyStatus As Boolean)
+
+Select Case HappyStatus
+    Case True
+    HappyHour1.Caption = &quot;It is now happy hour!&quot;
+    ' Change the following filename to match your system's configuration
+    Set HappyHour1.Picture = LoadPicture(&quot;d:\Code\Chapter 05\HappyHour2\After\_
+happy.bmp&quot;)
+    
+    Case False
+    HappyHour1.Caption = &quot;It is not happy hour yet. Get back to work.&quot;
+    ' Change the following filename to match your system's configuration
+    Set HappyHour1.Picture = LoadPicture(&quot;d:\Code\Chapter 05\HappyHour2\After\_
+work.bmp&quot;)
+    
+End Select
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL>
+<BR>(You'll want to change the filename &quot;d:\work\work.bmp&quot;
+to reflect the location of the file work.bmp on your system.)
+</OL>
+<P>
+
+<OL START=5>
+<LI>Using the Date/Time icon in the Control Panel, set your system
+clock to 5:59 PM.
+<LI>Run the program. You should be able to see the control change
+to the happy hour state as soon as the program runs. When your
+system clock changes to 6:00 PM, the control should change back
+to its work state.
+</OL>
+<H3><A NAME="RaisingEventsofConstituentControls">
+Raising Events of Constituent Controls</A></H3>
+<P>
+The preceding example demonstrates how to modify the Timer event
+of the constituent Timer control for a specific purpose. But if
+you are interested in simply passing a constituent control's event
+through to your UserControl, it's easy to do. Simply raise the
+constituent control's event to the UserControl level by using
+the RaiseEvent statement.
+<P>
+Events that are passed through to constituent controls are said
+to be <I>forwarded</I>. Here is an example of how a forwarded
+event might work in the HappyHour control. In this case, we're
+forwarding the Click event of PictureBox control:
+<BLOCKQUOTE>
+<PRE>
+Public Event Click()    ' This goes in the Declarations section
+
+Private Sub Picture1_Click()
+    RaiseEvent Click
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+Note that as written, this code will only raise the Click event
+if the user clicks on the PictureBox portion of the HappyHour
+control; it will not raise the event if the user clicks on the
+Label portion. To cause the Click event to be raised when the
+user clicks on any portion of the control, add a RaiseEvent to
+the Label's Click<B> </B>event as well (thereby forwarding the
+Click event of the Label control):
+<BLOCKQUOTE>
+<PRE>
+Private Sub lblCaption_Click()
+    RaiseEvent Click
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<H3><A NAME="ProvidingStandardEvents">
+Providing Standard Events</A></H3>
+<P>
+There is a set of events that users expect in practically every
+control. These events are:
+<UL>
+<LI>Click
+<LI>DblClick
+<LI>KeyDown
+<LI>KeyPress
+<LI>KeyUp
+<LI>MouseDown
+<LI>MouseMove
+<LI>MouseUp
+</UL>
+<P>
+Providing this core set of recommended events will go a long way
+toward making your control's programmable interface more intuitive.
+And, of course, providing more than this basic set of events will
+make your control more flexible for the programmers that use it.
+<P>
+Of course, you're not required to provide any of these events
+if they don't make sense in the context of your control. For example,
+a control that is meant to be clicked (such as a CommandButton)
+doesn't need to have a DblClick event (indeed, it would be difficult
+to implement a DblClick event in such a control, since its Click
+event would be triggered the first time a user clicked it).
+<H3><A NAME="SpecifyingaDefaultEvent">
+Specifying a Default Event</A></H3>
+<P>
+You can specify that a particular event in your control's event
+model is the <I>default event</I> for that control. The default
+event is the first event that appears in a code window.
+<P>
+For example, consider the PictureBox control. When you instantiate
+a PictureBox on a form at design time and double-click on it,
+the code window opens to the picture box's Click event. This happens
+because Click is the default event for a PictureBox control. To
+designate a default event for your control:
+<OL>
+<LI>Select the menu commands Tools, Procedure Attributes.
+<LI>The Procedure Attributes dialog box appears. In the Name combo
+box, select the event you want to serve as your control's default
+event.
+<LI>Click on the Advanced button.
+<LI>The Procedure Attributes dialog expands. Activate the User
+Interface Default box.
+<LI>Click on OK.
+</OL>
+<P>
+It's never mandatory to provide a default event for your control,
+but it makes things a little easier on your users. Most commercial
+controls designate a default event, so your users will expect
+you to provide one, too. If you don't provide an event, the first
+event to be displayed in the code window is the event that comes
+first in alphabetical order.
+<H3><A NAME="UnderstandingContainerProvidedEvents">
+Understanding Container-Provided Events</A></H3>
+<P>
+The Extender object of your control's container can automatically
+provide a number of events for your control. However, bear in
+mind that not all containers are the same. In Visual Basic, the
+container provides the following events:
+<UL>
+<LI>GotFocus
+<LI>LostFocus
+<LI>DragOver
+<LI>DragDrop
+</UL>
+<P>
+Because they are provided by the container, you don't have to
+write any code to enable the user to hook into these events; they're
+there inherently.
+<P>
+However, you need to remember that you can't count on these events
+being provided by the container. If you raise an event that you
+expect to be provided by the container's Extender object, use
+error-trapping just in case your control is placed into a container
+that doesn't raise the event you expected.
+<P>
+See <A HREF="ch7.htm" >Chapter 7</A> &quot;Interacting with the Container,&quot; for
+more details on the container. See <A HREF="ch15.htm" >Chapter 15</A>, &quot;Debugging
+and Error Trapping,&quot; for more information on error-trapping.
+<H2><A NAME="EventsoftheUserControlObject"><FONT SIZE=5 COLOR=#FF0000>
+Events of the UserControl Object</FONT></A></H2>
+<P>
+In order to be able to provide a number of standard features of
+an ActiveX control, it's important to understand the events that
+it triggers during its lifetime. This is different than the events
+that your control raises; the events of the UserControl object
+are analogous to events of the Visual Basic form such as Load,
+Unload, and Activate.
+<P>
+The events of the UserControl object are summarized in Table 5.1.
+<BR>
+<P>
+<CENTER><B>Table 5.1 Events of the UserControl Object</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=145><B>Event</B></TD><TD WIDTH=450><B>Occurs When</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=145>InitProperties</TD><TD WIDTH=450>The user places the control on the container for the first time. This event is only triggered once in the lifetime of the control. It is used to set the initial values for a control's 
+properties.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=145>Initialize</TD><TD WIDTH=450>An application creates an instance of a UserControl. The Extender and Ambient objects are not available to this event. This is the first event triggered by a control; it is triggered numerous times 
+in the control's lifetime.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=145>ReadProperties</TD><TD WIDTH=450>An old instance of a control is re-instantiated. This is where you read design-time properties from the PropertyBag and reassign them to your control.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=145>Resize</TD><TD WIDTH=450>This occurs after the control appears and whenever its size is changed.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=145>Paint</TD><TD WIDTH=450>This occurs when the control needs to redraw itself.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=145>WriteProperties</TD><TD WIDTH=450>The design-time properties of the control need to be saved using the PropertyBag object. This event is only triggered at design time (because run-time properties of the control aren't saved via 
+the PropertyBag).
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=145>Terminate</TD><TD WIDTH=450>All references to a UserControl are set to Nothing or when the last reference to the object falls out of scope. This occurs as the control is about to be destroyed.
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The Load and Unload events you're accustomed to working with in Visual Basic forms aren't present in control designers. The analogous events of the UserControl are the ReadProperties and WriteProperties events.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+Although the table makes the chain of events look deceptively
+simple, bear in mind that these events get triggered numerous
+times-often in seemingly counter-intuitive ways-during the development
+and deployment of your control. Part of the reason why the events
+are triggered in ways you might not expect is because the UserControl
+is destroyed and re-created by Visual Basic behind the scenes
+while you move through the development-testing-debugging-refinement
+cycle of control creation.
+<P>
+For example, if you create a UserControl, then instantiate it
+on an EXE project form, go back to the control designer in order
+to make changes to it, then return to the EXE project form, the
+control will have been destroyed and re-created by Visual Basic.
+This is to insure that the changes to the control are reflected
+in the instantiation of the control on your EXE project form.
+<P>
+Controls that are placed on a form at design time are destroyed,
+then re-created, when the user runs the Visual Basic EXE project.
+Because this process is performed seamlessly behind the scenes
+by Visual Basic, it might seem strange that so many Terminate<B>
+</B>events occur in your UserControl.
+<P>
+Table 5.2 provides a step-by-step narrative that should give you
+a better idea of how and when these events are triggered.
+<P>
+The example project HappyHour2 on your CD-ROM has Debug<B>.</B>Print
+statements in all the important UserControl events, so you can
+see the events explained in Table 5.2 in action.<BR>
+<P>
+<CENTER><B>Table 5.2 Events in the Lifetime of a Typical UserControl
+Object</B></CENTER><P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=433><B>Action</B></TD><TD WIDTH=156><B>Events Triggered</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=433>You instantate a control on an EXE project form.
+</TD><TD WIDTH=156>Initialize<BR>
+InitProperties</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=433>You open a form containing a previously-instantiated control.
+</TD><TD WIDTH=156>Initialize<BR>
+ReadProperties</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=433>You alter the control's designer, then return to the EXE project form.
+</TD><TD WIDTH=156>Initialize<BR>
+ReadProperties</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=433>You run the EXE program.</TD><TD WIDTH=156>WriteProperties<BR>
+Terminate<BR>
+Initialize<BR>
+ReadProperties
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=433>You halt the EXE program.</TD><TD WIDTH=156>Initialize<BR>
+ReadProperties
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=433>You delete the instance of the control from the form.
+</TD><TD WIDTH=156>WriteProperties<BR>
+Terminate</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Because there is no such thing as &quot;design-time&quot; on a Web page, controls that reside on Web pages don't go through the same life cycle as controls that reside in Visual Basic applications. Controls that live in Web pages are always treated as 
+if they are newly instantiated each time they appear; consequently, they trigger Initialize, InitProperties, Resize, and Paint events. For more information on how your controls behave in Web pages, see <A HREF="ch13.htm" >Chapter 13</A>, &quot;Deploying 
+Your Control on the Web.&quot;</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+This chapter explored how to raise events in your control. We
+covered both event declaration and implementing a real-world event
+in a control.
+<P>
+We also covered the event model of the UserControl object itself.
+In addition, we went over how you can use such events to manage
+properties and other run-time and design-time attributes of your
+control.
+<P>
+In the next chapter, you'll learn how to provide custom methods
+in your controls.
+<HR>
+
+<CENTER><P><A HREF="ch4.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch6.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

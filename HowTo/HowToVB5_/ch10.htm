@@ -1,0 +1,1104 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 10 -- Window Dressing</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;10</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Window Dressing</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#GivingYourControlaTransparentBackground">
+Giving Your Control a Transparent Background</A>
+<LI><A HREF="#DesignTimeRuntimeReadOnlyProperties">
+Design Time, Runtime, Read-Only Properties</A>
+<UL>
+<LI><A HREF="#Demonstration1">
+Demonstration</A>
+</UL>
+<LI><A HREF="#PermittingYourControltoActasaContainer">
+Permitting Your Control to Act as a Container</A>
+<UL>
+<LI><A HREF="#Demonstration2">
+Demonstration</A>
+</UL>
+<LI><A HREF="#ImplementingAccessKeys">
+Implementing Access Keys</A>
+<UL>
+<LI><A HREF="#AccessKeyswithConstituentControls">
+Access Keys with Constituent Controls</A>
+<LI><A HREF="#UsingtheAccessKeyPropertyandAccessKeyPressEvent">
+Using the AccessKey Property and AccessKeyPress Event</A>
+</UL>
+<LI><A HREF="#ControlsThatAreInvisibleatRuntime">
+Controls That Are Invisible at Runtime</A>
+<UL>
+<LI><A HREF="#Demonstration3">
+Demonstration</A>
+</UL>
+<LI><A HREF="#ControlsThatAligntotheEdgesofForms">
+Controls That Align to the Edges of Forms</A>
+<UL>
+<LI><A HREF="#Demonstration4">
+Demonstration</A>
+</UL>
+<LI><A HREF="#AddinganAboutBox">
+Adding an About Box</A>
+<LI><A HREF="#ProjectTemplates">
+Project Templates</A>
+<UL>
+<LI><A HREF="#Demonstration5">
+Demonstration</A>
+<LI><A HREF="#ChangingtheDefaultTemplatesFolder">
+Changing the Default Templates Folder</A>
+</UL>
+<LI><A HREF="#AddingaToolboxBitmap">
+Adding a Toolbox Bitmap</A>
+<UL>
+<LI><A HREF="#Demonstration6">
+Demonstration</A>
+</UL>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+
+<HR>
+<P>
+This chapter covers a mixed bag of ActiveX control features. Many
+of these features are cosmetic in nature, but even the seemingly
+superficial features can be crucial if you want to give your control
+the feature set and interface that users expect.
+<P>
+This chapter is chock-full of demonstrations that show how each
+feature works; many of the demonstrations include information
+on non-obvious techniques you can use to achieve a number of interesting
+effects in your ActiveX control project.
+<H2><A NAME="GivingYourControlaTransparentBackground"><FONT SIZE=5 COLOR=#FF0000>
+Giving Your Control a Transparent Background</FONT></A></H2>
+<P>
+Enabling your control to show the background of its container
+is a feature that's particularly useful when your control is based
+on several constituent controls.
+<P>
+You can make the background of your UserControl property transparent
+by setting its BackStyle property to 0 - Transparent. Bear in
+mind that making the background of your control transparent creates
+a significant performance hit on your control because it must
+do much more calculation in order to redraw itself.
+<H2><A NAME="DesignTimeRuntimeReadOnlyProperties"><FONT SIZE=5 COLOR=#FF0000>
+Design Time, Runtime, Read-Only Properties</FONT></A></H2>
+<P>
+Although some properties are design-time-only or runtime-only,
+most properties can be set at any time. The nature of each property
+will help you determine whether your control should expose properties
+that can't be set at runtime or design time. You should obviously
+avoid restricting user access to properties if you can help it.
+<P>
+You can make a property design-time-only or runtime-only by inspecting
+the UserMode property of the Ambient object in the Property Let
+procedure. If the UserMode property is True, then it is runtime.
+If the property is False, the control is in design mode.
+<H3><A NAME="Demonstration1">
+Demonstration</A></H3>
+<P>
+Here's a demonstration of a property that can't be set at runtime.
+<OL>
+<LI>Create a new control project. Give the UserControl the name
+ArkeyMalarkey.
+<LI>Enter the following code in the ArkeyMalarkey control's code
+window:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+
+Private mlngArkeyMalarkey As Long
+
+
+Public Property Get ArkeyMalarkey() As Long
+    ArkeyMalarkey = mlngArkeyMalarkey
+End Property
+
+
+Public Property Let ArkeyMalarkey(ByVal lngNewValue As Long)
+
+    If Ambient.UserMode = True Then
+        ' It's runtime.
+        MsgBox &quot;You ninny! You can't set this at runtime!&quot;
+    Else
+        mlngArkeyMalarkey = lngNewValue
+    End If
+        
+End Property
+</PRE>
+</BLOCKQUOTE>
+<OL START=3>
+<LI>To test this code, close the code window, close the control
+designer, and switch to the EXE project test form. Create an instance
+of the ArkeyMalarkey control on the form.
+<LI>You should be able to see the control's ArkeyMalarkey property
+in the Properties window. Change it to some other value. You should
+be able to do this with no problem. This demonstrates that the
+property can be changed at design time.
+<LI>Now run the project by choosing the menu command Run, Start.
+Pause execution by clicking on the Pause button on the toolbar
+(or by pressing Ctrl+Break on your keyboard).
+<LI>If the Immediate window isn't already visible, press Ctrl+G
+to make it visible. In the Immediate window, enter the code
+</OL>
+<BLOCKQUOTE>
+<PRE>
+ArkeyMalarkey1.ArkeyMalarkey = 14
+</PRE>
+</BLOCKQUOTE>
+<OL START=7>
+<LI>When you press Enter, the message box should pop up, as illustrated
+in Figure 10.1. The property will be left unchanged. This property
+cannot be changed at runtime.
+</OL>
+<P>
+<A HREF="f10-1.gif"><B>Figure 10.1 :</B> <I>What part of runtime don&#146;t you understand?</I>.</A><P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>When the user attempts to set a design-time-only property at runtime, your control should raise an error, rather than display a message box, as this simplified demonstration does. For more information on raising errors, see Chapter 15, &quot;Debugging 
+and Error Trapping.&quot;</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H2><A NAME="PermittingYourControltoActasaContainer"><FONT SIZE=5 COLOR=#FF0000>
+Permitting Your Control to Act as a Container</FONT></A></H2>
+<P>
+Just as a Visual Basic form can contain one or more ActiveX controls,
+a control can also contain one or more ActiveX controls. Not all
+controls can act as containers for other controls; examples of
+controls that can contain other controls include the PictureBox
+control and the Frame control.
+<P>
+Controls are contained in other controls for a variety of reasons.
+For example, the Frame control gives end users a choice of options,<FONT FACE="Times">
+</FONT>usually presented in the form of multiple OptionButton
+controls.
+<P>
+Sometimes controls are contained in other controls for cosmetic
+purposes. A PictureBox grouping of a collection of controls enables
+you to place a different color or bitmap behind the control group.
+Additionally, when you move the PictureBox control, all the controls
+contained in it move along with it,<FONT FACE="Times"> </FONT>which
+can be a real help when you're coding complicated Resize events.
+<P>
+To let your UserControl contain other controls, you set its ControlContainer
+property to True. Once you do that, users can deposit a hypothetically
+unlimited number of controls in it. The only problem with this,
+as the following demonstration shows, is writing code to handle
+them.
+<H3><A NAME="Demonstration2">
+Demonstration</A></H3>
+<P>
+To see how to program a control that has the ability to host other
+controls, you'll create a control called ViewPort. This control
+is designed to conserve screen space by housing a large number
+of controls in a very small space on the screen. It can do this
+because not all of the controls are visible at once; the user
+must scroll left or right to locate the correct control within
+the ViewPort control. So, this control trades off ease of use
+for the end user with conservation of screen space.
+<P>
+The ViewPort control consists of nothing more than some code and
+a constituent horizontal scroll bar control. The scroll bar enables
+the user to scroll left and right to view all the controls.
+<P>
+To create this control:
+<OL>
+<LI>Start a new control project. Give the UserControl the name
+ViewPort.
+<LI>Add a horizontal scroll bar control (HScroll) to the UserControl.
+It doesn't matter where you place the scroll bar, since its dimensions
+and position on the control will be determined by the UserControl's
+Resize event. The control designer will look like Figure 10.2.
+<BR>
+<A HREF="f10-2.gif"><B>Figure 10.2 :</B> <I>Visual design of ViewPort control</I>.</A><P>
+<LI>In the Properties window, set the UserControl's ControlContainer
+property to True.
+<LI>Set the HScrollBar's LargeChange property to 100, and its
+SmallChange property to 20.
+<LI>You'll need to write some code to make the scroll bar stretch
+to fill the width of the UserControl. The code looks like this:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_Resize()
+    HScroll1.Move 0, Height - HScroll1.Height, Width
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=6>
+<LI>Next, you need to create a new property for the control. This
+property will dictate the scrollable area of the control (as opposed
+to the <I>visible</I> width of the control, which is determined
+by the control's Width property). Call this property VirtualWidth.
+To implement it, enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Declaration
+Private mlngVirtualWidth As Long
+Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
+    PropBag.WriteProperty &quot;VirtualWidth&quot;, mlngVirtualWidth, Width
+End Sub
+
+Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
+    mlngVirtualWidth = PropBag.ReadProperty(&quot;VirtualWidth&quot;, Width)
+End Sub
+
+Public Property Get VirtualWidth() As Long
+    VirtualWidth = mlngVirtualWidth
+End Property
+
+Public Property Let VirtualWidth(ByVal lngNewValue As Long)
+    mlngVirtualWidth = lngNewValue
+    HScroll1.Max = lngNewValue
+End Property
+</PRE>
+</BLOCKQUOTE>
+<OL START=7>
+<LI>In the Declarations section of the code, declare an internal
+variable that stores the value of the horizontal scroll bar. You'll
+use this variable in the next step.
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private mlngPreviousScroll As Long
+</PRE>
+</BLOCKQUOTE>
+<OL START=8>
+<LI>Add the following code to the horizontal scroll bar's Change
+event. This code moves all of the controls contained in the control
+to the left or right whenever the scroll bar is changed. This
+will give the end user the impression that she is panning left
+or right when she clicks on the scroll bar, when in fact the controls
+are physically being moved each time she clicks.
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub HScroll1_Change()
+    Dim c As Control
+    For Each c In UserControl.ContainedControls
+        c.Left = c.Left + (mlngPreviousScroll - HScroll1.Value)
+    Next
+    mlngPreviousScroll = HScroll1.Value
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL>
+<BR>This is the trickiest piece of code in the control. It
+uses the ContainedControls collection of the UserControl object
+to iterate through all the controls contained in the control,
+adjusting their Left properties so it appears as if the control
+is panning across them. In fact, though, the control isn't panning
+at all; the controls themselves are moved left or right.
+</OL>
+<P>
+
+<OL START=9>
+<LI>The control is ready to be sited on the form. Close the control
+designer and return to the test EXE project form.
+<LI>Create an instance of the ViewPort control on the EXE project
+form. Resize the control so it's big enough to accommodate three
+CommandButton controls.
+<LI>Create a new CommandButton on the form.
+<LI>With the CommandButton still selected, choose the menu command
+Edit, Cut (or use the keyboard shortcut Ctrl+X).
+<LI>Select the ViewPort control and select the menu command Edit,
+Paste (or use the keyboard shortcut Ctrl+V). This causes the command
+button to be contained by the ViewPort control.
+<LI>Repeat the process for two more command buttons, and adjust
+their position and Caption properties so they look like Figure
+10.3.<BR>
+<A HREF="f10-3.gif"><B>Figure 10.3 :</B> <I>ViewPort control with contained CommandButtons</I>.</A><P>
+<LI>Resize the ViewPort control so that only one of the three
+buttons is visible.
+<LI>Before you run the EXE project, you must add one line of code
+to the EXE project form. This code sets the VirtualWidth property
+as a function of the width of the control. Enter the following
+code in the Load event of the form:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Form_Load()
+    ' Set virtual width of view port to
+    ' the right side of the rightmost command button
+    ViewPort1.VirtualWidth = Command3.Left + Command3.Width
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+
+<OL START=17>
+<LI>Run the EXE project by choosing the menu command Run, Start
+(or by using the function key F5). You should be able to use the
+scroll bar to scroll back and forth to see all of the buttons
+contained in the ViewPort control.
+</OL>
+<P>
+The ViewPort control should work for an unlimited number of contained
+controls, as long as the code you entered in the Load event of
+Form1 that sets the control's VirtualWidth property takes all
+the controls stored in the control into account; the property
+must always be large enough to store the rightmost control contained
+within.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>If you feel like getting a little more show-offy, you might consider adding a vertical scroll bar and some more code to this control to make it scroll in two dimensions, both horizontally and vertically. Such a control would be a very handy way to view 
+large graphics in a small area on screen.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H2><A NAME="ImplementingAccessKeys"><FONT SIZE=5 COLOR=#FF0000>
+Implementing Access Keys</FONT></A></H2>
+<P>
+An <I>access key</I> is a key that the user presses in combination
+with the Alt key. Controls can be programmed to respond to access
+keys. A typical use for this feature is for a control to take
+the focus in response to an access key, but you could have a control
+respond by executing a method.
+<P>
+Controls that can respond to access keys have a Caption property
+that responds to the ampersand (&amp;) character in a special
+way. When the user assigns a caption that contains an ampersand,
+it means that the next character in the caption string is to be
+treated as that control's access key. A control with a caption
+of ABC&amp;DEFG would then have an access key of d (and the caption
+would display as ABC<U>D</U>EFG). So, to produce the result specified
+in this caption, the user would press ALT+D.
+<P>
+For example, let's say you have a form with a frame and two option
+buttons. The first option button has the caption &amp;Jes, and
+the second button has the caption &amp;Ne. (I'm talkin' Esperanto
+here; try to keep up with me.) Pressing Alt+J on your keyboard
+is the equivalent of clicking the Jes button, while pressing Alt+N
+is the equivalent of clicking Ne, as illustrated in Figure 10.4.
+<P>
+<A HREF="f10-4.gif"><B>Figure 10.4 :</B> <I>Access keys allow an alternative to mouse
+clicks</I>.</A><P>
+<P>
+On the other hand, if you create a CommandButton control and give
+it the Caption property of J&amp;erky, the control's access key
+becomes Alt+E. If you run the program and press Alt+J, the CommandButton's
+Click event is triggered.
+<H3><A NAME="AccessKeyswithConstituentControls">
+Access Keys with Constituent Controls</A></H3>
+<P>
+If you rely on the behavior of constituent controls to provide
+access key behavior, you don't have to write any code at all.
+To see how this works, do the following:
+<OL>
+<LI>Set up a new control project with constituent Label and TextBox
+controls. Be sure to add the Label first, and then the Text Box.
+<LI>Give the UserControl the name TextLabel.
+<LI>Set the Text property of the constituent TextBox to nothing.
+The control should look like Figure 10.5.<BR>
+<A HREF="f10-5.gif"><B>Figure 10.5 :</B> <I>TextLabel control</I>.</A><P>
+<LI>Insert the following code to delegate a Caption property to
+the Label control:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Property Get Caption() As String
+    Caption = Label1.Caption
+End Property
+
+Property Let Caption(NewCaption As String)
+    Label1.Caption = NewCaption
+End Property
+
+Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
+    Caption = PropBag.ReadProperty(&quot;Caption&quot;)
+End Sub
+
+Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
+    PropBag.WriteProperty &quot;Caption&quot;, Label1.Caption
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=5>
+<LI>Close the form designer and switch to the EXE project form.
+<LI>Place a normal TextBox control on the form, then place an
+instance of your TextLabel control on the form.
+<LI>Set the Caption property of TextLabel1 to &amp;Punkinhead.
+Make sure you include the ampersand, because that's the character
+that designates the access key. The form should look like Figure
+10.6.<BR>
+<A HREF="f10-6.gif"><B>Figure 10.6 :</B> <I>Test form with TextBox and TextLabel controls</I>.</A><P>
+<LI>Run the EXE project. You can see that the normal TextBox takes
+the focus, because its TabIndex property is zero. (This is the
+case because you added it to the form first.)
+<LI>Press the access key for the TextLabel control, Alt+P. You
+should be able to see that the focus changes-not to the Label,
+but to the TextLabel's constituent TextBox control.
+</OL>
+<P>
+Relying on a Label to serve as an access key for another control
+is a neat (albeit not-entirely-obvious) trick. It works because
+the Label can't take the focus itself, so instead, the next control
+in the tab order (in this case, the constituent text box) is given
+the focus instead.
+<H3><A NAME="UsingtheAccessKeyPropertyandAccessKeyPressEvent">
+Using the AccessKey Property and AccessKeyPress Event</A></H3>
+<P>
+Hijacking the Label control's access key works well when you have
+a Label in your control. But what happens when you want to (for
+example) build your own avant-garde command button out of a constituent
+PictureBox control? A PictureBox control doesn't respond to an
+access key, so you have to build that functionality into your
+control manually.
+<P>
+You can build manual access key functionality into your control
+by using the AccessKeys property and AccessKeyPress event of the
+UserControl. The AccessKeys property denotes the key or keys that
+will cause the AccessKeyPress event to be raised. The AccessKeyPress
+event enables you to write code that will take an action based
+on the end user pressing the control's access key. Whether the
+code in the AccessKeyPress event simply moves the focus onto your
+control or initiates an action (such as another event) is up to
+you. To see how this works:
+<OL>
+<LI>Create a new control project. Give the UserControl the name
+ClickyPicture.
+<LI>Add a constituent PictureBox control to the designer and make
+it roughly the same height and width as the designer.
+<LI>Set Picture1's AutoRedraw property to True.
+<LI>Create a Click event for the control by adding the following
+code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+' Declarations
+Public Event Click()
+
+Private Sub Picture1_Click()
+    RaiseEvent Click
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=5>
+<LI>Give your PictureBox a textual component in its Paint event
+by entering the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_Paint()
+    Picture1.Font.Bold = True
+    Picture1.Font.Size = 24
+    Picture1.Font.Underline = True
+    Picture1.Print &quot;C&quot;;
+    Picture1.Font.Underline = False
+    Picture1.Print &quot;lick me!&quot;
+    Picture1.CurrentX = 0
+    Picture1.CurrentY = 0
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=6>
+<LI>In order to show that the control has responded to your pressing
+of the access key, enter the following code in the UserControl's
+AccessKeyPress event:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_AccessKeyPress(KeyAscii As Integer)
+    SetFocus
+    Debug.Print &quot;You sunk my battleship.&quot;
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=7>
+<LI>Finally, in the Properties window, change the UserControl's
+AccessKeys property to the letter c, as illustrated in Figure
+10.7.
+</OL>
+<P>
+<A HREF="f10-7.gif"><B>Figure 10.7 :</B> <I>AccessKeys property</I>.</A><P>
+<P>
+This will cause the control's AccessKeyPress event to be triggered
+when the end-user presses the keystroke combination Alt<B>+</B>C.
+<P>
+To test the control, place an instance of it on an EXE project
+form, along with a normal control such as a text box. The EXE
+project form should look like Figure 10.8. Then run the EXE project
+by clicking in the normal text box, then pressing Alt+C. You should
+be able to see the focus move off of the text box. The Immediate
+window will also indicate that the control's AccessKeyPress event
+was run.
+<P>
+<A HREF="f10-8.gif"><B>Figure 10.8 :</B> <I>ClickyPicture control</I>.</A><P>
+<P>
+So you can see in this example how to provide an access key through
+the AccessKeyPress event. Providing such shortcuts can make your
+control easier to use, providing users with the kind of interface
+they expect from controls.
+<H2><A NAME="ControlsThatAreInvisibleatRuntime"><FONT SIZE=5 COLOR=#FF0000>
+Controls That Are Invisible at Runtime</FONT></A></H2>
+<P>
+Not too many controls are invisible at runtime. This is because
+the vast majority of controls provide user-interface elements,
+and as every user-interface designer knows, an invisible user
+interface is an unhappy user interface.
+<P>
+Controls that are invisible at runtime usually provide some sort
+of calculation, or they're used as wrappers to Windows API calls.
+The Timer control is the most common example of this. Because
+it only serves to tick off time, the Timer doesn't need to have
+a visual interface; instead, it serves only to generate events
+after a certain period of time has passed.
+<P>
+Creating a control that is invisible at runtime is simplicity
+itself<FONT FACE="Times">-</FONT>simply set the control's InvisibleAtRuntime
+property to True.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Controls that are invisible at runtime do not generate Paint events. This seems like a no-brainer (because nothing that's invisible ever needs to be painted) but it's worth mentioning. In Chapter 11 you'll see an example of a control that is desperately 
+crying out for a Paint event, but simply can't have one because it's invisible at runtime.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H3><A NAME="Demonstration3">
+Demonstration</A></H3>
+<P>
+To set up a control that is invisible at runtime:
+<OL>
+<LI>Create a new control project. Give the UserControl the name
+AnnoyingPing.
+<LI>Add a Timer control to the UserControl.
+<LI>Set the UserControl's InvisibleAtRuntime property to True.
+<LI>Set the Timer's Interval property to 5000. Because the Interval
+property is measured in milliseconds, this will cause the Timer
+to raise its Timer event every five seconds.
+<LI>Double-click on the Timer control to get to its code window.
+In the code window, write the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Timer1_Timer()
+    If Ambient.UserMode = True Then
+        Debug.Print &quot;This has been an annoying ping.&quot;
+        Beep
+    End If
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+(You're beginning to see why we call this control AnnoyingPing.
+You're also beginning to see why I live in a two-bedroom apartment
+all by myself.)
+<P>
+One interesting thing about the AnnoyingPing control is the fact
+that it only beeps when the program it's in is running (that is,
+Ambient.UserMode) is True. This conditional test is necessary
+because the Timer control will happily continue to tick off Timer
+events no matter what&ETH;whether it's runtime or design-time.
+If only my dad's old Ford Pinto were that reliable.
+<P>
+Anyway, to test this control, close the form designer, create
+an instance of the control on an EXE project form, then run the
+EXE project. The AnnoyingPing control will start pinging wildly.
+You may wish to consider dropping this program off on the doorstep
+of any cranky old men (or ladies) you have living in your neighborhood.
+Try as they might, they won't be able to figure out what's causing
+the AnnoyingPing control to annoy them, because it has no visual
+interface. Science marches on.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>It's a good idea to consider placing the functionality of an invisible control in some other Visual Basic component, such as a class or an ActiveX DLL (formerly referred to as an OLE DLL). This is because an ActiveX control can have greater overhead (in 
+terms of distributables and potentially also in terms of run-time resources) than a code module or a DLL. You can't create DLLs with the Control Creation Edition, but you can create them with the Professional or Enterprise edition of Visual Basic.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="ControlsThatAligntotheEdgesofForms"><FONT SIZE=5 COLOR=#FF0000>
+Controls That Align to the Edges of Forms</FONT></A></H2>
+<P>
+Some controls, such as the PictureBox control, have the ability
+to automatically align themselves to the edge of their containers.
+Such controls can be set to align themselves to either the top,
+left, right, or bottom of the form on which they reside. Such
+controls also automatically resize themselves when their parent
+form is resized.
+<P>
+Controls that are alignable expose an Align property. The Align
+property can be set to None (meaning the control's alignment feature
+is disabled), Top, Bottom, Left, or Right.
+<P>
+Alignability is used most often to implement a status bar that
+sits at the bottom of the form. You can make a control align to
+the edge of its container by setting the Alignable property of
+the UserControl to True.
+<P>
+Since status bars usually have textual and graphical components
+to inform the user of what's going on in the application, it would
+make sense to create a status bar control out of a PictureBox
+control. But because a PictureBox control doesn't have a Caption
+property, you'll have to create one yourself.
+<H3><A NAME="Demonstration4">
+Demonstration</A></H3>
+<P>
+To demonstrate how to implement the UserControl's Alignable property,
+you'll create a status bar control that can align itself to the
+edge of the form it resides on and can resize automatically to
+match the form. To do this: 
+<OL>
+<LI>Create a new Visual Basic control project.
+<LI>Add a constituent PictureBox control to the UserControl. Set
+the PictureBox's Height property to about 375 twips. (It does
+not matter how wide the control is, because its width will adjust
+automatically to the width of its parent form.)
+<LI>Give the UserControl the name StatusBar.
+<LI>Set the UserControl's Alignable property to True.
+<LI>To enable the control's Caption property and drawing events,
+enter the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private mstrCaption As String
+
+Private Sub UserControl_InitProperties()
+    mstrCaption = Extender.Name
+End Sub
+
+Private Sub UserControl_Paint()
+    Picture1.Cls
+    Picture1.Font.Name = &quot;MS Sans Serif&quot;
+    Picture1.Font.Size = 10
+    Picture1.CurrentX = 0
+    Picture1.CurrentY = 0
+    Picture1.Print mstrCaption
+End Sub
+
+Private Sub UserControl_Resize()
+    Picture1.Move 0, 0, ScaleWidth, ScaleHeight
+    UserControl_Paint
+End Sub
+
+Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
+    mstrCaption = PropBag.ReadProperty(&quot;Caption&quot;, Extender.Name)
+End Sub
+
+Public Property Get Caption() As String
+    Caption = mstrCaption
+End Property
+
+Public Property Let Caption(ByVal strNewValue As String)
+    mstrCaption = strNewValue
+    UserControl_Paint
+End Property
+
+Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
+    PropBag.WriteProperty &quot;Caption&quot;, mstrCaption, Extender.Name
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=6>
+<LI>Close the control designer and switch to the text EXE project
+form.
+<LI>Place an instance of the StatusBar control on the form.
+<LI>Set StatusBar1's Align property to 2-vbAlignBottom.
+<LI>Notice how the control snaps to align itself with the bottom
+of the form.
+<LI>Set StatusBar1's Caption property to the text &quot;Spoon.&quot;
+The form should look like Figure 10.9.
+</OL>
+<P>
+<A HREF="f10-9.gif"><B>Figure 10.9 :</B> <I>Form with StatusBar control</I>.</A><P>
+<H2><A NAME="AddinganAboutBox"><FONT SIZE=5 COLOR=#FF0000>
+Adding an About Box</FONT></A></H2>
+<P>
+An About box is a way to stamp your control with your name or
+your company's name, as well as other information about your control.
+Including this information has become more important now that
+ActiveX controls are downloadable over the Internet. It's possible
+that users will download your control and scarcely pay attention
+to where it came from. Which means that when they want to pay
+you big bucks for the licensed version of your control (or harass
+your tech support people because the control doesn't work right)
+they have no idea whom to call. Providing an About box resolves
+that dilemma by including a sort of electronic business card with
+every control you create.
+<P>
+In addition to information about your control and your company,
+you might also consider adding information on your online presence
+in an About box, including your company's Web page, if you have
+one. You can add anything to the About box you can add to a normal
+Visual Basic form.
+<P>
+The standard Visual Basic way to provide an About box in a control
+is to attach the About box to the control's About property. This
+&quot;property&quot; can't be set, so it really acts like a method,
+but it's customarily implemented as a property so that users of
+your control can access it easily through the About property in
+the Properties window. The About property in the Properties window
+is illustrated in Figure 10.10.
+<P>
+<A HREF="f10-10.gif"><B>Figure 10.10 :</B> <I>AboutBox property in the Properties window</I>.</A><P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>It's common for licensed, commercial controls to display their About boxes every time the control is run on a system that does not have a license to run the control. This enables unlicensed users to play with the control and see how it works, even 
+though they haven't paid for it yet. But it discourages them from redistributing the control in the applications they build, because, you know, who wants to see your goofy About box every time the control runs? For more information on licensing your 
+control, see Chapter 12, &quot;Distributing Your Control.&quot;</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+To create your own About box, do the following:
+<OL>
+<LI>In the Project Explorer, right-click on Project1.
+<LI>Project1's Context menu appears. Click on Add.
+<LI>The Context menu's submenu appears. Click on Form.
+<LI>The Add Form dialog pops up. Click on Form, if it is not selected
+already, then click on Open.
+<LI>A new form is added to Project1. Change the form's properties
+as shown in Table 10.1.
+<LI>Add whatever other visual elements you want to the About box.
+(In my About box, for example, I chose to include a graphic promoting
+the virtues of cheese.)
+<LI>When you're done designing the About box, close it and return
+to your control designer.
+</OL>
+<P>
+<P>
+<CENTER><B>Table 10.1 Form properties</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=40%>
+<TR VALIGN=TOP><TD WIDTH=144><B>Property</B></TD><TD WIDTH=144><B>Setting</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=144>Name</TD><TD WIDTH=144>frmAbout</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=144>BorderStyle</TD><TD WIDTH=144>3 - Fixed Dialog
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=144>Caption</TD><TD WIDTH=144>About</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=144>StartUpPosition</TD><TD WIDTH=144>2 - CenterScreen
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+If you don't care to create your own About box for this demonstration,
+you can instead add the About box About.frm (from the CD-ROM that
+accompanies this book) to your template project. To add this About
+box to your project:
+<OL>
+<LI>Right-click on Project1 in the Project Explorer. Project1's
+context menu pops up. Select Add. Then, from the submenu, choose
+Add File (as pictured in Figure 10.11).<BR>
+<A HREF="f10-11.gif"><B>Figure 10.11 :</B> <I>Project context menu</I>.</A><P>
+<LI>The Add File dialog appears. Locate the file About.frm on
+the CD-ROM, select it, and click on Open.
+<LI>The file is added to Project1.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Be sure you've added the About box to Project1, your control project, not Project2, your test EXE project.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+Now that your project contains an About box, you need to enable
+it. To do this:
+<OL>
+<LI>In your UserControl, write the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Public Sub AboutBox()
+    frmAbout.Show vbModal
+    Unload frmAbout
+    Set frmAbout = Nothing
+End Sub<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The code Set frmAbout = Nothing is used to remove the form from memory.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=2>
+<LI>Select the menu command Tools, Procedure<B> </B>Attributes.
+The Procedure Attributes dialog box appears.
+<LI>Choose AboutBox from the Name combo box, if it isn't already
+selected.
+<LI>Click on Advanced. The Procedure Attributes dialog box expands.
+<LI>In the Procedure ID combo box, select AboutBox. This designates
+your AboutBox subroutine as the official AboutBox procedure for
+this control. As you'll see later, Visual Basic treats the AboutBox
+procedure in a special way.
+<LI>Click on OK.
+<LI>Close the code window, close the control designer, and place
+an instance of the control on Form1.
+<LI>In the Properties window, you should be about to see an About
+property at the top of the list. Click on the property, then click
+on its ellipsis button.
+<LI>The About box is displayed, as illustrated in Figure 10.12.
+</OL>
+<P>
+<A HREF="f10-12.gif"><B>Figure 10.12 :</B> <I>About box</I>.</A><P>
+<H2><A NAME="ProjectTemplates"><FONT SIZE=5 COLOR=#FF0000>
+Project Templates</FONT></A></H2>
+<P>
+If you find yourself creating the same type of project again and
+again, you should consider setting up a <I>project template</I>.</A>
+Project templates are a new feature of Visual Basic that let you
+create a prefabricated set of visual design and code elements
+that are included in every project you create.
+<P>
+It's worth noting that the CtlGroup project you've been basing
+most of your Visual Basic control projects on is itself a template.
+You can modify that template as well. For example, if your control
+projects always contain a certain set of API declarations, ActiveX
+controls (built by you or somebody else), a custom class library
+you've devised, or a third-party add-in, you can alter the standard
+project templates to load these automatically every time you create
+a new project.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Project templates take the place of the autoload.vpj file in Visual Basic 4.0 that loaded a programmer-defined set of custom controls each time you launched VB.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H3><A NAME="Demonstration5">
+Demonstration</A></H3>
+<P>
+Let's say you work for a software company that makes ActiveX controls
+that enable users to create custom charts and other graphics.
+Your company's standards dictate that every control have a similar
+About box with your company's logo. Additionally, since all your
+company's controls have to do with charting, you want all of your
+new controls to contain a PictureBox control with the appropriate
+resize code already included.
+<P>
+Start by creating the visual design of the project that will become
+your template. To do this:
+<OL>
+<LI>Create a new control project based on the template CtlGroup.
+Give the UserControl the name BasicPicture.
+<LI>Add a PictureBox control to the control designer.
+<LI>Double-click on the UserControl to open its code window. In
+the UserControl's Resize event, type the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_Resize()
+
+' The Move method is the fastest and most
+' sanitary way to resize a control
+    Picture1.Move 0, 0, ScaleWidth, ScaleHeight
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=4>
+<LI>Close the code window, then close the BasicPicture control's
+form designer.
+</OL>
+<P>
+At this point, you could have added more code to expose the constituent
+Picture property of Picture1 and take care of PropertyBag operations
+(for example), but we've proven our point for the time being.
+<P>
+Now it's time to take the skeletal project group you've created
+and move it into the Visual Basic templates directory so you can
+use it as a template. The trick here is that you're going to save
+the control <I>group</I> (that is, the .VBG file) into the templates
+folder, but you're going to save the individual elements of the
+project into a separate folder alongside the templates folder.
+That way, only the project group becomes a template. To do this:
+<OL>
+<LI>Select the menu command File, Save Project Group.
+<LI>Visual Basic will offer to save the control file, BasicPicture.ctl,
+first.
+<LI>Use the file dialog box to switch to the \vb\template folder.
+<LI>Click on Create New Folder, to create a new folder alongside
+the template folder. Call this new folder BasicPicture. The CreateNewFolder
+button is illustrated in Figure 10.13.<BR>
+<A HREF="f10-13.gif"><B>Figure 10.13:</B> <I>The CreateNewFolder button</I>.</A><P>
+<LI>Double-click on the new BasicPicture folder, then click on
+Save to save the file.
+<LI>Next, Visual Basic will offer to save the control project
+file. Save it as BasicPicture.vbp in the BasicPicture folder.
+<LI>Visual Basic will then offer to save the EXE project test
+form. Name this file BPTest.frm and save it in the BasicPicture
+folder.
+<LI>The next file to save is the EXE project file. Call this BPProject.vbp
+and save it in the BasicPicture folder.
+<LI>Finally, you are ready to save the project group. But don't
+save it into the BasicPicture folder. Instead, back up one folder
+level by clicking on Up One Level, as illustrated in Figure 10.14.
+<BR>
+<A HREF="f10-14.gif"><B>Figure 10.14 :</B> <I>The Up One Level button</I>.</A><P>
+<LI>Next, double-click on the Projects folder. This is where Visual
+Basic saves project templates. Give your project group the name
+Picture.vbg, then click on Save.
+<LI>The project is saved. Just in case you lost track of what
+just happened, Table 10.2 contains a handy summary of the filenames
+and where they should be stored.
+</OL>
+<P>
+<P>
+<CENTER><B>Table 10.2 Filenames for template project</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=65%>
+<TR VALIGN=TOP><TD WIDTH=200>Project Group</TD><TD WIDTH=318>\vb\template\projects\Picture.vbg
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=200>Project</TD><TD WIDTH=318>\vb\template\BasicPicture\BasicPicture.vbp
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=200>BasicPicture control</TD><TD WIDTH=318>\vb\template\BasicPicture\BasicPicture.ctl
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=200>Test project</TD><TD WIDTH=318>\vb\template\BasicPicture\BPTest.vbp
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=200>Test form</TD><TD WIDTH=318>\vb\template\BasicPicture\BPTest.frm
+</TD></TR>
+</TABLE></CENTER>
+<P>
+To see that your project has been made into a template, start
+a new project by choosing the menu command File, New Project.
+The New Project dialog box appears. You should be able to see
+your BasicPicture template in the dialog box, as illustrated in
+Figure 10.15.
+<P>
+<A HREF="f10-15.gif"><B>Figure 10.15 :</B> <I>New Project dialog box </I>.</A><P>
+<H3><A NAME="ChangingtheDefaultTemplatesFolder">
+Changing the Default Templates Folder</A></H3>
+<P>
+If for some reason you don't care to store your templates under
+the VB folder, you can change it to whichever directory you like.
+For example, if you are part of a team of developers, you might
+want to store a collection of templates on a file server accessible
+to everyone in your work group. In this case, you'd want all the
+developers in your work group to use the same templates folder.
+<P>
+To do this, choose the Tools, Options menu command, then select
+the Environment tab. The dialog box looks like Figure 10.16.
+<P>
+<A HREF="f10-16.gif"><B>Figure 10.16 :</B> <I>The Environment tab under Tools, Options</I>.</A><P>
+<P>
+Enter your preferred directory in the Templates Directory area,
+then click OK. The directory you chose will be the directory Visual
+Basic will look in to find templates. If you're working in a group,
+each member of the group must set this option in their copy of
+Visual Basic.
+<H2><A NAME="AddingaToolboxBitmap"><FONT SIZE=5 COLOR=#FF0000>
+Adding a Toolbox Bitmap</FONT></A></H2>
+<P>
+You can add a bitmap to your UserControl. This bitmap represents
+your control in the Visual Basic toolbox.
+<P>
+Adding a bitmap that will represent your control in the Visual
+Basic toolbox is similar to setting the Picture property of a
+PictureBox control.
+<P>
+You add a toolbox bitmap by assigning a bitmap to the ToolboxBitmap
+property of your UserControl. The bitmap you assign can be of
+any size. However, you should tailor your toolbox bitmaps to the
+standard size of 16 pixels wide by 15 pixels high. If you make
+your bitmaps any bigger than that, Visual Basic will automatically
+scale them down and they'll look heinous.
+<H3><A NAME="Demonstration6">
+Demonstration</A></H3>
+<P>
+To add a bitmap to a control project:
+<OL>
+<LI>Open or create a new control project.
+<LI>Open the control designer.
+<LI>In the control designer's Properties sheet, click on the ToolboxBitmap
+property, then click on its ellipsis button.
+<LI>The Load Bitmap<B> </B>dialog box appears. Locate and select
+the file tombo.bmp, which is on the CD-ROM that accompanies this
+book. When you've located it, click on Open.
+<LI>Close the form designer.
+<LI>Open Form1. You should be able to see that the nice new bitmap
+appears in the toolbox (as in Figure 10.17) and the stinky old
+generic toolbox bitmap is nowhere to be seen.
+</OL>
+<P>
+<A HREF="f10-17.gif"><B>Figure 10.17 :</B> <I>Icon in the toolbox</I>.</A><BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Paint Shop Pro is a righteous tool for creating goofy little bitmaps like this. It's orders of magnitude better than Windows Paintbrush. Better yet, it's shareware, so you can torture it before you purchase it. You can get a copy from the good folks as 
+JASC, Inc. by visiting their web site at <A HREF="http://www.jasc.com.">http://www.jasc.com.</A></I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+In this chapter, you learned probably more than any human being
+should be permitted to learn about a smattering of varied yet
+vital features of a well-crafted ActiveX control. In the next
+chapter, you'll learn how to take advantage of the Windows API
+to enable your control to perform tasks not available in Visual
+Basic.
+<HR>
+
+<CENTER><P><A HREF="ch9.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch11.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>
+
+
+

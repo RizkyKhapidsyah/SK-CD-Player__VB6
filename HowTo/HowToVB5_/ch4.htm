@@ -1,0 +1,1369 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 4 -- Control Properties</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;4</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Control Properties</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#CreatingPropertyProcedures">
+Creating Property Procedures</A>
+<UL>
+<LI><A HREF="#UsingtheExampleFilesontheCDROM">
+Using the Example Files on the CD-ROM</A>
+<LI><A HREF="#DeclaringProperties">
+Declaring Properties</A>
+<LI><A HREF="#UsingPropertyLetandPropertyGet">
+Using Property Let and Property Get</A>
+<LI><A HREF="#EnumeratedProperties">
+Enumerated Properties</A>
+<LI><A HREF="#ValidatingPropertyProcedures">
+Validating Property Procedures</A>
+<LI><A HREF="#UsingthePropertyBagObject">
+Using the PropertyBag Object</A>
+<LI><A HREF="#PropertiesofConstituentControls">
+Properties of Constituent Controls</A>
+<LI><A HREF="#PropertiesYourControlShouldProvide">
+Properties Your Control Should Provide</A>
+<LI><A HREF="#CreatingaProcedureDescription">
+Creating a Procedure Description</A>
+<LI><A HREF="#DesignatingaPropertyastheDefault">
+Designating a Property as the Default</A>
+<LI><A HREF="#GroupingProperties">
+Grouping Properties</A>
+<LI><A HREF="#SynchronizingaPropertywithPropertiesofItsContainer">
+Synchronizing a Property with Properties of Its Container
+</A>
+</UL>
+<LI><A HREF="#CreatingCustomPropertyPages">
+Creating Custom Property Pages</A>
+<UL>
+<LI><A HREF="#UsingthePropertyPageWizard">
+Using the Property Page Wizard</A>
+<LI><A HREF="#ProgrammingthePropertyPageObject">
+Programming the PropertyPage Object</A>
+<LI><A HREF="#ModifyingthePropertyPage">
+Modifying the Property Page</A>
+</UL>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+Properties are the most commonly used elements
+of an ActiveX control's interface. They're also fairly easy to
+implement in Visual Basic.
+<P>
+Much of the behavior of Visual Basic 5.0 properties is not new;
+the concept of properties existed in Visual Basic 4.0 as an element
+of classes. However, there are a number of new considerations,
+new language features, and additional tricks and traps to watch
+out for as you write properties for your ActiveX control.
+<H2><A NAME="CreatingPropertyProcedures"><FONT SIZE=5 COLOR=#FF0000>
+Creating Property Procedures</FONT></A></H2>
+<P>
+You create a property in your control by following these steps:
+<OL>
+<LI>Declare a module-level variable in the Declarations section
+of your control designer.
+<LI>Write a Property Let procedure (or, for object variables,
+a Property Set procedure) to enable the user to change the property.
+<LI>Write a Property Get to enable the user to read the variable.
+<LI>Set the procedure attributes for your property (optional).
+These attributes determine whether the property is the control's
+default property and whether the property is database-aware, as
+well as provide the help text that appears in the Properties window
+when the property is selected.
+</OL>
+<P>
+After you've written Property<B> </B>Let and Property<B> </B>Get
+procedures, you'll take care of these additional tasks:
+<UL>
+<LI>Write the necessary code to save the control's design-time
+properties using the PropertyBag object.
+<LI>Create a custom property page for your control (recommended,
+but optional).
+<LI>Determine which property will be the control's default object
+(also optional).
+</UL>
+<H3><A NAME="UsingtheExampleFilesontheCDROM">
+Using the Example Files on the CD-ROM</A></H3>
+<P>
+The example you'll use in this chapter is the LightBulb control,
+which you'll find on the CD-ROM accompanying this book. The group
+file this project is based on is called LightBulbGroup.vbg. The
+version of LightBulbGroup.vbg in the \Before folder contains a
+minimal version of the LightBulb control, with a visual design
+only and no code. The version of LightBulbGroup.vbg in the \After
+folder contains a version of the LightBulb control that includes
+all the code examples in this chapter. If you want to step through
+the examples in this chapter one at a time as a tutorial, start
+by opening the version of LightBulbGroup<B>.</B>vbg in the \Before
+folder.
+<H3><A NAME="DeclaringProperties">
+Declaring Properties</A></H3>
+<P>
+Creating a property generally involves declaring a variable and
+creating Property Get and Property Let procedures to read from
+and write to the variable.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Properties that are delegated to constituent controls don't require a variable declaration; the state of their properties is stored in the constituent control's property. This concept was introduced in <A HREF="ch2.htm" >Chapter 2</A>and is covered in 
+more detail later in this chapter.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+This example shows you how to create an Illuminated property for
+the LightBulb control. The Illuminated property is stored in a
+Boolean variable, mIlluminated. When the user sets the Illuminated
+property to True, the LightBulb control displays the illuminated
+light bulb graphic. When the Illuminated property is set to False,
+the LightBulb displays the dimmed light bulb graphic.
+<P>
+To implement the Illuminated property, begin by declaring a variable
+to store the state of the property in the Declarations section
+of the LightBulb code designer:
+<BLOCKQUOTE>
+<PRE>
+Private mIlluminated As Boolean
+</PRE>
+</BLOCKQUOTE>
+<P>
+Declare property variables as Private. This is because you don't
+want external procedures to get access to the value in the property.
+Rather than giving external procedures access to the variable
+directly, you give them access through Property<B> </B>Get and
+Property<B> </B>Let procedures. This lets you perform validation
+and other actions (such as changing in the graphical portion of
+the control) when the variable is accessed or changed.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>If you're coming to Visual Basic from another programming language, you might be familiar with the terms &quot;reader function&quot; and &quot;writer function.&quot; You  can think of Property<B> </B>Get as a way to declare a reader function and 
+Property<B> </B>Let and Property<B> </B>Set as ways to declare writer functions</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="UsingPropertyLetandPropertyGet">
+Using Property Let and Property Get</A></H3>
+<P>
+After you've declared a variable to store your property, you next
+need to write Property<B> </B>Let and Property<B> </B>Get procedures.
+(Properties that can be set to object variables require a Property<B>
+</B>Set instead of a Property<B> </B>Let, but the syntax is essentially
+the same.)
+<P>
+Here is the skeletal syntax of a Property<B> </B>Let declaration:
+<BLOCKQUOTE>
+<PRE>
+Property Let propertyname ([argument_list,] value)
+       .
+       .
+       .
+       Exit Property
+       .
+       .
+       .
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+Property<B> </B>Let and Property Get statements can be declared
+as Public, Private, Friend, or Static. For more information on
+declaring procedures as Friend, see <A HREF="ch16.htm" >Chapter 16</A>, &quot;Object-Oriented
+Programming.&quot;
+<P>
+Here is the syntax of the Property<B> </B>Get declaration:
+<BLOCKQUOTE>
+<PRE>
+Property Get <I>propertyname</I> [(<I>argument_list</I>)] [As <I>data_type</I>]
+       .
+       .
+       .      [<I>propertyname = expression</I>]
+[Exit Property]
+       .
+       .
+       .      [<I>propertyname = expression</I>]
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+Note that properties can be declared as any Visual Basic data
+type, including object variable types and user-defined types.
+But remember that if your property type is an object variable,
+you need to use Property<B> </B>Set instead of Property<B> </B>Let
+to set the value of the property.
+<P>
+Additionally, if you declare a property to be of a particular
+data type in its Property<B> </B>Let declaration, make sure that
+its Property<B> </B>Get is of the same type. Don't mix types,
+as you see here:
+<BLOCKQUOTE>
+<PRE>
+Public Property Let Wattage(ByVal NewValue As Wattage) ' Wattage is an
+    mWattage = NewValue                                ' enumerated 
+    PropertyChanged &quot;Wattage&quot;                          ' data type.
+End Property
+
+Public Property Get Wattage() As Integer  ' Integers are not good for
+    Wattage = mWattage                    ' children and other living
+End Property                              ' things
+</PRE>
+</BLOCKQUOTE>
+<P>
+This code will produce a compile error when you attempt to instantiate
+the control. To fix the problem, change the type declaration of
+the Property<B> </B>Get from Integer to Wattage.
+<P>
+The concept of enumerated properties, such as Wattage, is introduced
+later in this chapter. For now, you can write the code now and
+make the declaration it depends on later: .
+<BLOCKQUOTE>
+<PRE>
+' Declarations - We'll define the Wattage
+' type later
+
+Dim mWattage As Wattage
+
+Public Property Let Wattage(ByVal NewValue As Wattage)
+    mWattage = NewValue                               
+    PropertyChanged &quot;Wattage&quot;                         
+End Property
+
+Public Property Get Wattage() As Wattage
+    Wattage = mWattage                  
+End Property                            
+
+Public Property Get Illuminated() As Boolean
+    Illuminated = mIlluminated
+End Property
+
+Public Property Let Illuminated(ByVal bNewValue As Boolean)
+
+    If IsNumeric(bNewValue) Then
+        If bNewValue = True Then
+            picMain.Picture = picOn.Picture
+            mIlluminated = bNewValue
+        Else   ' false
+            picMain.Picture = picOff.Picture
+        End If
+        PropertyChanged &quot;Illuminated&quot;
+    End If
+
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+Don't test this code yet, because the Wattage property won't work
+until you declare the Wattage enumeration. You'll do that in the
+next section.
+<H3><A NAME="EnumeratedProperties">
+Enumerated Properties</A></H3>
+<P>
+You know from working with controls in Visual Basic in the past
+that some properties have the ability to limit the user to a specific
+range of settings. For example, consider the Alignment<B> </B>property
+of a TextBox<B> </B>control. This property can be set to one of
+three numbers: zero, 1, or 2. You can't choose another value in
+the Property window at runtime, because Visual Basic provides
+a combo box for the Alignment property that limits you to these
+three choices.
+<P>
+Fortunately, you don't have to memorize what the values zero,
+1, or 2 mean in order to set this property, because the numeric
+values are associated with textual values in the design-time environment,
+as illustrated in Figure 4.1. A property that provides a list
+of choices for the user at design time is called an <I>enumerated
+property</I>.
+<P>
+<A HREF="f4-1.gif"><B>Figure 4.1 :</B> <I>Example of an enumerated property</I>.</A>
+<P>
+You can provide a pre-defined list of legal property values for
+your user by using an <I>enumeration</I>. An enumeration is a
+new programming feature in Visual Basic 5.0 that enables you to
+define a related set of constant values.
+<P>
+You define an enumeration in a block of code inserted at the Declarations
+section of a module using the Enum statement. A typical enumeration
+looks like this:
+<BLOCKQUOTE>
+<PRE>
+Public Enum HappyHourStatus
+    WorkTime = 0
+    HappyHour = 1
+    NightTime = 2
+    Holiday = 3
+    Weekend = 4
+End Enum<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Remember, an enumeration is a type of constant, so the values you declare in an Enum statement can't be altered at runtime. Also, remember that you can use Enums for purposes other than supplying a list of valid properties; you can use an enumerated 
+variable anywhere you'd use a normal constant.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+A cool thing about enumerated constants is that you don't have
+to declare their values explicitly. If you don't set them to a
+value, then their values are set automatically, starting at zero.
+<P>
+For example, the following code is functionally identical to the
+preceding example:
+<BLOCKQUOTE>
+<PRE>
+Public Enum HappyHourStatus
+    WorkTime
+    HappyHour
+    NightTime
+    Holiday
+    Weekend
+End Enum
+</PRE>
+</BLOCKQUOTE>
+<H4>Handling Similarly Named Enumerated Constants</H4>
+<P>
+You can have two enumerated values with the same name defined
+in different enumerations. When you do this, you must refer to
+the variables by a fully qualified name of the form
+<BLOCKQUOTE>
+<PRE>
+EnumName.ConstantName
+</PRE>
+</BLOCKQUOTE>
+<P>
+For example, say you have an application that contains enumerations
+for both HappyHourStatus and CalendarDay. The CalendarDay enumeration
+looks like this:
+<BLOCKQUOTE>
+<PRE>
+Public Enum CalendarDay
+    WorkDay
+    Weekend
+    Holiday
+    Vacation
+    SickDay
+End Enum
+</PRE>
+</BLOCKQUOTE>
+<P>
+There's a big problem here<FONT FACE="Times">-</FONT>the Holiday
+and Weekend constants exist in both the HappyHour and CalendarDay
+enumerations. What's more, they are equal to different values.
+Holiday is equal to 3 in the HappyHour enumeration, while it's
+equal to 2 in the CalendarDay enumeration.
+<P>
+You can refer to the identically named constants in different
+enumerations by using code like this:
+<BLOCKQUOTE>
+<PRE>
+iToday = HappyHour.Holiday         ' iToday = 2
+iTomorrow = CalendarDay.Holiday    ' iTomorrow = 3
+</PRE>
+</BLOCKQUOTE>
+<P>
+You may be shrieking with horror at the prospect of collisions
+between different enumerated constants, and rightly so. Failing
+to plan ahead to avoid conflicting enumerations will make your
+code as confusing as heck. How confusing is heck? That's the point.
+Try to avoid such conflicts in the first place so you won't have
+to jump through hoops to deal with them.
+<P>
+One alternative is to provide a unique prefix for each enumerated
+constant, like this:
+<BLOCKQUOTE>
+<PRE>
+Public Enum CalendarDay
+    cdWorkDay
+    cdWeekend
+    cdHoliday
+    cdVacation
+    cdSickDay
+End Enum
+
+Public Enum HappyHourStatus
+    hhWorkTime
+    hhHappyHour
+    hhNightTime
+    hhHoliday
+    hhWeekend
+End Enum
+</PRE>
+</BLOCKQUOTE>
+<P>
+Declaring enumerations this way almost ensures you won't run into
+problems with two enumerated constants crashing into each other,
+bursting into flames, and making a mess on your carpet.
+<P>
+One small drawback is that your user will see the prefix when
+selecting the value in the combo box dropdown Property window,
+but that seems like a small price to pay. Function over form,
+and all that.
+<P>
+Here's the code that establishes the Wattage enumeration in the
+HappyHour example project:
+<BLOCKQUOTE>
+<PRE>
+Public Enum Wattage
+    VeryDim
+    FairlyDim
+    Bright
+    VeryBright
+End Enum
+</PRE>
+</BLOCKQUOTE>
+<P>
+Obviously, the values in the Wattage<B> </B>enumeration are oversimplified
+to make the example clearer. You can still test these enumerations
+by doing the following:
+<OL>
+<LI>Close LightBulb's form designer, if it is open.
+<LI>Open frmLBTestForm. There is an instance of the LightBulb
+control on the form called LightBulb1.
+<LI>Click on LightBulb1 to select it.
+<LI>In the Properties<B> </B>window, scroll down to the Wattage
+property. You should be able to change the property to any of
+the enumerated values, such as FairlyDim, Bright, or VeryBright
+(see Figure 4.2).
+</OL>
+<P>
+<A HREF="f4-2.gif"><B>Figure 4.2 :</B> <I>Wattage property enumeration</I>.</A>
+<H4>Boolean Properties</H4>
+<P>
+You can implement a Boolean property by declaring the control's
+Property<B> </B>Let procedure As Boolean. When you declare a Property<B>
+</B>Let in this way, the user is presented with two choices: True
+and False. You don't have to do anything special to make it happen
+this way; the Visual Basic IDE realizes that a particular property
+is Boolean and at design time provides a place in the Properties
+window to select the values True and False.
+<P>
+The Illuminated<B> </B>property of the LightBulb<B> </B>control
+is an example of this kind of property. To see how it works, try
+changing the Illuminated property of a LightBulb<B> </B>control
+on an EXE project form in the Properties<B> </B>window. You should
+be able to see that only two options are available, True<B> </B>and
+False.
+<H4>Using Standard Property Pages</H4>
+<P>
+There are a few properties for which there are standard property
+sheets. When you specify that a property, such as a font or color
+property, is of a predefined enumeration, Visual Basic displays
+a predefined Property window for you.
+<P>
+This is similar to the way the Picture property, introduced in
+<A HREF="ch3.htm" >Chapter 3</A> displays a common Windows File Open dialog box when
+the user attempts to change the control. You don't need to do
+anything special to get Visual Basic to display a file dialog
+box for the Picture property; it is enough to declare your Property<B>
+</B>Set procedure As Picture.
+<P>
+You can provide this functionality in your control's properties
+by using predefined enumerations. Table 4.1 lists some of these
+system-supplied enumerations.
+<H4>Using the Object Browser to Display Enumerations</H4>
+<P>
+Table 4.1 is only a partial list of enumerated properties available
+to you when you're developing properties in your controls. For
+information on all the enumerations that are available, open the
+Object Browser (using the menu command View, Object Browser or
+the function key F2) and browse the list of enumerated properties
+displayed there, as in Figure 4.3.
+<P>
+<A HREF="f4-3.gif"><B>Figure 4.3 :</B> <I>Object browser displaying property enumeration</I>.</A>
+<BR>
+<P>
+<CENTER><B>Table 4.1 Selected standard control property types</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=140><B>Property Type</B></TD><TD WIDTH=160><B>Declaration</B>
+</TD><TD WIDTH=300><B>Description</B></TD></TR>
+<TR VALIGN=TOP><TD WIDTH=140>Checked</TD><TD WIDTH=160>OLE_TRISTATE</TD>
+<TD WIDTH=300>The state of a check box (can be either checked, unchecked, or gray)
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=140>Color (BackColor, ForeColor, etc.)</TD><TD WIDTH=160>OLE_COLOR
+</TD><TD WIDTH=300>A standard color (stored as a Long)</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=140>MousePointer</TD><TD WIDTH=160>MousePointerConstants
+</TD><TD WIDTH=300>The icon associated with the mouse pointer (arrow, cross, I-beam, custom icon, etc.).
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=140>Value</TD><TD WIDTH=160>OLE_OPTEXCLUSIVE</TD>
+<TD WIDTH=300>Used by controls that act as grouped option buttons. When the Value property is declared as OLE_OPTEXCLUSIVE, only one such control in a group can have the value of True.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=140>Align</TD><TD WIDTH=160>AlignConstants</TD>
+<TD WIDTH=300>Used for controls (such as the PictureBox) that can align themselves to the top, bottom, left to right sides of their containers
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=140>Alignment</TD><TD WIDTH=160>AlignmentConstants
+</TD><TD WIDTH=300>The alignment of text left, right, or center, such as that found in a TextBox control
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=140>BorderStyle</TD><TD WIDTH=160>BorderStyleConstants
+</TD><TD WIDTH=300>The graphical border around a control; it is either None or Fixed Single.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=140>FillStyle</TD><TD WIDTH=160>FillStyleConstants
+</TD><TD WIDTH=300>The graphical fill of a control; it is either solid, transparent, or one of a number of shades, such as horizontal line.
+</TD></TR>
+</TABLE></CENTER>
+<P>
+You'll notice that the Object Browser also displays the name and
+values of the enumerations you've created yourself. To see this:
+<OL>
+<LI>In the Object Browser, scroll through the list of enumerations
+until you find the Wattage enumeration.
+<LI>Click on the Wattage<B> </B>enumeration. You should be able
+to see its members: Bright, FairlyDim, VeryBright, and VeryDim.
+<LI>Click on FairlyDim, then look at the bottom of the Object
+Browser. The status bar tells you that FairlyDim is a constant
+equal to 1. Your screen should look like Figure 4.4.
+</OL>
+<P>
+<A HREF="f4-4.gif"><B>Figure 4.4 :</B> <I>Object Browser display of enumerated constant</I>.</A>
+<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Using Object Browser to keep track of the enumerations you've written can be a great help, because it keeps you from having to hunt through your code when you're trying to remember whether you called something xyzFlag or pdqFlag. It also helps you 
+quickly look up the values of enumerated constants</I>
+</BLOCKQUOTE>
+<BLOCKQUOTE>
+<I>You can tell at a glance that a particular constant is an element of your project (as opposed to an element of a standard VB type library) by looking at the bottom of the Object Browser; this area is called the Details Pane.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H4>Example of Standard Control Property Types</H4>
+<P>
+To give an example of a system-provided enumerated constant, you'll
+add a BorderColor property to the LightBulb control. For simplicity's
+sake, the BorderColor property of the LightBulb will delegate
+to the BackColor property of the UserControl. To do this:
+<OL>
+<LI>Open the LightBulb control designer.
+<LI>Open the control designer's code window and enter the following
+code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Public Property Let BorderColor(ByVal NewColor As OLE_COLOR)
+    UserControl.BackColor = NewColor
+    PropertyChanged &quot;BorderColor&quot;
+End Property
+
+Public Property Get BorderColor() As OLE_COLOR
+    BorderColor = UserControl.BackColor
+End Property
+</PRE>
+</BLOCKQUOTE>
+<OL START=3>
+<LI>Close the code window, close the form designer, and switch
+back to frmLBTestForm.
+<LI>Click on LightBulb1. In the Properties windows, you should
+be able to see that the control now has a BorderColor<B> </B>property.
+<LI>In the Properties window, click on the BorderColor property.
+A standard color selection drop-down box appears, as you can see
+in Figure 4.5.
+</OL>
+<P>
+<A HREF="f4-5.gif"><B>Figure 4.5 :</B> <I>The BorderColor dropdown list box</I>.</A>
+<H3><A NAME="ValidatingPropertyProcedures">
+Validating Property Procedures</A></H3>
+<P>
+Property<B> </B>Let and Property<B> </B>Set procedures are the
+place where you'll write validation procedures. Such procedures
+should reject all invalid property values, either by raising some
+kind of error or by ignoring the attempt to change the property
+value.
+<P>
+From an error-trapping perspective, Boolean properties are nice,
+because you don't have to do numeric boundary checking. For example,
+consider the Illuminated property of a LightBulb control.
+<P>
+LightBulbs are either Illuminated or not; that is, their Illuminated
+properties are either True or False. But because Visual Basic
+defines False as zero and True as any nonzero value, the code
+<BLOCKQUOTE>
+<PRE>
+Lightbulb1.Illuminated = 3.14159
+</PRE>
+</BLOCKQUOTE>
+<P>
+will work fine, triggering no error (LightBulb1's Illuminated
+property will be set to True). However, the code 
+<BLOCKQUOTE>
+<PRE>
+Lightbulb1.Illuminated = &quot;ringbo&quot;
+</PRE>
+</BLOCKQUOTE>
+<P>
+generates an error (13-Type Mismatch). You can avoid error in
+this case by testing the value supplied by the user with an IsNumeric
+function, like this:
+<BLOCKQUOTE>
+<PRE>
+If IsNumeric (NewValue) Then
+    ' perform the property change
+    .
+    .
+    .
+Else
+    ' raise an error
+    .
+    .
+    .
+End If
+</PRE>
+</BLOCKQUOTE>
+<P>
+This technique is known as validation, and it's important to do.
+If a run-time error occurs in your control, there's no way for
+your user to trap it.
+<P>
+You have the option of exiting a Property Let in situations where
+the input is just too weird to deal with. For example, say you
+provide a BorderColor property for your control. Windows colors
+are expressed as long integers. But if your control encounters
+the code:
+<BLOCKQUOTE>
+<PRE>
+LightBulb1.BorderColor = &quot;v&aacute;clav&quot;
+</PRE>
+</BLOCKQUOTE>
+<P>
+the user gets a Type<B> </B>Mismatch error, because the BorderColor
+property expects a long integer.
+<P>
+Let's say that instead of raising an error, you want the BorderColor
+property to ignore, or &quot;eat&quot; the error. To make this
+happen, you can change your code to look like the following:
+<BLOCKQUOTE>
+<PRE>
+Public Property Let BorderColor(ByVal NewColor As OLE_COLOR)
+    If IsNumeric(NewColor) Then
+        UserControl.BackColor = NewColor
+        PropertyChanged &quot;BorderColor&quot;
+    Else
+        Exit Property
+    End If
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+The preceding code was just to introduce the Exit<B> </B>property
+statement to you; in general, your procedures should eat errors
+as seldom as possible. The preferred option for validation is
+to raise an error in your Property<B> </B>Let procedure. For more
+information on raising errors in your control, see <A HREF="ch15.htm" >Chapter 15</A>,
+&quot;Debugging and Error Trapping.&quot;
+<H3><A NAME="UsingthePropertyBagObject">
+Using the PropertyBag Object</A></H3>
+<P>
+You use the PropertyBag object to store the properties set for
+your control by a programmer at design time. The PropertyBag object
+has only two methods: ReadProperty and WriteProperty.
+<P>
+You read from the PropertyBag in the ReadProperties event and
+write to the PropertyBag in the WriteProperties event. The syntax
+of the WriteProperty method is:
+<BLOCKQUOTE>
+<PRE>
+PropertyBag.WriteProperty &quot;property_name&quot;, <I>value</I> [, <I>default_value</I>]
+</PRE>
+</BLOCKQUOTE>
+<P>
+The parameter property_name is a string that denotes which property
+you're saving to the property bag. Value is the value of the property
+you're saving. The parameter <I>default_value</I> is optional;
+it exists only to tell Visual Basic not to save the property unless
+the user has changed the property from its default. This makes
+for clearer and faster loading <B>.</B>CTL files.
+<P>
+Here is an example of the WriteProperty method used in the WriteProperties
+event of a UserControl:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
+    PropBag.WriteProperty &quot;Wattage&quot;, mWattage, 0
+    PropBag.WriteProperty &quot;Illuminated&quot;, mIlluminated, False
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+The syntax of the ReadProperty method is:
+<BLOCKQUOTE>
+<PRE>
+PropertyBag.ReadProperty &quot;<I>property_name</I><B>&quot;</B> [, <I>default_value</I>]
+</PRE>
+</BLOCKQUOTE>
+<P>
+Just as with WriteProperty, the ReadProperty<B> </B>method has
+an optional <I>default_value</I> parameter that tells Visual Basic
+whether the property needs to be read from disk or not. This accelerates
+loading the control.
+<P>
+Here is an example of the ReadProperty<B> </B>method in the ReadProperties<B>
+</B>event:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
+    Wattage = PropBag.ReadProperty(&quot;Wattage&quot;, 0)
+    Illuminated = PropBag.ReadProperty(&quot;Illuminated&quot;, False)
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+<B>Where Design-Time Property Data Is Stored</B>
+<P>
+Officially, you aren't supposed to be concerned with what happens
+to data once it's put in the PropertyBag. This is because the
+PropertyBag object is an abstraction, standing between the programmer
+and the property's storage and shielding you from its complexity.
+But you might need to know what these files are and what they
+do (especially when you're backing up your project, using version
+control, or moving your project from one disk to another).
+<P>
+For forms, most design-time property settings are saved to a .FRM
+file. This is also true for controls, except the settings are
+saved in the .CTL file. You can inspect the format of these files
+by opening a .FRM or .CTL in a text editor; just make sure not
+to make any changes to these files, or Visual Basic won't be able
+to read them.
+<P>
+Some properties, such as the Picture<B> </B>property of a PictureBox
+control, can't be stored in standard form or control files, because
+they are too large and consequently need to be stored in a binary
+format. When you set a property such as Picture in a form or control
+designer, Visual Basic creates a binary file that has the same
+name as your file, but with a different extension. This file is
+created and updated when the user saves the corresponding form
+or user control file; under normal circumstances, Visual Basic
+programmers never work with these files directly. Table 4.2 summarizes
+the files' extensions. 
+<H3><A NAME="PropertiesofConstituentControls">
+Properties of Constituent Controls</A></H3>
+<P>
+You learned in <A HREF="ch3.htm" >Chapter 3</A>how to pass through, or <I>delegate</I>,
+the property of your UserControl to a constituent control. In
+general, the code you use to read and write the properties of
+constituent controls to your UserControl is very simple. Given
+a UserControl called LightBulb with a constituent PictureBox control
+called picMain, the code to read and write the control's Picture
+property looks like this:
+<BLOCKQUOTE>
+<PRE>
+Public Property Get Picture() As Picture
+    Picture = picMain.Picture
+End Property
+
+Public Property Set Picture(ByVal NewPic As Picture)
+    picMain.Picture = NewPic
+    PropertyChanged &quot;Picture&quot;
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+This is a code clich&eacute;<FONT FACE="Times">-</FONT>a piece
+of code you'll write dozens if not hundreds of times in your career
+as a Visual Basic control developer. (The code is so straightforward,
+in fact, it makes more sense for you to let the ActiveX Control
+Interface Wizard write it for you. The ActiveX Control Interface
+Wizard is introduced in <A HREF="ch2.htm" >Chapter 2</A>)
+<H4>Limitations of Constituent Controls</H4>
+<P>
+When using constituent controls, there is a caveat you must bear
+in mind. When you place a constituent control on your UserControl
+designer, the constituent control is in run-time mode, even though
+no code is being executed. That means you will not be able to
+gain access to runtime-only properties of the constituent control
+(such as the Sorted property of the ComboBox control).<BR>
+<P>
+<CENTER><B>Table 4.2 Filename extensions of Visual Basic binary
+files</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=60%>
+<TR VALIGN=TOP><TD WIDTH=145><B>File Type</B></TD><TD WIDTH=164><CENTER><B>Filename Extension</B></CENTER>
+</TD><TD WIDTH=208><CENTER><B>Binary Filename Extension</B></CENTER>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=145>Forms</TD><TD WIDTH=164><CENTER>.FRM</CENTER>
+</TD><TD WIDTH=208><CENTER>.FRX</CENTER></TD></TR>
+<TR VALIGN=TOP><TD WIDTH=145>Controls</TD><TD WIDTH=164><CENTER>.CTL</CENTER>
+</TD><TD WIDTH=208><CENTER>.CTX</CENTER></TD></TR>
+<TR VALIGN=TOP><TD WIDTH=145>Property pages</TD><TD WIDTH=164><CENTER>.PAG</CENTER>
+</TD><TD WIDTH=208><CENTER>.PGX</CENTER></TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+Fortunately, the number of runtime-only properties of standard
+Windows control are few, so hopefully this shortcoming won't hinder
+you too often. But it is something to bear in mind as you build
+controls comprised of constituent controls.
+<H3><A NAME="PropertiesYourControlShouldProvide">
+Properties Your Control Should Provide</A></H3>
+<P>
+There are a number of properties that your control is supposed
+to always provide. This being a free country and all, you don't
+<I>have</I> to provide any properties you don't want to. If your
+control is unusual (for example, it's invisible at runtime), then
+you obviously would.
+<P>
+The properties your control should provide are:
+<UL>
+<LI>Appearance
+<LI>BackColor
+<LI>BackStyle
+<LI>BorderStyle
+<LI>Enabled
+<LI>Font
+<LI>ForeColor
+</UL>
+<P>
+You should also provide properties for controls that are similar
+to your control. Make sure your control's property interface make
+sense, and you will avoid legions of users throwing rocks through
+the windows of your home in the middle of the night.
+<H3><A NAME="CreatingaProcedureDescription">
+Creating a Procedure Description</A></H3>
+<P>
+One helpful new feature of the VB5 IDE is the procedure description
+of properties. When you click on a property in the Properties
+window, a (hopefully) helpful piece of text appears at the bottom
+of the Properties window (see Figure 4.6) telling you what the
+property is used for.
+<P>
+<A HREF="f4-6.gif"><B>Figure 4.6 :</B> <I>Example of a procedure description</I>.</A>
+<P>
+You can implement procedure descriptions in properties you create.
+To do this:
+<OL>
+<LI>Open the form designer for your control.
+<LI>Double-click on the designer to open a code window.
+<LI>Choose the menu command Tools, Procedure Attributes. The Procedure<B>
+</B>Attributes dialog appears.
+<LI>Using the Name combo box, choose the property of your control
+you wish to annotate.
+<LI>In the Description text box, type the description of your
+property. The Procedure Attributes dialog box will look like Figure
+4.7.
+<LI>Click on OK.
+</OL>
+<P>
+<A HREF="f4-7.gif"><B>Figure 4.7 :</B> <I>Procedure Attributes dialog box</I>.</A>
+
+<P>
+To test your property description:
+<OL>
+<LI>Click on the control LightBulb1 on frmLBTestForm.
+<LI>Scroll through the list of properties in the Properties window.
+<LI>Click on the Illuminated property. As shown in Figure 4.8,
+you should be able to see the description text you entered at
+the bottom of the Properties window.
+</OL>
+<P>
+<A HREF="f4-8.gif"><B>Figure 4.8 :</B> <I>Procedure description in the Properties
+window</I>.</A>
+<H3><A NAME="DesignatingaPropertyastheDefault">
+Designating a Property as the Default</A></H3>
+<P>
+Most controls have a <I>default property</I>. If you choose to
+designate a default property in your control, the user will not
+have to explicitly type the name of the property when referring
+to it in code. Denoting a default property in your control saves
+the user time at the expense of clarity. For example, the default
+property of a TextBox is its text property. If you have a TextBox
+called Text1, you can either type
+<BLOCKQUOTE>
+<PRE>
+MyString = Text1.Text
+</PRE>
+</BLOCKQUOTE>
+<P>
+or
+<BLOCKQUOTE>
+<PRE>
+MyString = Text1
+</PRE>
+</BLOCKQUOTE>
+<P>
+and the two lines of code will mean the exact same thing.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The default property is not to be confused with the Default property (also referred to in VB5 as the user interface default). The Default property is a property of command buttons and similar controls. When the Default property is set to true, striking 
+the Enter key triggers the command button's Click event</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+To designate a property of your control as its default property,
+do the following:
+<OL>
+<LI>With the control designer open, choose the menu command Tools,
+Procedure Attributes.
+<LI>The Procedure<B> </B>Attributes dialog box appears. In the
+Name<B> </B>combo box, select the property you want to designate
+as the default, then click on Advanced.
+<LI>In the Procedure<B> </B>ID combo box, select (Default). The
+screen will look like Figure 4.9.
+</OL>
+<P>
+You can test your new default property by entering code in the
+Immediate window while the form is running. To do this:
+<OL>
+<LI>Close the control designer, if it is still open.
+<LI>Return to frmLBTestForm. Create a LightBulb control there,
+if one does not already exist.
+<LI>Run the EXE project by choosing the menu command Run, Start
+or using the function key F5.
+<LI>Pause execution by typing Ctrl+Break or clicking on the Break
+button on the toolbar (see Figure 4.10).
+<LI>Open the Immediate window, if it's not already open. (To open
+the this window, choose the menu command View, Immediate Window
+or use the keystroke shortcut Ctrl+G.)
+<LI>In the Immediate window, type the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Print LightBulb1
+</PRE>
+</BLOCKQUOTE>
+<OL>
+<BR>and press Enter. The value of LightBulb1's Illuminated
+property appears in the Immediate window. Now when you type
+</OL>
+<BLOCKQUOTE>
+<PRE>
+LightBulb1 = True
+</PRE>
+</BLOCKQUOTE>
+</OL>
+LightBulb1 illuminates.
+
+<P>
+<A HREF="f4-9.gif"><B>Figure 4.9 :</B> <I>The completed Procedure Attributes dialog
+box</I>.</A>
+<P>
+<A HREF="f4-10.gif"><B>Figure 4.10:</B> <I>The toolbar Break button</I>.</A>
+<H3><A NAME="GroupingProperties">
+Grouping Properties</A></H3>
+<P>
+You can organize properties into groups in order to make it easier
+for users to find them in the Properties windows. It's particularly
+useful to do this if your control exposes a large number of properties.
+<P>
+For example, you might want to create a bunch of electricity-related
+properties together in one group. The Wattage and Illuminated
+properties would be more easily accessible if they belonged to
+this group. To place the LightBulb control's Illuminated property
+in a property group, do the following:
+<OL>
+<LI>Open the HappyHour control's designer, if it's not open already.
+<LI>From the menu, choose the command Tools, Procedure Attributes.
+<LI>The Procedure Attributes dialog box appears. Select the Illuminated
+property from the Name combo.
+<LI>Click on Advanced. The dialog box expands.
+<LI>The Property Category combo determines which category the
+property is placed in. You can select from one of the choices
+in the list (Appearance, Data, Font, and so forth) or you can
+create your own. To create your own property category, type the
+word Electrical in the Property Category box. The dialog box will
+look like Figure 4.11.
+<LI>Click on OK to apply the changes.
+</OL>
+<P>
+To see that the Illuminated property has been assigned to a category,
+do the following:
+<OL>
+<LI>Open the test form frmLBTestForm.
+<LI>An instance of the LightBulb control should already be on
+the form. Click on it to select it.
+<LI>In the Properties window, click on the Categorized tab. Scroll
+through the list of properties; you should be able to see that
+Illuminated now falls under the Electrical category, as illustrated
+in Figure 4.12.
+</OL>
+<P>
+<A HREF="f4-11.gif"><B>Figure 4.11:</B> <I>Custom property category</I>.</A>
+<P>
+<A HREF="f4-12.gif"><B>Figure 4.12:</B> <I>Electrical category</I>.</A>
+<H3><A NAME="SynchronizingaPropertywithPropertiesofItsContainer">
+Synchronizing a Property with Properties of Its Container
+</A></H3>
+<P>
+You can use the AmbientProperties object to gain access to information
+about the properties of your control's container. You do this
+in order to synchronize your control's properties with those of
+its container.
+<P>
+For example, when you set a form's Font property to Times New
+Roman 12 Bold and then place a Label control on the form, the
+Font property of the label is automatically set to Times New Roman
+12 Bold as well. The default properties of the Label are synchronized
+with the properties of its container.
+<P>
+When you write properties, consider whether it is appropriate
+to synchronize properties of your control with properties of its
+container. For more information on the container, including an
+example of how to use the AmbientProperties object, see Chapter
+7, &quot;Interacting with the Container.&quot;
+<H2><A NAME="CreatingCustomPropertyPages"><FONT SIZE=5 COLOR=#FF0000>
+Creating Custom Property Pages</FONT></A></H2>
+<P>
+A custom property page can go a long way toward making the properties
+of your control easier to manipulate at design time. This is particularly
+true if your control has numerous properties or an otherwise complicated
+interface. You can assign a property page to your entire control
+or to a particular property in your control.
+<P>
+In this section you'll step through the construction of a simple
+property page using a wizard, then you'll write code to create
+a property page manually.
+<H3><A NAME="UsingthePropertyPageWizard">
+Using the Property Page Wizard</A></H3>
+<P>
+You can use the Property Page Wizard as a quick way to set up
+a basic property page for your control. After you've created a
+property page using the wizard, you can further customize the
+property page using the same visual design techniques you'd use
+to create Visual Basic applications and ActiveX controls.
+<P>
+Begin by setting up a minimal property page for the LightBulb
+control.
+<P>
+To do this:
+<OL>
+<LI>Open the LightBulb control project in LightBulbGroup<B>.</B>vbg,
+if it is not open already.
+<LI>Choose the menu command Add-Ins, Property Page Wizard.
+<LI>The first Property Page Wizard screen appears. Click on Next.
+<LI>As in Figure 4.12, the screen labeled Select<B> </B>the<B>
+</B>Property<B> </B>Pages appears. Here you have the option to
+designate an existing property page for your control or to create
+a new page.
+<LI>The Property Page Wizard starts by allowing you to select
+the property pages to use for your control.
+<LI>Click on Add to create a new page.
+<LI>The Property Page Name dialog box appears, prompting you to
+name your new property page (see Figure 4.13). In place of PropertyPage1,
+type <B>LightBulbPage</B>, then click on OK.
+<LI>The new page is added to your project and you are returned
+to the Select the Property Pages<B> </B>dialog<B> </B>box. Click
+on Next.
+<LI>The Add<B> </B>Properties<B> </B>window appears. This window
+lets you add properties from your UserControl<B> </B>to the property
+page.
+<LI>Double-click on Illuminated in the Available Properties list.
+The Illuminated property moves to the LightBulbPage page. Click
+on Next.
+<LI>The Finished! window appears. Click on Finish.
+<LI>The Property Page Created dialog box appears. Click on OK.
+<LI>A report appears giving you information on what else needs
+to be done to make your property page functional (see Figure 4.14).
+Click on Close when you're done reading it.
+</OL>
+<P>
+<A HREF="f4-13.gif"><B>Figure 4.13:</B> <I>The Property Page Name window is where
+you name a new property page</I>.</A>
+<P>
+<A HREF="f4-14.gif"><B>Figure 4.14:</B> <I>Property Page Wizard summary report</I>.</A>
+<P>
+Your property page is now functional. To test it:
+<OL>
+<LI>Close the LightBulb control's designer, if it is open.
+<LI>Open the EXE project form. There should be an instance of
+the LightBulb control there already.
+<LI>Right-click on LightBulb1. A pop-up menu appears. Click on
+Properties. As in Figure 4.15, your custom property page appears.
+</OL>
+<P>
+<A HREF="f4-15.gif"><B>Figure 4.15:</B> <I>The Properties Pages showing the LightBulb
+tab</I>.</A>
+<P>
+You should also be able to see that a new file has been added
+to your project, a custom property page called LightBulbPage.
+Locate it in the Project Explorer and double-click it to open
+it.
+<P>
+You can see that at design time, a property page looks not unlike
+a control designer; in fact, they are called <I>property page
+designers</I>. You can manipulate this designer and add controls
+and code to it just like a control designer or a form. You'll
+do that in the next section.
+<H3><A NAME="ProgrammingthePropertyPageObject">
+Programming the PropertyPage Object</A></H3>
+<P>
+The PropertyPage object is a fully programmable Visual Basic object
+similar to a Form or a UserControl object. Tables 4.3 and 4.4
+describe the important properties and events of the PropertyPage.
+<BR>
+<P>
+<CENTER><B>Table 4.3 Important properties of the PropertyPage
+object</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=157><B>Property</B></TD><TD WIDTH=481><B>Description</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=157>ActiveControl</TD><TD WIDTH=481>This is the control that has the focus. You can use this property to determine which type of control the user has selected when the PropertyPage is displayed.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=157>Changed</TD><TD WIDTH=481>This is a flag that indicates whether the user changed a property through the PropertyPage.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=157>SelectedControls</TD><TD WIDTH=481>This is a collection containing all the controls selected when the PropertyPage was activated.
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+<CENTER><B>Table 4.4 Important events of the PropertyPage object</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=151><B>Event</B></TD><TD WIDTH=480><B>When Triggered</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=151>ApplyChanges</TD><TD WIDTH=480>This is triggered when the user clicks on the Apply or OK button or switches tabs in a PropertyPage comprised of multiple pages.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=151>EditProperty</TD><TD WIDTH=480>When the user clicks on the ellipsis button in the Properties window, the property page is opened. It exists so you can set the focus to the appropriate control.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=151>SelectionChanged</TD><TD WIDTH=480>This is triggered when the PropertyPage is first opened and when you select or deselect one or more controls while the page is still open.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=151>Unload</TD><TD WIDTH=480>This is triggered when the PropertyPage is about to be unloaded (usually as a result of the user closing the page). This is similar to the Unload event of a form.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=151>Terminate</TD><TD WIDTH=480>This event occurs after the Unload event. All references to the PropertyPage control go out of scope (or are set to Nothing). 
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="ModifyingthePropertyPage">
+Modifying the Property Page</A></H3>
+<P>
+Property pages created by the Property Page Wizard are generally
+adequate for most types of properties. But you might want to take
+your control's properties sheet further by applying additional
+code and custom controls to the property page's interface.
+<P>
+To demonstrate this, you'll convert the check box that controls
+the Illuminated<B> </B>property to a group of option buttons with
+graphical representations of the &quot;on&quot; and &quot;off&quot;
+states of the light bulb. To do this:
+<OL>
+<LI>Open the property page designer LightBulbPage. There should
+be a single checkbox there for the Illuminated property; this
+checkbox was created by the Property Page Wizard in the preceding
+demonstration of property pages.
+<LI>Beneath the Illuminated checkbox, create a Frame control.
+<LI>Inside the Frame control, create two PictureBoxes and two
+OptionButton controls. Make sure that all the controls are contained
+inside the Frame control or the option buttons won't work properly.
+<LI>Give one OptionButton the name optBulbOff. Name the other
+one optBulbOn.
+<LI>Assign the properties shown in Tables 4.5-4.9 to the controls
+Picture1, Picture2, optBulbOff, optBulbOn, and Frame1, respectively.
+</OL>
+<P>
+<P>
+<CENTER><B>Table 4.5 Picture1 control properties</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=40%>
+<TR VALIGN=TOP><TD WIDTH=86><B>Property</B></TD><TD WIDTH=292><B>Value</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=86>Picture</TD><TD WIDTH=292>slite-off.bmp (on the CD-ROM)
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=86>AutoSize</TD><TD WIDTH=292>True</TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER><B>Table 4.6 Picture2 control properties</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=45%>
+<TR VALIGN=TOP><TD WIDTH=86><B>Property</B></TD><TD WIDTH=350><B>Value</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=86>Picture</TD><TD WIDTH=350>slite-on.bmp (also on your CD-ROM)
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=86>AutoSize</TD><TD WIDTH=350>True</TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER><B>Table 4.7 optBulbOff properties</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=40%>
+<TR VALIGN=TOP><TD WIDTH=86><B>Property</B></TD><TD WIDTH=96><B>Value</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=86>Caption</TD><TD WIDTH=96>Off</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=86>Value</TD><TD WIDTH=96>True</TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER><B>Table 4.8 optBulbOn properties</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=40%>
+<TR VALIGN=TOP><TD WIDTH=96><B>Property</B></TD><TD WIDTH=96><B>Value</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Caption</TD><TD WIDTH=96>On</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Value</TD><TD WIDTH=96>False</TD></TR>
+</TABLE></CENTER>
+<P>
+<CENTER><B>Table 4.9 Frame1 control properties</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=40%>
+<TR VALIGN=TOP><TD WIDTH=96><B>Property</B></TD><TD WIDTH=96><B>Value</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Caption</TD><TD WIDTH=96>Illuminated</TD></TR>
+</TABLE></CENTER>
+<P>
+
+<OL START=6>
+<LI>Delete chkIlluminated. The graphical interface of your property
+page should look like Figure 4.16.
+<LI>Double-click on the property page designer to open its code
+window. You should be able to see existing code for changing the
+Illuminated property using the checkbox, chkIlluminated.
+<LI>Delete the procedure chkIlluminated<B>_</B>Click and replace
+it with the following code. This code provides Click events for
+the two option buttons:
+</OL>
+<P>
+<A HREF="f4-16.gif"><B>Figure 4.16:</B> <I>New Property page</I>.</A>
+<BLOCKQUOTE>
+<PRE>
+Private Sub optBulbOff_Click()
+    Changed = True
+End Sub
+
+Private Sub optBulbOn_Click()
+    Changed = True
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+This code flags the property page as &quot;dirty,&quot; meaning
+that the user has altered a property in the page. When the property
+page is dirty, the Apply button is enabled; the property page
+then knows to apply the property changes to the control when the
+user clicks on Apply or OK.
+<P>
+Next you'll need to alter the ApplyChanges event of the PropertyPage
+so the page applies the property change appropriately. To do this,
+make the following changes to the code in the property page's
+ApplyChanges event:
+<BLOCKQUOTE>
+<PRE>
+Private Sub PropertyPage_ApplyChanges()
+    SelectedControls(0).Illuminated = optBulbOn.Value
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+Finally, you'll have to alter the property page's SelectionChanged
+event so it accurately reflects the state of the selected control
+when the property page was opened. This code is in the SelectionChanged
+event because this event is triggered when the property page is
+first opened. It is also triggered when the user changes the control
+that is selected. However, the event is <I>also</I> triggered
+when you click on the property sheet's Apply button, which is
+bad, because when you change the property to Off and press Apply,
+the code will change the property sheet to indicate that the property
+has been set to On. We'll include a workaround for this puzzling
+anomaly by placing a flag in the ApplyChanges event.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>It's important to remember that the set of selected controls can change after the user has brought up the Property sheet. This is the case because property pages are modeless (meaning that users can access windows in the background while the Property 
+page is still being displayed).</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+To make this change, start by creating the flag in the Declarations
+section of the code:
+<BLOCKQUOTE>
+<PRE>
+Private mApplyingFlag As Boolean
+</PRE>
+</BLOCKQUOTE>
+<P>
+Next, alter the ApplyChanges event so it sets the flag. Its code
+should look like this:
+<BLOCKQUOTE>
+<PRE>
+Private Sub PropertyPage_ApplyChanges()
+    mApplyingFlag = True
+    SelectedControls(0).Illuminated = optBulbOn.Value
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+Finally, alter the code in the SelectionChanged event as follows:
+<BLOCKQUOTE>
+<PRE>
+Private Sub PropertyPage_SelectionChanged()
+    If mApplyingFlag = False Then
+        optBulbOn.Value = SelectedControls(0).Illuminated
+    Else
+        ' do nothing
+        mApplyingFlag = False
+    End If
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+To test your new Property page, do the following:
+<OL>
+<LI>Close the Property page designer.
+<LI>Open frmLBTextForm, the EXE project form that contains an
+instance of the LightBulb control.
+<LI>Right-click on LightBulb1. From the pop-up menu, select Properties.
+<LI>Your Property page appears. Using the Property page, change
+the Illuminated property of the selected control, then click on
+Apply. You should be able to see the control change.
+</OL>
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+This chapter discussed how to create properties in the ActiveX
+controls you create. Using an example project, you created properties,
+wrote validation procedures, and developed custom property pages.
+<P>
+In the next chapter, you'll learn about another new element of
+control interfaces: custom events.
+<HR>
+
+<CENTER><P><A HREF="ch3.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch5.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

@@ -1,0 +1,769 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 9 -- User-Drawn Controls</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;9</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>User-Drawn Controls</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#GraphicsMethods">
+Graphics Methods</A>
+<UL>
+<LI><A HREF="#AddressingtheCoordinateSystem">
+Addressing the Coordinate System</A>
+<LI><A HREF="#TheLineMethod">
+The Line Method</A>
+<LI><A HREF="#TheCircleMethod">
+The Circle Method</A>
+<LI><A HREF="#ThePSetMethod">
+The PSet Method</A>
+<LI><A HREF="#ThePrintMethod">
+The Print Method</A>
+<LI><A HREF="#TheClsMethod">
+The Cls Method</A>
+</UL>
+<LI><A HREF="#ThePaintEvent">
+The Paint Event</A>
+<LI><A HREF="#ExampleofaUserDrawnControlTheHexagonControl">
+Example of a User-Drawn Control: The Hexagon Control</A>
+<LI><A HREF="#TheRefreshMethod">
+The Refresh Method</A>
+<LI><A HREF="#DisplayingYourControlAsDisabled">
+Displaying Your Control As Disabled</A>
+<LI><A HREF="#DisplayingtheDefaultProperty">
+Displaying the Default Property</A>
+<LI><A HREF="#ShowingThatYourControlHastheFocus">
+Showing That Your Control Has the Focus</A>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+Until now, all of the example controls in this book have been
+comprised of one or more constituent controls. But that does not
+mean that all your ActiveX controls must be based on existing
+controls. Using Visual Basic's graphics methods, you have the
+ability to create controls that have totally unique graphical
+appearances. It's possible that you may already be familiar with
+these graphics methods; you'll find that implementing them in
+the context of a UserControl is quite straightforward.
+<P>
+A control that does not use constituent controls is referred to
+as a <I>user-drawn control</I>. (This is something of a misnomer,
+since the control isn't technically drawn by the <I>user</I>,
+it's drawn by your code, but we'll let that slide for now.)
+<P>
+When your control project is user-drawn, there are a number of
+things to watch out for. This chapter will take a look at those
+considerations and summarize the Visual Basic graphic methods
+available to you when you're creating your user-drawn control.
+<H2><A NAME="GraphicsMethods"><FONT SIZE=5 COLOR=#FF0000>
+Graphics Methods</FONT></A></H2>
+<P>
+You can use Visual Basic's graphics methods to draw the interface
+and appearance of your control.
+<P>
+The graphics methods discussed in this section apply to forms
+and form-like objects, such as property pages, as well as your
+UserControl object. You can also use these graphics methods with
+the PictureBox<B> </B>control. In this chapter, I'll refer to
+any component of the Visual Basic interface that can be drawn
+on as a <I>Painting object</I>.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>For experienced users of Visual Basic, much of this section will be review, but I'm including it here because I wanted all the important stuff to be in the same place, thereby satisfying my need for tidiness and organization. If you understand VB's 
+graphics methods, you may wish to skim this section and skip to the middle of the chapter, where I'll relate it all back to control creation.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H3><A NAME="AddressingtheCoordinateSystem">
+Addressing the Coordinate System</A></H3>
+<P>
+When you're using any of these graphics methods, you are drawing
+in a coordinate system. Everything you do in this coordinate system
+must be addressed to a point in the system. In Visual Basic, the
+coordinate system of any Painting object has its origin in the
+upper-left corner of the Painting object; coordinates increase
+as you go down and to the right. Horizontal dimensions are expressed
+along the X axis, while vertical dimensions are expressed along
+the Y axis. This is illustrated in Figure 9.1.
+<P>
+<A HREF="f9-1.gif"><B>Figure 9.1 :</B> <I>Visual Basic coordinate system</I>.</A>
+<P>
+So, for example, to draw a line from the upper left corner of
+the form to the lower right corner of the form, you'd instruct
+the graphics method to draw a line from point (0,0) (that is,
+zero units on the X axis, and zero units on the Y axis) to point
+(Me.Width, Me.Height). If the Painting object were 2000 units
+wide and 3000 units high, the destination point for your line
+would be (2000, 3000).<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>In Visual Basic, the keyword Me refers to the currently executing form (or other class). In the code examples in this book, it's invariably used as shorthand in situations where you don't care to specify (or don't know) the name of the form that 
+contains the control.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+Visual Basic's standard method of measurement is the <I>twip</I>.
+There are 1,440 twips to the inch, although the actual size of
+a twip on your screen will vary according to the resolution of
+your screen and the size of your monitor.
+<P>
+Since a twip is much smaller than the resolution of a pixel on
+any computer monitor you're likely to run across in your lifetime,
+it makes sense to express on-screen graphics methods in another
+measurement system. Visual Basic gives you the ability to express
+units on the coordinate system in inches, points (there are 72
+points to the inch), millimeters, and so forth.
+<P>
+You can change the measurement system of a Painting object by
+using its ScaleMode<B> </B>property. For example, the code:
+<BLOCKQUOTE>
+<PRE>
+Me.ScaleMode = vbCentimeters
+</PRE>
+</BLOCKQUOTE>
+<P>
+sets the coordinate system of the current form to centimeters.
+<P>
+Visual Basic Painting objects also provide graphics properties
+(TwipsPerPixelX and TwipsPerPixelY) that enable you to convert
+between twips and pixels. For simplicity's sake, in this chapter
+I'll use pixels (signified by the Visual Basic ScaleMode constant
+vbPixels).
+<H3><A NAME="TheLineMethod">
+The Line Method</A></H3>
+<P>
+The Line method draws a line between two points. The syntax of
+this method is:
+<BLOCKQUOTE>
+<PRE>
+<I>object</I>.Line (<I>startX, startY</I>) - (<I>endX, endY</I>)[, <I>color</I>, BF]
+</PRE>
+</BLOCKQUOTE>
+<P>
+The parameters startX and startY designate the starting point
+of the line you're drawing. The values <I>endX</I> and <I>endY</I>
+indicate where the line ends. The optional <I>color</I> argument
+is a long<B> </B>integer corresponding to a Windows color. If
+you include the B argument, then the Line<B> </B>method will draw
+a box instead of a line. If you include the F argument, then the
+Line method will draw a filled box. (Of course, it's only meaningful
+to include the F argument if you also include the B argument.)
+<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The syntax of this method is a little kooky, as you might have noticed, mainly because it's a throwback to the early days of Basic. The funny syntax is retained for compatibility with earlier versions of the language.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+To see how the Line method works, try this example. The code draws
+a simulated text box on the center of the form. You might find
+this code helpful as an example of how to create 3-D user interface
+effects for your controls.
+<P>
+To see how this works, create a command button on the EXE project
+form. In the button's Click event, type the following code:
+<BLOCKQUOTE>
+<PRE>
+Private Sub Command2_Click()
+
+    Me.ScaleMode = vbPixels
+
+    lngStartX = 20
+    lngStartY = 20
+    lngEndX = 200
+    lngEndY = 35
+
+' white box
+Line (lngStartX, lngStartY)-(lngEndX, lngEndY), _
+      RGB(255, 255, 255), BF
+
+' ** black lines
+' vertical
+Line (lngStartX - 1, lngStartY - 1)-(lngStartX - 1, lngEndY + 1), _
+      RGB(0, 0, 0)
+' horizontal
+Line (lngStartX - 1, lngStartY - 1)-(lngEndX + 1, lngStartY - 1), _
+      RGB(0, 0, 0)
+
+' ** dark grey lines
+' vertical
+Line (lngStartX - 2, lngStartY - 2)-(lngStartX - 2, lngEndY + 2), _
+      RGB(128, 128, 128)
+' horizontal
+Line (lngStartX - 2, lngStartY - 2)-(lngEndX + 2, lngStartY - 2), _
+      RGB(128, 128, 128)
+
+' ** white lines
+' vertical
+Line (lngEndX + 2, lngStartY - 2)-(lngEndX + 2, lngEndY + 3), _
+      RGB(255, 255, 255)
+' horizontal
+Line (lngStartX - 2, lngEndY + 2)-(lngEndX + 2, lngEndY + 2), _
+      RGB(255, 255, 255)
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+This code gives you a feel for the different flavors of the Line
+method. The first Line method takes the optional BF parameter,
+drawing a white box on the form. The remaining Line methods draw
+lines in black and gray around the box in order to give it that
+three-dimensional look that the kids are so crazy about these
+days.
+<H3><A NAME="TheCircleMethod">
+The Circle Method</A></H3>
+<P>
+The Circle<B> </B>method draws a circle. Its syntax looks like
+this:
+<BLOCKQUOTE>
+<PRE>
+<I>object</I>.Circle (<I>x, y</I>), <I>radius</I>, [<I>color</I>, <I>start</I>, <I>end</I>, <I>aspect</I>]
+</PRE>
+</BLOCKQUOTE>
+<P>
+The <I>x</I> and <I>y</I> arguments determine the midpoint of
+the circle. The radius argument sets the radius of the circle.
+The optional <I>color</I> argument is a long<B> </B>integer corresponding
+to a Windows color. The optional <I>start</I> and <I>end </I>arguments
+are single<B> </B>values that determine the start and end points
+for an arc (rather than a complete circle). The optional <I>aspect</I>
+argument determines the aspect ratio for the circle. Setting an
+aspect ratio other than 1 will produce an ellipse rather than
+a perfect circle.
+<P>
+To see how the Circle method works, try the following code. This
+code draws a bulls-eye on the center of the a form:
+<BLOCKQUOTE>
+<PRE>
+Private Sub Command3_Click()
+
+    Me.ScaleMode = vbTwips
+
+    lngCenterX = Me.Width / 2
+    lngCenterY = Me.Height / 2
+    Me.FillStyle = vbFSSolid   ' constant from VB's object library
+
+    Me.FillColor = RGB(0, 0, 255)
+    Circle (lngCenterX, lngCenterY), Me.Width / 5, Me.FillColor
+
+    Me.FillColor = RGB(255, 255, 255)
+    Circle (lngCenterX, lngCenterY), Me.Width / 10, Me.FillColor
+
+    Me.FillColor = RGB(255, 0, 0)
+    Circle (lngCenterX, lngCenterY), Me.Width / 20, Me.FillColor
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+When you run this code and click on the button, the form should
+look something like the one in Figure 9.2.
+<P>
+<A HREF="f9-2.gif"><B>Figure 9.2 :</B> <I>Example of Circle method</I>.</A>
+<H3><A NAME="ThePSetMethod">
+The PSet Method</A></H3>
+<P>
+You can use the PSet method to draw an individual pixel on an
+object. The syntax of the PSet method looks like this:
+<BLOCKQUOTE>
+<PRE>
+<I>object</I>.PSet (x, y) [, <I>color</I>]
+</PRE>
+</BLOCKQUOTE>
+<P>
+The <I>x</I> argument represents a horizontal position of the
+point in the coordinate system. The <I>y</I> argument represents
+the vertical position. The optional <I>color</I> argument is a
+long<B> </B>integer corresponding to a Windows color.
+<P>
+To test how the PSet method works, create an EXE project form
+with a command button. In the command button's Click event, type
+the following code:
+<BLOCKQUOTE>
+<PRE>
+Private Sub Command1_Click()
+
+intMaxX = Me.Width
+intMaxY = Me.Height
+
+For x = 1 To 5000
+    intX = Int(intMaxX - 1) * Rnd
+    intY = Int(intMaxY - 1) * Rnd
+    Me.PSet (intX, intY)
+Next x
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+This code demonstrates the PSet method by painting the form with
+random pixels. To see how it works, run the EXE project, then
+click on the button. The form should look like the one shown in
+Figure 9.3.
+<P>
+<A HREF="f9-3.gif"><B>Figure 9.3 :</B> <I>Example of PSet method</I>.</A>
+<P>
+Because of the way this code is written, the density of the pixels
+drawn on your screen will be a function of the dimensions of your
+Form1.
+<H3><A NAME="ThePrintMethod">
+The Print Method</A></H3>
+<P>
+The Print method renders text on the target object. Here is the
+Print method's syntax:
+<BLOCKQUOTE>
+<PRE>
+<I>object</I>.Print <I>text</I>
+</PRE>
+</BLOCKQUOTE>
+<P>
+The <I>text </I>argument represents the text to be printed. It
+can be any string.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>There are additional, seldom-used arguments to the Print method that are included primarily for compatibility with older versions of Visual Basic. For example, the Print method provides support for printing tabulated lists in columns. See the Print 
+method topic in Visual Basic online help for more information on these arguments.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+Here is an example of code that uses the Print method. This code
+displays a word on the form over and over, in a range of colors
+(or, rather, shades of gray):
+<BLOCKQUOTE>
+<PRE>
+Private Sub Command5_Click()
+    Me.FontBold = True
+    Me.Font = &quot;Arial&quot;
+    Me.FontSize = 36
+
+    Randomize Timer
+
+    For x = 1 To 255
+        Green = Int(255 * Rnd + 1)
+        Blue = Int(255 * Rnd + 1)
+        Me.CurrentX = x
+        Me.CurrentY = x
+        Me.ForeColor = RGB(x, Green, Blue)
+        Print &quot;Spoon!&quot;
+Next x
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+The effect this code produces when run is illustrated in Figure
+9.4
+<P>
+<A HREF="f9-4.gif"><B>Figure 9.4:</B> <I>An example of the Print method</I>.</A>
+<P>
+The font face and style used by the Print<B> </B>method is a function
+of the Drawing object's font properties (such as FontSize and
+FontBold). These properties must be set before you use the Print
+method, because you can't change the way the text is rendered
+once it's been placed on the painting object.
+<H3><A NAME="TheClsMethod">
+The Cls Method</A></H3>
+<P>
+You can clear the painting area by using the Cls method. The Cls
+method takes no arguments; its syntax is:
+<BLOCKQUOTE>
+<PRE>
+<I>object</I>.Cls
+</PRE>
+</BLOCKQUOTE>
+<P>
+To see how this works, add a command button to your example form.
+In the command button's Click event, add the code:
+<BLOCKQUOTE>
+<PRE>
+Me.Cls
+</PRE>
+</BLOCKQUOTE>
+<P>
+Then run the EXE project. Click on one of the buttons that generates
+graphics on the form, then click on the Cls button. You should
+be able to see that the Cls method clears all the graphics on
+the form.
+<H2><A NAME="ThePaintEvent"><FONT SIZE=5 COLOR=#FF0000>
+The Paint Event</FONT></A></H2>
+<P>
+In a user-drawn control, the graphics methods that comprise the
+control's appearance are placed in the control's Paint event.
+<P>
+Here are some things to watch out for when writing code in the
+Paint event of a UserControl:
+<UL>
+<LI>Don't set the BackStyle property of your user-drawn UserControl
+to True. Doing this will short-circuit the code you place in the
+Paint<B> </B>event and cause your control to be invisible.
+<LI>Don't place a DoEvents statement in the Paint<B> </B>event.
+<LI>Setting the AutoRedraw<B> </B>property of your UserControl<B>
+</B>to False<B> </B>will result in faster performance. 
+</UL>
+<H2><A NAME="ExampleofaUserDrawnControlTheHexagonControl"><FONT SIZE=5 COLOR=#FF0000>
+Example of a User-Drawn Control: The Hexagon Control</FONT></A></H2>
+<P>
+Let's put all that together in an example. The Hexagon control
+is similar to the Shape control that comes with Visual Basic,
+except it draws a regular, six-sided figure. It is a completely
+user-drawn control; the code to draw the hexagon is in the UserControl's
+Paint<B> </B>event. The code for this control is on the CD-ROM
+that accompanies this book. To create the Hexagon control, insert
+the following code in a control designer called Hexagon:
+<BLOCKQUOTE>
+<PRE>
+' Declarations section
+
+Private lngSideLength As Long
+Private lngXPoint0 As Long, lngXPoint1 As Long
+Private lngXPoint2 As Long, lngXPoint3 As Long
+Private lngYPoint0 As Long, lngYPoint1 As Long
+Private lngYPoint2 As Long
+
+' The business end of the code
+
+Private Sub UserControl_Paint()
+
+    lngSideLength = (UserControl.Width / 2)
+    lngXPoint0 = 0
+    lngXPoint1 = lngXPoint0 + (lngSideLength / 2)
+    lngXPoint2 = lngXPoint1 + lngSideLength
+    lngXPoint3 = lngXPoint2 + lngXPoint1 - 10
+
+    lngYPoint0 = 0
+    lngYPoint1 = CLng(lngSideLength * (Sqr(3) / 2))
+    lngYPoint2 = lngYPoint1 * 2
+
+    DrawWidth = 1
+    Line (lngXPoint1, lngYPoint0)-(lngXPoint2, lngYPoint0)
+    Line (lngXPoint2, lngYPoint0)-(lngXPoint3, lngYPoint1)
+    Line (lngXPoint3, lngYPoint1)-(lngXPoint2, lngYPoint2)
+    Line (lngXPoint2, lngYPoint2)-(lngXPoint1, lngYPoint2)
+    Line (lngXPoint1, lngYPoint2)-(lngXPoint0, lngYPoint1)
+    Line (lngXPoint0, lngYPoint1)-(lngXPoint1, lngYPoint0)
+
+End Sub
+
+
+Private Sub UserControl_Resize()
+    ' Make sure the control always
+    ' fits dimensions of the hexagon
+    UserControl.Height = UserControl.Width * (Sqr(3) / 2) + 20
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+You can see that the Paint event is responsible for drawing the
+appearance of the control.
+<P>
+One cool thing about this code is that because the drawing in
+the Paint event is based on the dimensions of the UserControl,
+the hexagon always fills the available area of the control. If
+you resize the control, the hexagon redraws so it's exactly the
+right size.
+<H2><A NAME="TheRefreshMethod"><FONT SIZE=5 COLOR=#FF0000>
+The Refresh Method</FONT></A></H2>
+<P>
+Anytime you change the appearance of your user-drawn control,
+the control must execute the Refresh method. The Refresh method
+causes the code in your control's Paint event to run, thereby
+redrawing the control.
+<P>
+For example, let's say you want to enable the Hexagon control
+to draw in a color chosen by the user. To do this, you create
+a ForeColor<B> </B>property for the control and execute the Refresh
+method in the ForeColor's Property<B> </B>Let procedure. Here
+are the steps to implementing this feature in the Hexagon control:
+<OL>
+<LI>Add the following code to the declarations section of the
+Hexagon<B> </B>control. This variable stores the state of the
+control's foreground color.
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private mlngForeColor As Long
+</PRE>
+</BLOCKQUOTE>
+<OL START=2>
+<LI>Alter the code in the control's Paint<B> </B>event so that
+it takes advantage of the new property. The code should look like
+this:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_Paint()
+    .
+    .
+    .
+Line (lngXPoint1, lngYPoint0)-(lngXPoint2, lngYPoint0), mlngForeColor
+Line (lngXPoint2, lngYPoint0)-(lngXPoint3, lngYPoint1), mlngForeColor
+Line (lngXPoint3, lngYPoint1)-(lngXPoint2, lngYPoint2), mlngForeColor
+Line (lngXPoint2, lngYPoint2)-(lngXPoint1, lngYPoint2), mlngForeColor
+Line (lngXPoint1, lngYPoint2)-(lngXPoint0, lngYPoint1), mlngForeColor
+Line (lngXPoint0, lngYPoint1)-(lngXPoint1, lngYPoint0), mlngForeColor
+</PRE>
+</BLOCKQUOTE>
+<OL START=3>
+<LI>Next, add Property Let and Property Get procedures for the
+new property:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Public Property Get ForeColor() As OLE_COLOR
+    ForeColor = mlngForeColor
+End Property
+
+Public Property Let ForeColor(ByVal NewValue As OLE_COLOR)
+    mlngForeColor = NewValue
+    PropertyChanged &quot;ForeColor&quot;
+    Refresh   ' this redraws the control with the new color
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Don't forget to declare color properties as type OLE_COLOR so a color palette is displayed in the Properties window when the user changes the ForeColor<B> </B>property.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+If you place an instance of the Hexagon control onto an EXE project
+form and then change its ForeColor property, you should be able
+to see that you can change the color of the control to any Windows
+color. The control should look like Figure 9.5.
+<P>
+<A HREF="f9-5.gif"><B>Figure 9.5 :</B> <I>Colorized Hexagon control</I>.</A>
+<H2><A NAME="DisplayingYourControlAsDisabled"><FONT SIZE=5 COLOR=#FF0000>
+Displaying Your Control As Disabled</FONT></A></H2>
+<P>
+If your control has an Enabled<B> </B>property and that property
+has been set to False, you should provide some graphical indication
+that the control is disabled. You do this by providing logic in
+the control's Paint method.
+<P>
+There is no standardized way of graphically indicating that a
+control is disabled, but in general, drawing a disabled control
+involves graying out the colored portions of the control. For
+ideas on how to do that, take a look at some existing controls.
+Figure 9.6 shows some standard Windows controls in their disabled
+state.
+<P>
+<A HREF="f9-6.gif"><B>Figure 9.6 :</B> <I>Disabled controls</I>.</A>
+<P>
+In order to implement a graphical display of Enabled<B> = </B>False,
+you need to inspect the Enabled<B> </B>property in the Paint event
+using an If...Then statement. If Enabled is False, the Paint event
+draws the disabled version of the control. If Enabled is True,
+the Paint event draws the enabled version of the control.
+<H2><A NAME="DisplayingtheDefaultProperty"><FONT SIZE=5 COLOR=#FF0000>
+Displaying the Default Property</FONT></A></H2>
+<P>
+A control is said to be the <I>default</I> <I>control</I> when
+its Default property is set to True. This control will always
+be given the focus when the form it resides on is first displayed.
+<P>
+You see this most frequently in situations where the user is confronted
+with a dialog box containing OK and Cancel buttons; assuming the
+user does not move the focus to some other control in the dialog
+box, the user can either click on OK or press the Enter key to
+quickly confirm the dialog box settings.
+<P>
+You should draw a thick black line around your control when all
+of the following things are true:
+<UL>
+<LI>Your control acts as a command button
+<LI>Your control has a Default property
+<LI>The Default property is set to True
+<LI>No other control has the focus
+</UL>
+<P>
+The tricky part about this is determining whether another control
+residing on the same form as your control has the focus. Fortunately,
+Visual Basic helps you out here, through the DisplayAsDefault
+property of the AmbientProperties object. The DisplayAsDefault
+property is a Boolean property that tells your control whether
+it should draw itself as the default button.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Exactly how thick the line should be is an aesthetic choice you'll make depending on what your control looks like; take a look at some existing controls for hints. In a user-drawn control, you'll use Visual Basic graphics methods to draw the border.</I>
+
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+As an example, let's say you want to change the Hexagon control
+into a hexagonal button control. To do this:
+<OL>
+<LI>Open the control's designer. In the Properties window, change
+the DefaultCancel<B> </B>property to True. This tells Visual Basic
+that the control is capable of acting as a default or cancel button.
+Because the Cancel and Default properties are provided by the
+container, you don't have to write any code to implement these
+properties; they appear automatically when you set the DefaultCancel
+property to True.
+<LI>Change the control's Paint<B> </B>property as follows:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Line (lngXPoint1, lngYPoint0)-(lngXPoint2, lngYPoint0), _
+    RGB(255, 255, 255)
+Line (lngXPoint2, lngYPoint0)-(lngXPoint3, lngYPoint1), _
+    RGB(128, 128, 128)
+Line (lngXPoint3, lngYPoint1)-(lngXPoint2, lngYPoint2), _
+    RGB(128, 128, 128)
+Line (lngXPoint2, lngYPoint2)-(lngXPoint1, lngYPoint2), _
+    RGB(128, 128, 128)
+Line (lngXPoint1, lngYPoint2)-(lngXPoint0, lngYPoint1), _
+    RGB(128, 128, 128)
+Line (lngXPoint0, lngYPoint1)-(lngXPoint1, lngYPoint0), _
+    RGB(255, 255, 255)
+
+If Extender.Default = True Then
+    Line (0, 0)-(Width - 20, Height - 20), 0, B
+End If
+</PRE>
+</BLOCKQUOTE>
+<OL START=3>
+<LI>To redraw the control when the user changes the Default property
+at design time, insert the following code in the AmbientChanged
+event of the UserControl:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_AmbientChanged(PropertyName As String)
+    If PropertyName = &quot;DisplayAsDefault&quot; Then
+        Refresh
+    End If
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=4>
+<LI>To trap the user action when the Default or Cancel properties
+have been set to True, use the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_AccessKeyPress(KeyAscii As Integer)
+
+    Select Case KeyAscii
+        Case 13  ' user hit enter when Default property True
+        MsgBox &quot;Default.&quot;
+        
+        Case 27  ' user cancelled when Cancel property True
+        MsgBox &quot;Cancel.&quot;
+    End Select
+        
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+You will, of course, want to replace the MsgBox statements in
+the AccessKeyPress event with something more meaningful. Typically,
+when the AccessKeyPress<B> </B>event of a command button detects
+that the user has pressed Enter<B> </B>when the Default<B> </B>property
+is True, it triggers the Click<B> </B>event.
+<P>
+To test the new version of the Hexagon control, do the following:
+<OL>
+<LI>Switch to the EXE project form that contains an instance of
+the Hexagon control.
+<LI>In the Properties window, set the Default<B> </B>property
+of Hexagon1<B> </B>to True.
+<LI>Run the EXE project by pressing F5.
+<LI>After the program runs, press Enter. The MsgBox statement
+in the UserControl's AccessKeyPressed event is triggered, producing
+the message box illustrated in Figure 9.7.
+</OL>
+<P>
+<A HREF="f9-7.gif"><B>Figure 9.7 :</B> <I>Demonstration of the Default property</I>.</A>
+<P>
+The fact that the control has been set as the default means that
+it responds to the user pressing the Enter key. In this case,
+pressing Enter causes the message box to be displayed.
+<H2><A NAME="ShowingThatYourControlHastheFocus"><FONT SIZE=5 COLOR=#FF0000>
+Showing That Your Control Has the Focus</FONT></A></H2>
+<P>
+If your control can take the focus, then it should graphically
+display that is has the focus. Standard Windows controls show
+that they have the focus by drawing a thin, dotted line around
+themselves. In Figure 9.8, the command button with the caption
+&quot;Martini&quot; has the focus.
+<P>
+<A HREF="f9-8.gif"><B>Figure 9.8 :</B> <I>Command button with focus</I>.</A>
+<P>
+The thin dotted line drawn around a control to indicate that it
+has the focus is called the <I>focus rectangle</I>. You can write
+custom graphics methods to draw the focus rectangle, or you can
+use a standard Windows API function called DrawFocusRect. This
+function only works for rectangular controls; if you create a
+non-rectangular control (such as our hexagonal button), you must
+manage the focus rectangle yourself.
+<P>
+For more information on making Windows API calls, see Chapter
+11, &quot;Making Windows API and DLL Calls.&quot;
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+This chapter explored the triumphs and pitfalls of rendering your
+control's appearance using Visual Basic graphics methods. In addition,
+we covered how you can use VB's graphics methods to render your
+control, including methods to display controls as disabled and
+in focus.
+<P>
+In the next chapter, you'll delve into a mixed bag of miscellaneous
+control features, effects, and tricks to give your control the
+kind of full-featured interface that users expect.
+<HR>
+
+<CENTER><P><A HREF="ch8.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch10.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

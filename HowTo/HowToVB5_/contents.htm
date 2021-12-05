@@ -1,0 +1,1036 @@
+<HTML>
+<HEAD>
+
+<META>
+<TITLE>CONTENTS</TITLE>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+
+<FONT SIZE=16 COLOR=#FF0000><B>How to Program<BR>
+Visual Basic 5.0</B></FONT>
+<H3>Control Creation Edition</H3>
+<H3><B><I>by Jeffrey P. McManus</I></B></H3>
+
+<HR>
+
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+
+<H2><FONT SIZE=5 COLOR=#FF0000><A HREF="#Introduction"><I>Introduction</I></A></FONT></H2>
+
+<UL>
+<LI><A HREF="#HowtoHurtUncooperativeUsers">
+How to Hurt Uncooperative Users</A>
+<LI><A HREF="#CreatingControlsinVisualBasicisSoGreatICouldJustExplode">
+Creating Controls in Visual Basic is So Great I Could Just
+Explode</A>
+<LI><A HREF="#WhyJohnnyCantCreateControls">
+Why Johnny Can't Create Controls</A>
+<LI><A HREF="#ThisIsNotWhatThisBookIsAbout">
+This Is Not What This Book Is About</A>
+<LI><A HREF="#WhoShouldUseThisBook">
+Who Should Use This Book</A>
+</UL>
+
+
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>1
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch1.htm"><I>What's New In Visual Basic 5.0</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch1.htm#WhatsNewintheIntegratedDevelopmentEnvironment">
+What's New in the Integrated Development Environment</A>
+<UL>
+<LI><A HREF="ch1.htm#ProjectsFilesandtheProjectExplorer">
+Projects, Files, and the Project Explorer</A>
+<LI><A HREF="ch1.htm#FormLayoutWindow">
+Form Layout Window</A>
+<LI><A HREF="ch1.htm#IndentOutdent">
+Indent/Outdent</A>
+<LI><A HREF="ch1.htm#CustomizableToolbars">
+Customizable Toolbars</A>
+<LI><A HREF="ch1.htm#Wizards">
+Wizards</A>
+<LI><A HREF="ch1.htm#ProcedureViewFullModuleView">
+Procedure View/Full Module View </A>
+<LI><A HREF="ch1.htm#Bookmarks">
+Bookmarks</A>
+<LI><A HREF="ch1.htm#AutomaticCodeCompletion">
+Automatic Code Completion</A>
+<LI><A HREF="ch1.htm#DragandDropEditing">
+Drag-and-Drop Editing</A>
+</UL>
+<LI><A HREF="ch1.htm#NewLanguageFeatures">
+New Language Features</A>
+<UL>
+<LI><A HREF="ch1.htm#Assertions">
+Assertions</A>
+<LI><A HREF="ch1.htm#EnumeratedConstants">
+Enumerated Constants</A>
+<LI><A HREF="ch1.htm#AddressOf">
+AddressOf</A>
+<LI><A HREF="ch1.htm#LanguageFeaturesPertainingtoControlCreation">
+Language Features Pertaining to Control Creation</A>
+</UL>
+<LI><A HREF="ch1.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>2
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch2.htm"><I>Control Basics</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch2.htm#IsanActiveXControl">
+Is an ActiveX Control?</A>
+<UL>
+<LI><A HREF="ch2.htm#DifferencesbetweenOCXControlsandActiveXControls">
+Differences between OCX Controls and ActiveX Controls</A>
+<LI><A HREF="ch2.htm#ContextsinWhichYouCanUseActiveXControls">
+Contexts in Which You Can Use ActiveX Controls</A>
+</UL>
+<LI><A HREF="ch2.htm#YourControlsInterface">
+Your Control's Interface</A>
+<UL>
+<LI><A HREF="ch2.htm#Properties">
+Properties</A>
+<LI><A HREF="ch2.htm#Events">
+Events</A>
+<LI><A HREF="ch2.htm#Methods">
+Methods</A>
+</UL>
+<LI><A HREF="ch2.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>3
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch3.htm"><I>Developing Your First Control</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch3.htm#GettingStarted">
+Getting Started</A>
+<UL>
+<LI><A HREF="ch3.htm#SettingUptheIDE">
+Setting Up the IDE</A>
+</UL>
+<LI><A HREF="ch3.htm#ManagingtheProject">
+Managing the Project</A>
+<LI><A HREF="ch3.htm#DesigningYourControl">
+Designing Your Control</A>
+<LI><A HREF="ch3.htm#TestingtheControl">
+Testing the Control</A>
+<LI><A HREF="ch3.htm#ExposingtheHappyHourControlsCaptionProperty">
+Exposing the HappyHour Control's Caption Property</A>
+<UL>
+<LI><A HREF="ch3.htm#CodingthePropertyGet">
+Coding the Property Get</A>
+<LI><A HREF="ch3.htm#CodingthePropertyLet">
+Coding the Property Let</A>
+<LI><A HREF="ch3.htm#TestingtheNewCaptionProperty">
+Testing the New Caption Property</A>
+<LI><A HREF="ch3.htm#ResizingtheControl">
+Resizing the Control</A>
+<LI><A HREF="ch3.htm#SupplyingaDefaultCaptionUsingtheExtenderObject">
+Supplying a Default Caption Using the Extender Object</A>
+<LI><A HREF="ch3.htm#StoringDesignTimePropertyChanges">
+Storing Design-Time Property Changes</A>
+</UL>
+<LI><A HREF="ch3.htm#ExposingPropertiesUsingtheActiveXControlInterfaceWizard">
+Exposing Properties Using the ActiveX Control Interface Wizard
+</A>
+<UL>
+<LI><A HREF="ch3.htm#TestingtheNewCode">
+Testing the New Code</A>
+</UL>
+<LI><A HREF="ch3.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>4
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch4.htm"><I>Control Properties</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch4.htm#CreatingPropertyProcedures">
+Creating Property Procedures</A>
+<UL>
+<LI><A HREF="ch4.htm#UsingtheExampleFilesontheCDROM">
+Using the Example Files on the CD-ROM</A>
+<LI><A HREF="ch4.htm#DeclaringProperties">
+Declaring Properties</A>
+<LI><A HREF="ch4.htm#UsingPropertyLetandPropertyGet">
+Using Property Let and Property Get</A>
+<LI><A HREF="ch4.htm#EnumeratedProperties">
+Enumerated Properties</A>
+<LI><A HREF="ch4.htm#ValidatingPropertyProcedures">
+Validating Property Procedures</A>
+<LI><A HREF="ch4.htm#UsingthePropertyBagObject">
+Using the PropertyBag Object</A>
+<LI><A HREF="ch4.htm#PropertiesofConstituentControls">
+Properties of Constituent Controls</A>
+<LI><A HREF="ch4.htm#PropertiesYourControlShouldProvide">
+Properties Your Control Should Provide</A>
+<LI><A HREF="ch4.htm#CreatingaProcedureDescription">
+Creating a Procedure Description</A>
+<LI><A HREF="ch4.htm#DesignatingaPropertyastheDefault">
+Designating a Property as the Default</A>
+<LI><A HREF="ch4.htm#GroupingProperties">
+Grouping Properties</A>
+<LI><A HREF="ch4.htm#SynchronizingaPropertywithPropertiesofItsContainer">
+Synchronizing a Property with Properties of Its Container
+</A>
+</UL>
+<LI><A HREF="ch4.htm#CreatingCustomPropertyPages">
+Creating Custom Property Pages</A>
+<UL>
+<LI><A HREF="ch4.htm#UsingthePropertyPageWizard">
+Using the Property Page Wizard</A>
+<LI><A HREF="ch4.htm#ProgrammingthePropertyPageObject">
+Programming the PropertyPage Object</A>
+<LI><A HREF="ch4.htm#ModifyingthePropertyPage">
+Modifying the Property Page</A>
+</UL>
+<LI><A HREF="ch4.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>5
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch5.htm"><I>Handling and Raising Events</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch5.htm#CreatingCustomEvents">
+Creating Custom Events</A>
+<UL>
+<LI><A HREF="ch5.htm#UnderstandingtheSyntaxofEventandRaiseEvent">
+Understanding the Syntax of Event and RaiseEvent</A>
+<LI><A HREF="ch5.htm#CreatinganEvent">
+Creating an Event</A>
+<LI><A HREF="ch5.htm#CreatinganEventThatIncludesaParameter">
+Creating an Event That Includes a Parameter</A>
+<LI><A HREF="ch5.htm#RaisingEventsofConstituentControls">
+Raising Events of Constituent Controls</A>
+<LI><A HREF="ch5.htm#ProvidingStandardEvents">
+Providing Standard Events</A>
+<LI><A HREF="ch5.htm#SpecifyingaDefaultEvent">
+Specifying a Default Event</A>
+<LI><A HREF="ch5.htm#UnderstandingContainerProvidedEvents">
+Understanding Container-Provided Events</A>
+</UL>
+<LI><A HREF="ch5.htm#EventsoftheUserControlObject">
+Events of the UserControl Object</A>
+<LI><A HREF="ch5.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>6
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch6.htm"><I>Control Methods</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch6.htm#CreatingaMethod">
+Creating a Method</A>
+<UL>
+<LI><A HREF="ch6.htm#WhattheWatchClockMethodDoes">
+What the WatchClock Method Does</A>
+<LI><A HREF="ch6.htm#TestingtheWatchClockMethod">
+Testing the WatchClock Method</A>
+</UL>
+<LI><A HREF="ch6.htm#CreatingaMethodThatTakesanArgument">
+Creating a Method That Takes an Argument</A>
+<UL>
+<LI><A HREF="ch6.htm#TestingtheParameterizedEventProcedure">
+Testing the Parameterized Event Procedure</A>
+</UL>
+<LI><A HREF="ch6.htm#CreatingaMethodThatReturnsaValue">
+Creating a Method That Returns a Value</A>
+<UL>
+<LI><A HREF="ch6.htm#TestingtheCalculateHowLongMethod">
+Testing the CalculateHowLong Method</A>
+</UL>
+<LI><A HREF="ch6.htm#ImplementingStandardMethods">
+Implementing Standard Methods</A>
+<LI><A HREF="ch6.htm#UsingMethodsSuppliedbytheContainer">
+Using Methods Supplied by the Container</A>
+<LI><A HREF="ch6.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>7
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch7.htm"><I>Interacting With the Container</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch7.htm#WhatIsaContainer">
+What Is a Container?</A>
+<UL>
+<LI><A HREF="ch7.htm#VisualBasicContainers">
+Visual Basic Containers</A>
+<LI><A HREF="ch7.htm#InteractingwithNonVBContainers">
+Interacting with Non-VB Containers</A>
+<LI><A HREF="ch7.htm#UsingMicrosoftInternetExplorerasaContainer">
+Using Microsoft Internet Explorer as a Container</A>
+</UL>
+<LI><A HREF="ch7.htm#UsingtheExtenderObject">
+Using the Extender Object</A>
+<UL>
+<LI><A HREF="ch7.htm#PropertiesExposedbytheVisualBasicExtenderObject">
+Properties Exposed by the Visual Basic Extender Object</A>
+<LI><A HREF="ch7.htm#ProvidinganEnabledProperty">
+Providing an Enabled Property</A>
+<LI><A HREF="ch7.htm#UsingtheAmbientPropertiesObjecttoSynchronizeProperties">
+Using the AmbientProperties Object to Synchronize Properties
+</A>
+<LI><A HREF="ch7.htm#UsingExtenderPropertieswiththeContaineratorProject">
+Using Extender Properties with the Containerator Project</A>
+<LI><A HREF="ch7.htm#TheContainerProperty">
+The Container Property</A>
+</UL>
+<LI><A HREF="ch7.htm#Summary">
+Summary</A>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>8
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch8.htm"><I>Using Constituent Controls</I></A></FONT></H2>
+
+<UL>
+<LI><A HREF="ch8.htm#InherentControls">
+Inherent Controls</A>
+<LI><A HREF="ch8.htm#ActingonAlltheConstituentControlsinYourControl">
+Acting on All the Constituent Controls in Your Control</A>
+<LI><A HREF="ch8.htm#ThirdPartyControls">
+Third-Party Controls</A>
+<UL>
+<LI><A HREF="ch8.htm#LicensingConsiderationsApplicabletoThirdPartyControls">
+Licensing Considerations Applicable to Third-Party Controls
+</A>
+</UL>
+<LI><A HREF="ch8.htm#LocatingCommercialControls">
+Locating Commercial Controls</A>
+<UL>
+<LI><A HREF="ch8.htm#Microsoft">
+Microsoft</A>
+<LI><A HREF="ch8.htm#CNETActiveXcom">
+CNET ActiveX.com</A>
+<LI><A HREF="ch8.htm#TechWebActiveXpress">
+TechWeb ActiveXpress</A>
+<LI><A HREF="ch8.htm#DaveCentral">
+Dave Central</A>
+<LI><A HREF="ch8.htm#BrowserWatchActiveXArena">
+BrowserWatch ActiveX Arena</A>
+<LI><A HREF="ch8.htm#CatalogResellersSpecializinginVBControlsandAddOns">
+Catalog Resellers Specializing in VB Controls and Add-Ons
+</A>
+</UL>
+<LI><A HREF="ch8.htm#Summary">
+Summary</A>
+</UL>
+
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>9
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch9.htm"><I>User-Drawn Controls</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch9.htm#GraphicsMethods">
+Graphics Methods</A>
+<UL>
+<LI><A HREF="ch9.htm#AddressingtheCoordinateSystem">
+Addressing the Coordinate System</A>
+<LI><A HREF="ch9.htm#TheLineMethod">
+The Line Method</A>
+<LI><A HREF="ch9.htm#TheCircleMethod">
+The Circle Method</A>
+<LI><A HREF="ch9.htm#ThePSetMethod">
+The PSet Method</A>
+<LI><A HREF="ch9.htm#ThePrintMethod">
+The Print Method</A>
+<LI><A HREF="ch9.htm#TheClsMethod">
+The Cls Method</A>
+</UL>
+<LI><A HREF="ch9.htm#ThePaintEvent">
+The Paint Event</A>
+<LI><A HREF="ch9.htm#ExampleofaUserDrawnControlTheHexagonControl">
+Example of a User-Drawn Control: The Hexagon Control</A>
+<LI><A HREF="ch9.htm#TheRefreshMethod">
+The Refresh Method</A>
+<LI><A HREF="ch9.htm#DisplayingYourControlAsDisabled">
+Displaying Your Control As Disabled</A>
+<LI><A HREF="ch9.htm#DisplayingtheDefaultProperty">
+Displaying the Default Property</A>
+<LI><A HREF="ch9.htm#ShowingThatYourControlHastheFocus">
+Showing That Your Control Has the Focus</A>
+<LI><A HREF="ch9.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>10
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch10.htm"><I>Window Dressing</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch10.htm#GivingYourControlaTransparentBackground">
+Giving Your Control a Transparent Background</A>
+<LI><A HREF="ch10.htm#DesignTimeRuntimeReadOnlyProperties">
+Design Time, Runtime, Read-Only Properties</A>
+<UL>
+<LI><A HREF="ch10.htm#Demonstration1">
+Demonstration</A>
+</UL>
+<LI><A HREF="ch10.htm#PermittingYourControltoActasaContainer">
+Permitting Your Control to Act as a Container</A>
+<UL>
+<LI><A HREF="ch10.htm#Demonstration2">
+Demonstration</A>
+</UL>
+<LI><A HREF="ch10.htm#ImplementingAccessKeys">
+Implementing Access Keys</A>
+<UL>
+<LI><A HREF="ch10.htm#AccessKeyswithConstituentControls">
+Access Keys with Constituent Controls</A>
+<LI><A HREF="ch10.htm#UsingtheAccessKeyPropertyandAccessKeyPressEvent">
+Using the AccessKey Property and AccessKeyPress Event</A>
+</UL>
+<LI><A HREF="ch10.htm#ControlsThatAreInvisibleatRuntime">
+Controls That Are Invisible at Runtime</A>
+<UL>
+<LI><A HREF="ch10.htm#Demonstration3">
+Demonstration</A>
+</UL>
+<LI><A HREF="ch10.htm#ControlsThatAligntotheEdgesofForms">
+Controls That Align to the Edges of Forms</A>
+<UL>
+<LI><A HREF="ch10.htm#Demonstration4">
+Demonstration</A>
+</UL>
+<LI><A HREF="ch10.htm#AddinganAboutBox">
+Adding an About Box</A>
+<LI><A HREF="ch10.htm#ProjectTemplates">
+Project Templates</A>
+<UL>
+<LI><A HREF="ch10.htm#Demonstration5">
+Demonstration</A>
+<LI><A HREF="ch10.htm#ChangingtheDefaultTemplatesFolder">
+Changing the Default Templates Folder</A>
+</UL>
+<LI><A HREF="ch10.htm#AddingaToolboxBitmap">
+Adding a Toolbox Bitmap</A>
+<UL>
+<LI><A HREF="ch10.htm#Demonstration6">
+Demonstration</A>
+</UL>
+<LI><A HREF="ch10.htm#Summary">
+Summary</A>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>11
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch11.htm"><I>Making Windows API and DLL Calls</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch11.htm#DeclaringDLLCalls">
+Declaring DLL Calls</A>
+<LI><A HREF="ch11.htm#SampleProjectTheSoundButtonControl">
+Sample Project: The SoundButton Control</A>
+<UL>
+<LI><A HREF="ch11.htm#UsingResources">
+Using Resources</A>
+<LI><A HREF="ch11.htm#CreatingaResourceScript">
+Creating a Resource Script</A>
+<LI><A HREF="ch11.htm#CompilingYourResourceFile">
+Compiling Your Resource File</A>
+<LI><A HREF="ch11.htm#BeyondClicksnd">
+Beyond Clicksnd</A>
+</UL>
+<LI><A HREF="ch11.htm#SampleProjectTheMenuPicControl">
+Sample Project: The MenuPic Control</A>
+<UL>
+<LI><A HREF="ch11.htm#DesigningtheMenuPicControl">
+Designing the MenuPic Control</A>
+<LI><A HREF="ch11.htm#HowChangeMenuWorks">
+How ChangeMenu Works</A>
+<LI><A HREF="ch11.htm#ImplementingMenuPicsProperties">
+Implementing MenuPic's Properties</A>
+<LI><A HREF="ch11.htm#CallingChangeMenu">
+Calling ChangeMenu</A>
+<LI><A HREF="ch11.htm#TestingMenuPic">
+Testing MenuPic</A>
+</UL>
+<LI><A HREF="ch11.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>12
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch12.htm"><I>Distributing Your Control</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch12.htm#CompilingYourControl">
+Compiling Your Control</A>
+<UL>
+<LI><A HREF="ch12.htm#Demonstration">
+Demonstration</A>
+<LI><A HREF="ch12.htm#ConfirmingThatItWorked">
+Confirming That It Worked</A>
+</UL>
+<LI><A HREF="ch12.htm#BinaryCompatibility">
+Binary Compatibility</A>
+<LI><A HREF="ch12.htm#NamingYourControl">
+Naming Your Control</A>
+<LI><A HREF="ch12.htm#ProjectProperties">
+Project Properties</A>
+<UL>
+<LI><A HREF="ch12.htm#VersionNumber">
+Version Number</A>
+<LI><A HREF="ch12.htm#VersionInformation">
+Version Information</A>
+<LI><A HREF="ch12.htm#CheckingVersionInformation">
+Checking Version Information</A>
+<LI><A HREF="ch12.htm#Application">
+Application</A>
+<LI><A HREF="ch12.htm#DLLBaseAddress">
+DLL Base Address</A>
+</UL>
+<LI><A HREF="ch12.htm#TestingYourCompiledControlinMicrosoftAccess">
+Testing Your Compiled Control in Microsoft Access</A>
+<LI><A HREF="ch12.htm#UsingtheSetupWizard">
+Using the Setup Wizard</A>
+<LI><A HREF="ch12.htm#BinaryLicensing">
+Binary Licensing</A>
+<UL>
+<LI><A HREF="ch12.htm#WhentoLicense">
+When to License</A>
+</UL>
+<LI><A HREF="ch12.htm#Localization">
+Localization</A>
+<LI><A HREF="ch12.htm#RegisteringandUnregisteringControls">
+Registering and Unregistering Controls</A>
+<LI><A HREF="ch12.htm#UsingRegclean">
+Using Regclean</A>
+<UL>
+<LI><A HREF="ch12.htm#AWordofCautionaboutRegclean">
+A Word of Caution about Regclean</A>
+</UL>
+<LI><A HREF="ch12.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>13
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch13.htm"><I>Deploying Your Control on the Web</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch13.htm#HostingaWebSite">
+Hosting a Web Site</A>
+<LI><A HREF="ch13.htm#FortheNetImpaired">
+For the Net-Impaired</A>
+<LI><A HREF="ch13.htm#ObtainingtheActiveXControlPad">
+Obtaining the ActiveX Control Pad</A>
+<LI><A HREF="ch13.htm#CrashCourseonHTMLandVBScript">
+Crash Course on HTML and VBScript</A>
+<UL>
+<LI><A HREF="ch13.htm#AboutHTML">
+About HTML</A>
+<LI><A HREF="ch13.htm#AboutVBScript">
+About VBScript</A>
+</UL>
+<LI><A HREF="ch13.htm#UsingtheActiveXControlPad">
+Using the ActiveX Control Pad</A>
+<LI><A HREF="ch13.htm#TestingYourControlinaWebBrowser">
+Testing Your Control in a Web Browser</A>
+<UL>
+<LI><A HREF="ch13.htm#AddingVBScriptCodetotheWebPage">
+Adding VBScript Code to the Web Page</A>
+<LI><A HREF="ch13.htm#ExtraCredit">
+Extra Credit</A>
+</UL>
+<LI><A HREF="ch13.htm#MakingItWorkwithNetscape">
+Making It Work with Netscape</A>
+<LI><A HREF="ch13.htm#UsingtheSetupWizardinanInternetContext">
+Using the Setup Wizard in an Internet Context</A>
+<LI><A HREF="ch13.htm#CABFilesandCODEBASETags">
+CAB Files and CODEBASE Tags</A>
+<UL>
+<LI><A HREF="ch13.htm#UsingtheCODEBASETag">
+Using the CODEBASE Tag</A>
+<LI><A HREF="ch13.htm#GUIDs">
+GUIDs</A>
+</UL>
+<LI><A HREF="ch13.htm#SafetyConsiderations">
+Safety Considerations</A>
+<UL>
+<LI><A HREF="ch13.htm#Scriptsafe">
+Script-safe</A>
+<LI><A HREF="ch13.htm#InitializationSafe">
+Initialization-Safe</A>
+</UL>
+<LI><A HREF="ch13.htm#LicensingIssuesontheWeb">
+Licensing Issues on the Web</A>
+<UL>
+<LI><A HREF="ch13.htm#UsingtheLpktoolUtility">
+Using the Lpk_tool Utility</A>
+</UL>
+<LI><A HREF="ch13.htm#SigningYourCode">
+Signing Your Code</A>
+<UL>
+<LI><A HREF="ch13.htm#ObtainingaSoftwarePublishersCertificate">
+Obtaining a Software Publisher's Certificate</A>
+</UL>
+<LI><A HREF="ch13.htm#UsingSigncodetoSignYourCABFile">
+Using Signcode to Sign Your.CAB File</A>
+<UL>
+<LI><A HREF="ch13.htm#TestingtheSignedCABFile">
+Testing the Signed .CAB File</A>
+</UL>
+<LI><A HREF="ch13.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>14
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch14.htm"><I>Controls That Interact with the
+Internet</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch14.htm#AsynchronousDownloadofPropertyValues">
+Asynchronous Download of Property Values</A>
+<UL>
+<LI><A HREF="ch14.htm#UsingtheAsyncReadMethod">
+Using the AsyncRead Method</A>
+<LI><A HREF="ch14.htm#TheHappyHourControlsURLProperties">
+The HappyHour Control's URL Properties</A>
+<LI><A HREF="ch14.htm#WhattheTimerEventDoes">
+What the Timer Event Does</A>
+<LI><A HREF="ch14.htm#TestingtheCode">
+Testing the Code</A>
+</UL>
+<LI><A HREF="ch14.htm#InternetControlsasConstituentControls">
+Internet Controls as Constituent Controls</A>
+<UL>
+<LI><A HREF="ch14.htm#ObtainingtheMabryMailControl">
+Obtaining the Mabry Mail Control</A>
+<LI><A HREF="ch14.htm#BuildingtheTechSupportControl">
+Building the TechSupport Control</A>
+</UL>
+<LI><A HREF="ch14.htm#AddingWebBrowsingFeaturestoYourControl">
+Adding Web-Browsing Features to Your Control</A>
+<UL>
+<LI><A HREF="ch14.htm#UsingInternetExplorerasaConstituentControl">
+Using Internet Explorer as a Constituent Control</A>
+<LI><A HREF="ch14.htm#ControlsThatActasHyperlinks">
+Controls That Act as Hyperlinks</A>
+<LI><A HREF="ch14.htm#UsingtheInternetExplorerAutomationObject">
+Using the Internet Explorer Automation Object</A>
+</UL>
+<LI><A HREF="ch14.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>15
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch15.htm"><I>Debugging and Error Trapping</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch15.htm#Debugging">
+Debugging</A>
+<UL>
+<LI><A HREF="ch15.htm#TheImmediateWindow">
+The Immediate Window</A>
+<LI><A HREF="ch15.htm#Breakpoints">
+Breakpoints</A>
+<LI><A HREF="ch15.htm#UsingOptionExplicit">
+Using Option Explicit</A>
+<LI><A HREF="ch15.htm#TheLocalsWindow">
+The Locals Window</A>
+<LI><A HREF="ch15.htm#MonitoringExpressionsUsingWatches">
+Monitoring Expressions Using Watches</A>
+<LI><A HREF="ch15.htm#UsingAssertions">
+Using Assertions</A>
+</UL>
+<LI><A HREF="ch15.htm#ErrorHandling">
+Error-Handling</A>
+<UL>
+<LI><A HREF="ch15.htm#WritingErrorHandlers">
+Writing Error-Handlers</A>
+<LI><A HREF="ch15.htm#TheErrObject">
+The Err Object</A>
+<LI><A HREF="ch15.htm#RaisingErrors">
+Raising Errors</A>
+</UL>
+<LI><A HREF="ch15.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>16
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch16.htm"><I>Object-Oriented Programming</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch16.htm#ObjectOrientedConcepts">
+Object-Oriented Concepts</A>
+<LI><A HREF="ch16.htm#Classes">
+Classes</A>
+<UL>
+<LI><A HREF="ch16.htm#CreatingaClass">
+Creating a Class</A>
+</UL>
+<LI><A HREF="ch16.htm#Collections">
+Collections</A>
+<UL>
+<LI><A HREF="ch16.htm#HowCollectionsWork">
+How Collections Work</A>
+<LI><A HREF="ch16.htm#CreatingaCollectionClass">
+Creating a Collection Class</A>
+<LI><A HREF="ch16.htm#PerformanceConsiderations">
+Performance Considerations</A>
+</UL>
+<LI><A HREF="ch16.htm#IncorporatingaClassinaControl">
+Incorporating a Class in a Control</A>
+<LI><A HREF="ch16.htm#BuildingInterfacesUsingtheImplementsKeyword">
+Building Interfaces Using the Implements Keyword</A>
+<LI><A HREF="ch16.htm#UsingFriendMethods">
+Using Friend Methods</A>
+<LI><A HREF="ch16.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>17
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch17.htm"><I>Database Access</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch17.htm#VisualBasicDataAccess">
+Visual Basic Data Access</A>
+<UL>
+<LI><A HREF="ch17.htm#UsingaMicrosoftAccessDatabase">
+Using a Microsoft Access Database</A>
+<LI><A HREF="ch17.htm#OtherDataSourcesAccessibletotheDataControl">
+Other Data Sources Accessible to the Data Control</A>
+<LI><A HREF="ch17.htm#MoreChoicesUsingOpenDatabaseConnectivity">
+More Choices: Using Open Database Connectivity</A>
+<LI><A HREF="ch17.htm#DataAwareControlsinVisualBasic">
+Data-Aware Controls in Visual Basic</A>
+<LI><A HREF="ch17.htm#HowDatabaseAccessWorks">
+How Database Access Works</A>
+</UL>
+<LI><A HREF="ch17.htm#ProvidingDataAwarenessinYourActiveXControl">
+Providing Data Awareness in Your ActiveX Control</A>
+<LI><A HREF="ch17.htm#Summary">
+Summary</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Appendix </FONT></I><FONT SIZE=5 COLOR=#FF0000>
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch18.htm"><I>Regular Expressions in Perl</I></A></FONT></H2>
+<UL>
+<LI><A HREF="ch18.htm#TheRulesofRegularExpressionMatching">
+The Rules of Regular Expression Matching</A>
+<UL>
+<LI><A HREF="ch18.htm#UnquantifiedAtoms">
+Unquantified Atoms</A>
+<LI><A HREF="ch18.htm#QuantifiersandQuantifiedAtoms">
+Quantifiers and Quantified Atoms</A>
+<LI><A HREF="ch18.htm#Assertions">
+Assertions</A>
+</UL>
+<LI><A HREF="ch18.htm#ExamplesofRegularExpressions">
+Examples of Regular Expressions</A>
+<LI><A HREF="ch18.htm#OperatorsThatUseRegularExpressionsinPerl">
+Operators That Use Regular Expressions in Perl</A>
+<UL>
+<LI><A HREF="ch18.htm#PerlsRegularExpressionMatchingOperatorm">
+Perl's Regular Expression Matching Operator: m//</A>
+<LI><A HREF="ch18.htm#PerlsSearchandReplaceOperators">
+Perl's Search-and-Replace Operator: s///</A>
+</UL>
+</UL>
+
+<H2><I><FONT SIZE=5 COLOR=#FF0000>Chapter </FONT></I><FONT SIZE=5 COLOR=#FF0000>19
+</FONT><FONT SIZE=5>&nbsp;&nbsp;<A HREF="ch19.htm"><I>Glossary</I></A></FONT></H2>
+<UL>
+</UL>
+
+
+
+
+
+<P>
+<H2><A HREF="#credits"><B><I>Credits</I></B></A></H2>
+<p>
+
+<HR>
+<P>
+<A NAME="credits"></A><B>HTML conversion by </B> : 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;M/s. LeafWriters (India) Pvt. Ltd. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<I>Website</I> : <A HREF=http://leaf.stpn.soft.net>http://leaf.stpn.soft.net</A> 
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<I>e-mail</I> : <A HREF=mailto:leafwriters@leaf.stpn.soft.net>
+leafwriters@leaf.stpn.soft.net</A>
+<p></B>
+
+<HR>
+<CENTER>
+<TABLE>
+<TR><TD WIDTH=259><B>Publisher</B></TD><TD WIDTH=240><I>Stacy Hiquet</I>
+</TD></TR>
+<TR><TD WIDTH=259><B>Associate Publisher</B></TD><TD WIDTH=240><I>Stephen Sayre</I>
+</TD></TR>
+<TR><TD WIDTH=259><B>Acquisitions Editor</B></TD><TD WIDTH=240><I>Simon Hayes</I>
+</TD></TR>
+<TR><TD WIDTH=259><B>Development Editor</B></TD><TD WIDTH=240><I>Angela Allen</I>
+</TD></TR>
+<TR><TD WIDTH=259><B>Copy Editor</B></TD><TD WIDTH=240><I>Candace Crane</I>
+</TD></TR>
+<TR><TD WIDTH=259><B>Technical Reviewer</B></TD><TD WIDTH=240><I>Vidya Bharat and John Kee</I>
+</TD></TR>
+<TR><TD WIDTH=259><B>Production Editors</B></TD><TD WIDTH=240><I>Barbara Dahl and Edith Rex</I>
+</TD></TR>
+<TR><TD WIDTH=259><B>Proofreader</B></TD><TD WIDTH=240><I>Jeff Barash</I>
+</TD></TR>
+<TR><TD WIDTH=259><B>Cover Illustration and Design</B></TD><TD WIDTH=240><I>Megan Gandt</I>
+</TD></TR>
+<TR><TD WIDTH=259><B>Illustrator</B></TD><TD WIDTH=240><I>Mina Reimer</I>
+</TD></TR>
+<TR><TD WIDTH=259><B>Book Design and Layout</B></TD><TD WIDTH=240><I>Bruce Lundquist</I>
+</TD></TR>
+<TR><TD WIDTH=259><B>Indexer</B></TD><TD WIDTH=240><I>Anne Leach</I>
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<HR>
+<P>
+Ziff-Davis Press, ZD Press, and the Ziff-Davis Press logo are
+trademarks or registered trademarks of, and are licensed to Macmillan
+Computer Publishing USA by Ziff-Davis Publishing Company, New
+York, New York.
+<P>
+Ziff-Davis Press imprint books are produced on a Macintosh computer
+system with the following applications: FrameMaker<B>&#174;</B>,
+Microsoft<B>&#174;</B> Word, QuarkXPress<B>&#174;</B>, Adobe Illustrator<B>&#174;</B>,
+Adobe Photoshop<B>&#174;</B>, Adobe Streamline<B>&#153;</B>, MacLink<B>&#174;</B><I>Plus</I>,
+Aldus<B>&#174;</B> FreeHand<B>&#153;</B>, Collage Plus<B>&#153;</B>.
+<P>
+Ziff-Davis Press, an imprint of<BR>
+Macmillan Computer Publishing USA<BR>
+5903 Christie Avenue<BR>
+Emeryville, CA 94608
+<P>
+<B>Copyright &#169; 1997 by Macmillan Computer Publishing USA.
+All rights reserved.<BR>
+</B>
+<P>
+<B>PART OF A CONTINUING SERIES</B>
+<P>
+All other product names and services identified throughout this
+book are trademarks or registered trademarks of their respective
+companies. They are used throughout this book in editorial fashion
+only and for the benefit of such companies. No such uses, or the
+use of any trade name, is intended to convey endorsement or other
+affiliation with the book.
+<P>
+No part of this publication may be reproduced in any form, or
+stored in a database or retrieval system, or transmitted or distributed
+in any form by any means, electronic, mechanical photocopying,
+recording, or otherwise, without the prior written permission
+of Macmillan Computer Publishing USA, except as permitted by the
+Copyright Act of 1976, and the End-User License Agreement at the
+back of this book, and except that program listings may be entered,
+stored, and executed in a computer system.
+<P>
+<FONT SIZE=-1>EXCEPT FOR THE LIMITED WARRANTY COVERING THE PHYSICAL
+CD-ROM PACKAGED WITH THIS BOOK AS PROVIDED IN THE END-USER LICENSE
+AGREEMENT AT THE BACK OF THIS BOOK, THE INFORMATION AND MATERIAL
+CONTAINED IN THIS BOOK ARE PROVIDED &quot;AS IS,&quot; WITHOUT
+WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
+ANY WARRANTY CONCERNING THE ACCURACY, ADEQUACY, OR COMPLETENESS
+OF SUCH INFORMATION OR MATERIAL OR THE RESULTS TO BE OBTAINED
+FROM USING SUCH INFORMATION OR MATERIAL. NEITHER MACMILLAN COMPUTER
+PUBLISHING USA NOR THE AUTHOR SHALL BE RESPONSIBLE FOR ANY CLAIMS
+ATTRIBUTABLE TO ERRORS, OMISSIONS, OR OTHER INACCURACIES IN THE
+INFORMATION OR MATERIAL CONTAINED IN THIS BOOK, AND IN NO EVENT
+SHALL MACMILLAN COMPUTER PUBLISHING USA OR THE AUTHOR BE LIABLE
+FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF SUCH INFORMATION OR MATERIAL.</FONT>
+<P>
+<B>ISBN:</B> 1-56276-485-3<BR>
+<BR>
+<H3>Acknowledgments</H3>
+<P>
+I'd like to thank Laura Lemay for her advice and support. Thanks
+to John Chen for his friendship and for his extremely valuable
+assistance in helping me navigate the sometimes Byzantine machinations
+of a certain software company over the years. And thanks to Mike
+and Laura Medina for their help and advice.
+<P>
+Thanks to my editors at Ziff-Davis Press for believing in me and
+for letting me keep the corny jokes in.
+<P>
+I'd also like to thank the following legion of truly righteous
+mental heavyweights for their technical help and hints: Tom Digby,
+Jim Huguley, Matt Luallen, Tales Normando, Marty Pavlovic, and
+Bob Rossney. Your generosity with your time and knowledge has
+improved this book greatly.
+<P>
+This book was written in San Francisco and Livermore, California
+in Fall of 1996 and Winter of 1997.
+<P>
+This is not a sexist cookbook.<BR>
+<P>
+<HR>
+<H1><A NAME="Introduction"><FONT SIZE=6 COLOR=#FF0000>Introduction</FONT></A></H1>
+<P>
+A world in which every piece of software has the ability to interact
+with every other piece of software ain't gonna happen anytime
+soon. But you can always dream. I personally hope to someday put
+a software chip in a small house pet-a cat, perhaps-and control
+it through the use of Visual Basic properties and methods.
+<P>
+But perhaps I'm sharing too much.
+<P>
+Windows developers have had the ability to use software components
+ever since Visual Basic first came out. People Who Know About
+These Things tell us that the Windows component market-formerly
+restricted to VB developers, now expanding to accommodate developers
+in applications as disparate as FoxPro, Access, Visual C++ and
+Microsoft Word 97-has grown to a sizable software subindustry
+that sells on the order of $250 million worth of products. That's
+a lot of widgets, whatzits, and data-aware ding-dongs by anybody's
+standards.
+<H2><A NAME="HowtoHurtUncooperativeUsers"><FONT SIZE=5 COLOR=#FF0000>
+How to Hurt Uncooperative Users</FONT></A></H2>
+<P>
+With the advent of this kooky Internet thing, it's certain that
+this component technology will continue to grow and mature and
+eventually get to the point where it will become a part of every
+application, Web page, vibrating hotel bed, and house pet on earth.
+<P>
+However, it's not there yet. The idea of sending software components
+to users through a Web page is a compelling one-if your users
+are using a Web browser that supports the software component technology
+standard you chose.
+<P>
+Of course, if visitors to your Web site simply refuse to use &quot;The
+Correct Browser,&quot; you have a number of options for remediation
+that you may wish to consider:
+<UL>
+<LI>Shoot them
+<LI>Garrote them
+<LI>Systematically buff their elbows with sandpaper until they
+howl with agony
+<LI>etc.
+</UL>
+<P>
+Only through the cooperation of Webmasters all over the world
+will the ActiveX assimilation of Planet Earth be completed in
+a timely and cruelty-free fashion.
+<P>
+Until Web browser support for ActiveX becomes as ubiquitous as
+the rubber insole, there are still plenty of reasons to develop
+ActiveX controls. You probably have at least a few of these in
+mind, or you wouldn't have bought this book (and I wouldn't have
+written it). It is my opinion that rapid development of ActiveX
+controls will be most prevalent in two areas: vertical applications
+(written in Visual Basic or any one of a number of other development
+environments that support ActiveX) and on private Web servers
+(also known as intranets).
+<P>
+It will be interesting to see what happens with ActiveX support
+in Microsoft Office 97, although I couldn't tell you exactly how
+it's going to work, because as I write this, Office 97 is exactly
+24 hours away from being released. (I, for one, am quivering with
+anticipation.)
+<H2><A NAME="CreatingControlsinVisualBasicisSoGreatICouldJustExplode"><FONT SIZE=5 COLOR=#FF0000>
+Creating Controls in Visual Basic is So Great I Could Just
+Explode</FONT></A></H2>
+<P>
+One of the great unsung promises of ActiveX is that-unlike other
+cross-platform component technologies, such as Java-you can theoretically
+build an ActiveX component in any programming language and use
+it with any programming language.
+<P>
+No longer do VB programmers need to rely on the third-party control
+market for controls written in C++. In fact, the advent of VB
+as a control-development environment means that a Visual Basic
+developer can now turn the tables, providing ActiveX components
+for developers who create applications in Visual C++. What a concept.
+<P>
+It's likely that more languages and development environments will
+support the creation of ActiveX controls as time goes by. In fact,
+as this book was being written, a beta version of a new tool for
+creating ActiveX controls called VisualX from InterGroup Technologies
+was released. It's not quite as good as Visual Basic's Control
+Creation Edition (for reasons I'll let you discover on your own),
+but it is worth checking out. You can download it for free from
+<A HREF="http://www.intergrouptech.com/form.html">http://www.intergrouptech.com/form.html</A>.
+<H2><A NAME="WhyJohnnyCantCreateControls"><FONT SIZE=5 COLOR=#FF0000>
+Why Johnny Can't Create Controls</FONT></A></H2>
+<P>
+Visual Basic programmers have been whining for years about their
+inability to create ActiveX controls in Visual Basic. &quot;How
+hard could it be to include this ability in VB?&quot; they ask.
+Well, the Visual Basic gnomes at Microsoft listened. And they
+came up with a bonus: In addition to giving you a way to create
+ActiveX controls in Visual Basic, they made it a free download
+from the Microsoft Web site.
+<P>
+Because it's so easy to create controls using Visual Basic (easy,
+that is, once you've purchased and read the informative tome you
+now hold in your hands), it's likely that we'll begin to see a
+number of new, interesting, fascinating, and perhaps disgusting
+contributions to the world of ActiveX controls in coming years.
+<P>
+So, there it is. You have before you the Visual Basic Control
+Creation Edition. Please use its powers only for good, never for
+evil.
+<H2><A NAME="ThisIsNotWhatThisBookIsAbout"><FONT SIZE=5 COLOR=#FF0000>
+This Is Not What This Book Is About</FONT></A></H2>
+<P>
+Now that you have an idea about what this book is about, I'll
+go into some of the things it isn't about. (By the way, I always
+hate it when authors say &quot;er, um, this topic is beyond the
+scope of this book.&quot; It seems like such a cop-out. So when
+a topic <I>is</I> beyond the scope of this book, I try to give
+you a reference to a book where the topic is covered in more depth.)
+<P>
+This book does not delve into the technology initiatives behind
+ActiveX controls such as COM, DCOM, and OLE, except where they
+are necessary to convey points directly related to building controls
+in Visual Basic. I did this by design; you don't need to be steeped
+in these initiatives in order to create good controls any more
+than you need to know everything about the Windows API to create
+good Visual Basic applications. If you want information on the
+forest rather than the trees, I'll refer to you the documentation
+and tools available in the ActiveX Software Development Kit, downloadable
+from <A HREF="http://www.microsoft.com/activex">http://www.microsoft.com/activex</A>.
+<P>
+You'll also notice that I conspicuously avoid referring to Java
+in this book. This isn't because I don't have anything to say
+about ActiveX versus Java; it's more a function of the fact that
+I didn't want to muddle the instructional material in this book
+with pointless factoids on this alleged clash of the technology
+titans. My opinion on the whole ActiveX versus Java hubbub, for
+what it's worth, is this: Viewing ActiveX and Java as a winner-take-all
+competition for domination of the Internet is like viewing lowfat
+milk versus skimmed milk as a competition for domination of your
+refrigerator.
+<P>
+To get your very own copy of Visual Basic 5.0 Control Creation
+Edition for free, go to the Microsoft site at <A HREF="http://www.microsoft.com/vbasic/controls/">http://www.microsoft.com/vbasic/controls/</A>.
+<H2><A NAME="WhoShouldUseThisBook"><FONT SIZE=5 COLOR=#FF0000>
+Who Should Use This Book</FONT></A></H2>
+<P>
+This book is designed for intermediate to advanced Visual Basic
+programmers who are interested in creating ActiveX controls in
+Visual Basic. You may be interested in creating controls that
+will reside in Web pages, or you may want to create controls that
+will reside in compiled Visual Basic applications. Either way,
+this book addresses all of the steps you'll need to take to create
+a control in VB.
+<P>
+Although this book uses the Control Creation Edition for its examples,
+you can use any version of Visual Basic 5.0 to create controls.
+The concepts are the same from one edition of Visual Basic to
+the next.
+<P>
+You should be aware that this book is not a comprehensive reference
+to programming in VB. It would, however, serve as an excellent
+companion to a more general book on VB. If you're a beginner and
+you want to learn how to create ActiveX controls, it might behoove
+you to learn how VB works in general before jumping into control
+creation. You'll save yourself some time and some grief.
+<P>
+Finally, enjoy the book. And don't forget to check out the Web
+page at <A HREF="http://www.well.com/user/jeffreyp/activex/">http://www.well.com/user/jeffreyp/activex/</A>. I'll try
+to keep it updated with as much control-creation information and
+links to VB resources as I have time for.
+<HR>
+
+<CENTER><P>
+
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch1.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

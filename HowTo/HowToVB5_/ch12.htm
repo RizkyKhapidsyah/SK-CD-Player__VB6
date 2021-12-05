@@ -1,0 +1,823 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 12 -- Distributing Your Control</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;12</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Distributing Your Control</FONT>
+</H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#CompilingYourControl">
+Compiling Your Control</A>
+<UL>
+<LI><A HREF="#Demonstration">
+Demonstration</A>
+<LI><A HREF="#ConfirmingThatItWorked">
+Confirming That It Worked</A>
+</UL>
+<LI><A HREF="#BinaryCompatibility">
+Binary Compatibility</A>
+<LI><A HREF="#NamingYourControl">
+Naming Your Control</A>
+<LI><A HREF="#ProjectProperties">
+Project Properties</A>
+<UL>
+<LI><A HREF="#VersionNumber">
+Version Number</A>
+<LI><A HREF="#VersionInformation">
+Version Information</A>
+<LI><A HREF="#CheckingVersionInformation">
+Checking Version Information</A>
+<LI><A HREF="#Application">
+Application</A>
+<LI><A HREF="#DLLBaseAddress">
+DLL Base Address</A>
+</UL>
+<LI><A HREF="#TestingYourCompiledControlinMicrosoftAccess">
+Testing Your Compiled Control in Microsoft Access</A>
+<LI><A HREF="#UsingtheSetupWizard">
+Using the Setup Wizard</A>
+<LI><A HREF="#BinaryLicensing">
+Binary Licensing</A>
+<UL>
+<LI><A HREF="#WhentoLicense">
+When to License</A>
+</UL>
+<LI><A HREF="#Localization">
+Localization</A>
+<LI><A HREF="#RegisteringandUnregisteringControls">
+Registering and Unregistering Controls</A>
+<LI><A HREF="#UsingRegclean">
+Using Regclean</A>
+<UL>
+<LI><A HREF="#AWordofCautionaboutRegclean">
+A Word of Caution about Regclean</A>
+</UL>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+By this time, you've been
+exposed to most of the functionality of a typical control. Now
+it's time to kick your control out of the nest and unleash it
+on the real world.
+<P>
+Getting an ActiveX control to end users isn't as easy as it was
+in the old days. In the 16-bit world of VBXs, you could distribute
+a VBX to a user simply by putting a copy of it into their \windows\system
+directory.
+<P>
+Not so with ActiveX controls. ActiveX controls must be registered
+with the system in order to work properly. You can register controls
+manually (using a registration utility called regsvr32), but in
+all likelihood you'll want to distribute your control to users
+without forcing them to register the controls manually. A Setup
+application does this for you; you can create a Setup application
+with the Visual Basic Setup Wizard.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>There is one situation in which you don't have to create a conventional Setup application:<FONT FACE="Times"> </FONT>when you're distributing your control on the Web. Controls distributed via a Web page are downloaded and install themselves 
+automatically on a user's machine, without a Setup application. For more information on Web-distributed controls, check out <A HREF="ch13.htm" >Chapter 13</A>, which goes into more detail about how this works.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="CompilingYourControl"><FONT SIZE=5 COLOR=#FF0000>
+Compiling Your Control</FONT></A></H2>
+<P>
+To get your control to users, you must first compile it. Compiling
+the control takes all of its code and other components and combines
+it into a .OCX file that you can distribute to users.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>You can't use the Control Creation Edition of Visual Basic to create compiled executable (.EXE) files. This edition of Visual Basic can only be used to create compiled ActiveX (.OCX) files. In order to compile EXEs, you need to purchase one of the 
+commercial versions of VB. You'd think this would be a no-brainer (as in, &quot;What part of Control Creation Edition don't you understand?&quot;). But you'd be surprised at how many people posted messages on the Net asking &quot;Where's the make .EXE 
+option in the Control Creation Edition?&quot; during the beta.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="Demonstration">
+Demonstration</A></H3>
+<P>
+As a demonstration of how to compile and distribute your control,
+you'll compile a version of the HappyHour control you set up in
+a previous chapter. To compile this project, do the following:
+<OL>
+<LI>Open the enhanced version of the HappyHour project on the
+CD-ROM that accompanies this book. Use the version in the Chapter
+12 folder on the CD&#173;ROM.
+<LI>Select the menu command <B>File, Make HappyHourProject.ocx</B>.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>If you don't see the Make .ocx command on the File menu, make sure that you've selected your control project (as opposed to the test EXE project) in the Project Explorer window.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=3>
+<LI>The Make Project dialog box will appear. Confirm that the
+name of the .OCX file you want is correct.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>I still give my .OCX files conventional DOS/Windows 8.3 filenames (that is, filenames with a maximum of eight characters in their names and a maximum of three characters in their extensions). This may be sheer paranoia on my part; I dunno. At any rate, 
+old habits die hard, and since most users will never have to deal with the .OCX file as a filename anyway, using the 8.3 convention doesn't hurt anything.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=4>
+<LI>Click on <B>OK</B>. The control will compile.
+</OL>
+<H3><A NAME="ConfirmingThatItWorked">
+Confirming That It Worked</A></H3>
+<P>
+You'll be able to tell that your control is compiled because it
+will appear on the list of insertable controls in applications
+that support ActiveX controls. To see this list in Visual Basic
+5.0, you use the Project, Components menu command. In Microsoft
+Access 95, you can see the list by opening a form in design view,
+then choosing the menu command Insert, Custom Control.
+<H2><A NAME="BinaryCompatibility"><FONT SIZE=5 COLOR=#FF0000>
+Binary Compatibility</FONT></A></H2>
+<P>
+When you compile your control, it is assigned a Globally Unique
+Identifier (GUID<I>)</I>. A GUID is a 16-byte number that uniquely
+identifies your control to Windows. When your control is installed
+and registered on another user's system, the GUID is copied to
+that system's registry as part of the installation process.
+<P>
+Each time you compile your control, the random GUID generated
+by Visual Basic will be different, unless you have an option known
+as <I>binary compatibility</I> turned on. Turning on binary compatibility
+means that you're almost ready to distribute your control (or
+you've already distributed a version of your control) and you
+want to make sure that the version you're about to build remains
+consistent with future versions. (A side effect of turning this
+option on is that the GUID remains stable from one build of your
+control to the next.)<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Having a stable GUID from one version of your control to the next becomes particularly important when you're inserting controls on a Web page. See <A HREF="ch13.htm" >Chapter 13</A> for more information on this.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+When you turn binary compatibility on, you're making a formal
+commitment to your control's interface. You can add new elements
+to your control's set of properties, methods, and events, but
+if you remove any part of the existing interface, backward compatibility
+with earlier versions of your control will break. Visual Basic
+will issue a warning to you when this happens.
+<P>
+To activate binary compatibility, do the following:
+<OL>
+<LI>From the menu, choose Project, &lt;my control name&gt; Properties.
+<LI>The Project Properties dialog box appears. Choose the Component
+tab. The dialog box should look like Figure 12.1.<BR>
+<A HREF="f12-1.gif"><B>Figure 12.1 :</B> <I>The Component tab of the Project Properties
+window WordPad's Save As dialog box with the Text option enabled</I>.</A>
+<p>
+<LI>Click on <B>Binary Compatibility</B>, then click <B>OK</B>.
+</OL>
+<H2><A NAME="NamingYourControl"><FONT SIZE=5 COLOR=#FF0000>
+Naming Your Control</FONT></A></H2>
+<P>
+The name you give your control project and your UserControl designer
+determines the name the user will see when he places the control
+into a project.
+<P>
+Consider the SoundButton control as illustrated in Figure 12.2.
+<P>
+<A HREF="f12-2.gif"><B>Figure 12.2 :</B> <I>SoundButton project names</I>.</A>
+<P>
+When a user of your control inserts it into his project, the control
+will appear in the list of available controls as SoundButton.
+(However, in Microsoft Access 95, it will appear as MySoundButton.SoundButton;
+see the topic &quot;Testing Your Compiled Control In Microsoft
+Access&quot; later in this chapter for more information.)
+<P>
+The moral of the story is that you should give your control project
+and UserControl a name that is going to make sense when a user
+browses the list of insertable controls.
+<H2><A NAME="ProjectProperties"><FONT SIZE=5 COLOR=#FF0000>
+Project Properties</FONT></A></H2>
+<P>
+You can assign a number of properties to your control project.
+These properties are added to the .OCX file at compile time.
+<P>
+Some project properties can be viewed by users of your control
+whether or not the control is actually installed on their machine.
+Such information is nice to add, because it makes it easier for
+users to manage .OCX files. If you don't add version information,
+for example, your users will have a hard time figuring out what
+your .OCX file does or where it came from.
+<P>
+To set project properties for your control project, select the
+menu command Project<B>,</B> &lt;my project&gt; Properties. Then
+choose the Make tab.
+<P>
+The Project Properties dialog box is shown in Figure 12.3.
+<P>
+<A HREF="f12-3.gif"><B>Figure 12.3 :</B> <I>The Project Properties window</I>.</A>
+<P>
+The following are some details on what each of the project properties
+do.
+<H3><A NAME="VersionNumber">
+Version Number</A></H3>
+<P>
+The version number of your control is important in situations
+where a user is re-installing or upgrading the control on a particular
+system. Most Setup programs will refuse to overwrite an existing
+copy of a control if the existing control is of a later version
+than the one it's trying to install. (That is, the Setup program
+won't kill version 2.0 of your control in order to install version
+1.0.)
+<P>
+For this reason, it's important that you keep the interface of
+your control consistent across versions. (And by interface, I'm
+referring here to its programmable interface<FONT FACE="Times">-</FONT>its
+properties, methods, and events.) If you don't do this, newer
+versions of your control will break applications built on earlier
+versions. Once you've implemented an element of your programmable
+interface, it should stay there forever, even if you've since
+come up with a much better way to implement something.
+<P>
+To enable version numbering in your control, do the following:
+<OL>
+<LI>In the Project Properties dialog box, select the Make tab.
+<LI>If you want the revision number of your control to be automatically
+incremented each time it is recompiled, activate the Auto Increment
+checkbox. Otherwise, you will need to remember to change the version
+number manually each time you recompile your project (which is
+perfectly fine, if that's the way you want to go about it).
+</OL>
+<H3><A NAME="VersionInformation">
+Version Information</A></H3>
+<P>
+Version information enables you to add some textual information
+to your control. Even if the control is not installed, the user
+can use the Properties page in Windows Explorer to figure out
+what your control is and where it came from.
+<P>
+The version information categories that you can include with your
+control are:
+<UL>
+<LI>Comments
+<LI>Company Name
+<LI>File Description
+<LI>Legal Copyright
+<LI>Legal Trademarks
+<LI>Product Name
+</UL>
+<P>
+It's particularly important to supply version information in the
+Company Name category, because guess which company's name appears
+in that slot if you don't include your company's name? (I'll give
+you a hint: It's two words, and it begins with the word &quot;Microsoft&quot;
+and ends with the word &quot;Corporation.&quot;)
+<P>
+To supply version information with your control:
+<OL>
+<LI>In the Project Properties dialog box, click on the type of
+version information you wish to supply.
+<LI>In the Value box, type the value to be assigned to the category
+of version information. For example, Figure 12.4 shows a comment
+assigned to the Comments category of the SoundButton control.
+<BR>
+<A HREF="f12-4.gif"><B>Figure 12.4 :</B> <I>Version information comments</I>.</A>
+<p>
+<LI>Continue to enter version information values for as many of
+the categories as you wish. When you're done, click on OK. You
+will, of course, need to recompile your control for the information
+to be included in the distributable .OCX file.
+</OL>
+<H3><A NAME="CheckingVersionInformation">
+Checking Version Information</A></H3>
+<P>
+After you've compiled your control, you can inspect the version
+information compiled in with your control by doing the following:
+<OL>
+<LI>Using Windows Explorer, locate your compiled .OCX file on
+disk.
+<LI>Right-click on the file. The file's context menu pops up.
+Select Properties.
+<LI>The control's Properties dialog box appears. Select the Version
+tab.
+<LI>The control's version information is displayed, as illustrated
+in Figure 12.5.
+</OL>
+<P>
+<A HREF="f12-5.gif"><B>Figure 12.5 :</B> <I>Version information in Windows Explorer</I>.</A>
+<H3><A NAME="Application">
+Application</A></H3>
+<P>
+The Application panel determines two properties of your compiled
+application: its name and its icon. However, these properties
+do not pertain to ActiveX controls; they are used for compiled
+EXE projects only.
+<H3><A NAME="DLLBaseAddress">
+DLL Base Address</A></H3>
+<P>
+The DLL base address is the part of memory that your control loads
+into by default. (The reason why it's called the DLL base address
+and not the ActiveX base address is because ActiveX controls are
+really just another type of DLL.)
+<P>
+It's important to choose a DLL base address for your control because
+if you don't, the DLL base address for your control will be the
+same as the controls created by the millions of yo-yos out there
+who didn't buy this book and read this chapter. When your control
+is loaded into memory on a system that already has a DLL in memory
+at its base location, the operating system has to find a new slot
+in memory in which to load your control. This makes your control
+load more slowly, although how much more slowly is anyone's guess.
+(My guess is, since we're talking about a memory operation here,
+not that much more slowly.)
+<P>
+The key to solving this problem is to pick a base address that
+is different from the default. Valid DLL base addresses are multiples
+of 65,536 that fall between the range 65,536 and 2,147,418,112.
+<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Although the Visual Basic manuals and help files use hexadecimal notation for memory addresses, you're free to enter a DLL base address in either hex or decimal notation. By the way, you might find the Windows Calculator useful if you need to do 
+hexadecimal calculations, since it has the ability to quickly switch back and forth between decimal and hex.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+One handy way to come up with a DLL base address for your control
+is to pick a random number between two and 32,000-ish, multiply
+that number by 65,536, and use that as your base address. For
+example, I set the DLL base address of the SoundButton control
+project to 1179648 decimal (&amp;H120000 hex), which is 65,536
+times 18.
+<P>
+Using this method, you might run into a base address used by some
+other control, but it's not terribly likely. And even if you do,
+it won't cause a fatal error, just a teensy performance degradation
+at runtime.
+<P>
+You can access the DLL base address setting in the Compile tab
+of the Project Properties dialog box, as illustrated in Figure
+12.6.
+<P>
+<A HREF="f12-6.gif"><B>Figure 12.6 :</B> <I>Compile tab of the Project Properties dialog
+box</I>.</A>
+<H2><A NAME="TestingYourCompiledControlinMicrosoftAccess"><FONT SIZE=5 COLOR=#FF0000>
+Testing Your Compiled Control in Microsoft Access</FONT></A></H2>
+<P>
+Using Visual Basic to test your control is like driving a four-wheel-drive
+vehicle on the freeway on a sunny day. You might be able to verify
+that it works, but you won't have an idea of how it's going to
+perform in unexpected situations.
+<P>
+Testing your compiled control in a non-VB container such as this
+is like coating that sunny highway with a thin layer of tapioca
+pudding. Just as driving your Jeep down a pudding-covered highway
+gives you a sense of how it <I>really</I> handles, putting your
+control into a container other than VB, such as Microsoft Access
+95, can give you important insights into how your control is going
+to behave in the real world.
+<P>
+Even if your control is destined for use in only one container
+(such as a Visual Basic project or a Web page) I'd recommend you
+test it in at least one other container, for no other reason than
+to gain a non-VB perspective on how your control will be used.
+<P>
+In this section, I'll demonstrate how a Microsoft Access user
+might use your compiled SoundButton control in an Access form.
+<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>I used Access 95 as an example because a lot of people have it and it's an application that I'm familiar with, and the fact that it's different enough from Visual Basic to make it an effective alternative test application. But it's no big deal if you 
+don't have it on your machine. You should be able to follow along in whatever ActiveX container application you're most familiar with. (And by the time you read this, Access 97 will be out; you can of course use that for testing as well.)</I>
+</BLOCKQUOTE>
+<BLOCKQUOTE>
+<I>For a list of apps that support ActiveX controls, see <A HREF="ch2.htm" >Chapter 2</A> If you don't have any other ActiveX-capable apps on your system, don't sweat it<FONT FACE="Times">-</FONT>we'll go through this again in the next chapter, when I'll 
+talk about embedding controls in Web pages. In that chapter, you'll use the ActiveX Control Pad to embed the SoundButton control in a Web page.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+To embed the SoundButton control in a Microsoft Access form, do
+the following:
+<OL>
+<LI>Start Microsoft Access. You can either create a new database,
+use an existing database of your own, or use the example database
+provided on the CD-ROM that accompanies this book. The name of
+this database used in this example is example.mdb.
+<LI>If you're using your own database or a new database, select
+the menu command <B>Insert Form</B>. The New Form dialog box appears
+(see Figure 12.7); select Design View, then click on <B>OK</B>.
+Or, if you're using the example database on the CD-ROM, locate
+the form called frmAddress in the database window, then click
+on <B>Design</B>. The form will appear in design mode.<BR>
+<A HREF="f12-7.gif"><B>Figure 12.7 :</B> <I>Create New Form dialog box</I>.</A>
+<P>
+<LI>To insert the control onto the form, select the menu command
+<B>Insert, Custom Control</B>. The Insert OLE Custom Controls
+dialog box appears (see Figure 12.8). Scroll down until you find
+the SoundButton control, which appears in the list as MySoundButton.SoundButton.
+</OL>
+<P>
+<A HREF="f12-8.gif"><B>Figure 12.8 :</B> <I>Insert OLE Custom Controls dialog box</I>.</A>
+<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>You can see that the control appears differently in Access than it does in Visual Basic. This is one of the reasons why it's good to test your control in a non-VB container, even if you don't really intend to use the control in a non-VB container.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=4>
+<LI>Click on <B>OK</B>. The button appears on the form. To confirm
+that it works properly, put the form into run mode by selecting
+the menu command <B>View,</B> <B>Form</B>.
+<LI>The form goes into run mode (see Figure 12.9). Click on the
+SoundButton. It should generate the soothing click sound you've
+come to appreciate.
+</OL>
+<P>
+<A HREF="f12-9.gif"><B>Figure 12.9 :</B> <I>Access form in run mode</I>.</A><BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Remember that property pages aren't just a good idea, they're the law, at least when you plan on using your ActiveX control in a non-Visual Basic container. If you don't provide a custom property sheet, users may not be able to get design-time access to 
+its properties at all. Access 95 is a good example of an application in which this is the case.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="UsingtheSetupWizard"><FONT SIZE=5 COLOR=#FF0000>
+Using the Setup Wizard</FONT></A></H2>
+<P>
+If you're going to give your control to developers who are going
+to use it in Visual Basic or other development environments, you
+need to build a Setup application. The Setup application installs
+your control and, optionally, any attendant controls that are
+installed along with your controls, such as DLLs, constituent
+controls, help files, README files, and so forth.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>This chapter gives instructions on how to distribute your control to users via floppy disk or a shared disk drive on a local-area network (LAN). For instructions on how to distribute your control over the Internet, see <A HREF="ch13.htm" >Chapter 
+13</A>.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+To use the Setup Wizard to create a setup program for your control,
+do the following:
+<OL>
+<LI>If Visual Basic is open, close it.
+<LI>From the Windows taskbar, select the Visual Basic 5.0 program
+group.
+<LI>In the VB 5 program group, choose Application Setup Wizard.
+This is illustrated in Figure 12.10.<BR>
+<A HREF="f12-10.gif"><B>Figure 12.10:</B> <I>Launching the Application Setup Wizard</I>.</A>
+<P>
+<LI>The Setup Wizard runs and displays an introductory screen.
+Click on <B>Next</B>.
+<LI>The Select Project and Options screen appears. Choose the
+project file for your control by browsing the disk and selecting
+the .VBP file.
+<LI>If your control needs to be rebuilt (that is, recompiled),
+then make sure the Rebuild the Project checkbox is selected.
+<LI>Finally, if you want the Setup Wizard to create a dependency
+file rather than a Setup program, make sure the Generate Dependency
+File Only button is selected. (A <I>dependency file</I> is a file
+that lists all the files that need to be distributed to users
+in order for your project to function.) The screen should look
+like Figure 12.11.<BR>
+<A HREF="f12-11.gif"><B>Figure 12.11:</B> <I>The Select Project and Options window</I>.</A>
+<P>
+<LI>Click on <B>Next</B>. There will be a short delay while the
+Setup Wizard contemplates its navel. After a few seconds, the
+Distribution Method screen appears, as illustrated in Figure 12.12.
+Choose the option you want.
+</OL>
+<P>
+<A HREF="f12-12.gif"><B>Figure 12.12:</B> <I>The Distribution Method screen</I>.</A><BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Selecting Floppy disk means that you want the Setup Wizard to create diskettes containing your code components. Choosing Single Directory means that the Setup program created by the Setup Wizard will occupy a single folder. (This type of program could 
+conceivably be much larger than a 1.44 megabyte diskette but is appropriate for situations when you're distributing a control to users over a shared disk on a local-area network, for example.) For my money, the best type of Setup program is the third 
+option, Disk Directories, because it offers the speed of the hard disk combined with the flexibility of a Setup program broken up into diskettes.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=9>
+<LI>Click on <B>Next</B>.
+<LI>If you chose the Disk Directories option, you're next confronted
+with the Multiple Directories screen. Choose the directory into
+which you'd like your Setup program installed, then click on <B>Next</B>.
+If the directory you denote doesn't exist, the Setup Wizard will
+create it; however, if the directory you choose already contains
+files, the Setup Wizard will not delete those files for you. (For
+this reason, you should create a new directory or choose a directory
+you know is empty.) The screen should look like Figure 12.13.
+<BR>
+<A HREF="f12-13.gif"><B>Figure 12.13:</B> <I>Setup Wizard's Multiple Directories screen</I>.</A>
+<P>
+<LI>The ActiveX Components screen appears. In this screen, the
+Wizard determines whether your project uses any constituent controls.
+If you wish to add constituent controls to your Setup program,
+you can do so now by clicking on <B>Browse</B>. Otherwise, click
+on <B>Next</B>.
+<LI>The Confirm Dependencies screen appears. This screen informs
+you of the files required for your project to run. If you want
+more information on any of these files, click on <B>File Details</B>.
+Otherwise, click on <B>Next</B>.
+<LI>The Setup Wizard enters an additional period of contemplation,
+during which you may wish to go out to the kitchen and obtain
+yourself a tasty beverage.
+<LI>For an ActiveX control project, you'll get the message pictured
+in Figure 12.14. Of course you wish to include the Property Page
+DLL, because if you don't, your users will have a tough time gaining
+access to properties of your control at runtime. So if you plan
+on using your control in non-VB applications, click on Yes.<BR>
+<A HREF="f12-14.gif"><B>Figure 12.14:</B> <I>Setup Wizard Property Page DLL message</I>.</A>
+<P>
+<LI>The File Summary screen (Figure 12.15) appears, showing a
+list of files that will be distributed along with your control
+project. If you need to add additional files to your installation
+(such as a readme file or a help file), now's the time to do it.
+Click on <B>Add</B> to add files.<BR>
+<A HREF="f12-15.gif"><B>Figure 12.15:</B> <I>The File Summary screen</I>.</A>
+<P>
+<LI>Click on <B>Next</B>. The Setup Wizard is finished, so click
+on <B>Finish</B>. The Setup wizard dutifully collects and compresses
+files as you continue to enjoy your tasty beverage.
+</OL>
+<P>
+When it's all done, you've got a lovely Setup application on your
+disk, along with a couple of disks' worth of compressed support
+files. 
+<P>
+Many (if not all) of these files do not actually need to be installed
+on your users' machines with each control you distribute. This
+is because most of these files are shared components that get
+installed into the user's Windows system directory. If your users
+already have a copy of the files you're distributing, the Setup
+program is smart enough to know not to litter their hard drives
+with additional copies. So if you're worried about dumping megabytes
+of junk on your users' disks, don't be.
+<H2><A NAME="BinaryLicensing"><FONT SIZE=5 COLOR=#FF0000>
+Binary Licensing</FONT></A></H2>
+<P>
+Controls that support licensing enable you to restrict the use
+of your control. When your control is licensed, programmers are
+permitted to write code to access the interface of your controls
+within a development environment (such as Visual Basic's), and
+they can distribute the control to their end users. But those
+end users cannot access the control in a development environment
+unless they, too, have a licensed copy of the control.
+<P>
+Usually it's necessary to install a control (using the setup diskettes
+created by the developer of the control) to license the control.
+In the past, Visual Basic controls used tiny binary files stored
+in the Windows system directory as license files. ActiveX controls
+use registry entries for this purpose. Neither scheme will prevent
+a dedicated software pirate from making unauthorized copies of
+your controls, but adding support for licensing will slow down
+less technical (and less dedicated) users.
+<P>
+Controls that are destined for commercial distribution should
+always support licensing. You can add support for licensing to
+your control by doing the following:
+<OL>
+<LI>In your control project, select the Project, &lt;your<B> </B>project
+name&gt; Properties menu.
+<LI>In the Project<B> </B>Properties dialog box, select the General
+tab.
+<LI>Select the Require<B> </B>License<B> </B>Key checkbox. The
+dialog box will look like Figure 12.16.
+</OL>
+<P>
+<A HREF="f12-16.gif"><B>Figure 12.16:</B> <I>Requiring a license key</I>.</A>
+<P>
+If you have compiled your control already, you'll need to compile
+it again in order for the licensing requirement to take effect.
+Once you have done this, your users will have to install your
+control using a setup application you provide for them; simply
+placing a copy of the <B>.</B>OCX<B> </B>file on their system
+will not suffice.
+<H3><A NAME="WhentoLicense">
+When to License</A></H3>
+<P>
+It's a bad idea to require licensing when you're creating a control
+that you don't plan to sell. For example, if you wrote a control
+that acted as the interface for an expense account tracking system
+for your company, adding licensing support would be pointless;
+nobody (except a certifiable weirdo) would attempt to surreptitiously
+copy your control without your authorization. Also consider that,
+in this scenario, licensing adds an additional set of steps for
+your user. Instead of simply asking your network system administrator
+to blast a copy of your .OCX onto every computer on your LAN,
+you'd have to ask each user to install your control using a setup
+program you'd have to author.
+<H2><A NAME="Localization"><FONT SIZE=5 COLOR=#FF0000>
+Localization</FONT></A></H2>
+<P>
+A <I>localized </I>application is an application that has the
+ability to display text in different languages. Localization requires
+first and foremost a top-down planning effort. It is much easier
+to implement as you're building your application rather than after
+the fact (believe me).
+<P>
+The national language used by a piece of software is referred
+to as its <I>locale</I>. The locale of an ActiveX control is embedded
+into it by Visual Basic at compile time; if you're using the U.S.
+English version of VB, for example, your controls will have the
+U.S. English Locale ID.
+<P>
+You can determine the locale of the program in which your control
+is being used by inspecting the LocaleID property of the Ambient
+object. This property tells a localized control which language
+to display text in. If your control displays different text based
+on the LocaleID of its container, you should inspect the LocaleID
+in the InitProperties and AmbientChanged events of the UserControl.
+<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Most localized applications make use of resource files to store string data displayed in the user interface. That way, when the application needs to be localized, all you need to do is take out the English string resource file, replace it with the 
+international file, and recompile. For more information on resource files, see <A HREF="ch11.htm" >Chapter 11</A>.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="RegisteringandUnregisteringControls"><FONT SIZE=5 COLOR=#FF0000>
+Registering and Unregistering Controls</FONT></A></H2>
+<P>
+You may run into a situation of having to register your control
+manually without running a setup application. For example, if
+you compile a control, then move the control to another folder
+on your computer (to reflect the fact that the control has moved
+from development to production, for example), you need to re-register
+the control so that your system knows where to find the relocated
+.OCX file.
+<P>
+You can manually register a control using a utility called Regsvr32.
+For example, to register the SoundButton OCX manually, do the
+following:
+<OL>
+<LI>Locate the utility regsvr32.exe on your disk. On my Windows
+NT machine, it's located in \windows\system32. The utility regsvr32.exe
+is installed by a number of applications, including Visual Basic
+and Microsoft Internet Explorer.
+<LI>Using the Start menu in the Windows task bar, select <B>Run</B>.
+Enter the following command line:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+c:\windows\system32\regsvr32.exe c:\windows\system32\sndbtn.ocx
+</PRE>
+</BLOCKQUOTE>
+<OL START=3>
+<LI>The confirmation dialog box shown in Figure 12.17 is displayed.
+</OL>
+<P>
+<A HREF="f12-17.gif"><B>Figure 12.17:</B> <I>Regsvr32 Successful</I>.</A>
+<P>
+You may find it useful to unregister a control, particularly in
+situations where you mistakenly registered a control or you simply
+want to clear a few controls off your system.
+<P>
+You can manually unregister a control by using the Start menu
+in the Windows task bar to select Run. Then enter the following
+command line:
+<BLOCKQUOTE>
+<PRE>
+c:\windows\system32\regsvr32.exe /u c:\windows\system32\sndbtn.ocx
+</PRE>
+</BLOCKQUOTE>
+<H2><A NAME="UsingRegclean"><FONT SIZE=5 COLOR=#FF0000>
+Using Regclean</FONT></A></H2>
+<P>
+Regclean is a utility that checks your OLE registry and insures
+that all of the registered files actually exist on your computer.
+If it doesn't find the file that corresponds to the registry entry,
+it blows the registry entry away. This can be a great help when
+you're testing the ActiveX control registry. It's also nice to
+get rid of applications you installed years ago but have long
+since deleted. (Did I <I>ever</I> have Lotus Approach installed
+on my system? Yeees.) The latest version of Regclean is available
+on the Microsoft Web site at <A HREF="http://www.microsoft.com/kb/softlib/mslfiles/REGCLN.EXE">http://www.microsoft.com/kb/softlib/mslfiles/REGCLN.EXE</A>.
+(An older version shipped with Visual Basic 4.0; I would imagine
+they'll ship it with VB5 as well.)
+<P>
+A nice thing about the way that Regclean works is that it leaves
+an <I>undo</I> <I>file</I> that tells you exactly what registry
+entries it removed. This file, undo.reg, is created in the same
+folder in which Regclean resides.
+<H3><A NAME="AWordofCautionaboutRegclean">
+A Word of Caution about Regclean</A></H3>
+<P>
+I recently used Regclean on my Windows NT 4.0 machine. It came
+up with so many things wrong with my registry I permitted it to
+clean up all the problems it found without notifying me of what
+it was doing. It wound up hosing the registry of the Data Access
+Object (DAO) library used by Microsoft Access 95. It wasn't hard
+to fix-I just had to figure out which library it had un-registered,
+which took a few minutes, and then re-register it using the registration
+utility Regtlb32. I could have also simply re-installed Access
+95. Not a huge deal, but do bear in mind that over-zealous use
+of Regclean can cause these kinds of problems.
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+This chapter discussed some of the more common methods of distributing
+controls to users. In addition to compiling the control into an
+.OCX and applying compiler-related properties to your control,
+the chapter covered a number of ancillary topics such as localization,
+the system registry, and licensing support.
+<P>
+The next chapter addresses a new way to distribute your controls
+to users<FONT FACE="Times">-</FONT>through a World Wide Web page.
+<HR>
+
+<CENTER><P><A HREF="ch11.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch13.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

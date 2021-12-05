@@ -1,0 +1,823 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 3 -- Developing Your First Control</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;3</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Developing Your First Control</FONT>
+</H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#GettingStarted">
+Getting Started</A>
+<UL>
+<LI><A HREF="#SettingUptheIDE">
+Setting Up the IDE</A>
+</UL>
+<LI><A HREF="#ManagingtheProject">
+Managing the Project</A>
+<LI><A HREF="#DesigningYourControl">
+Designing Your Control</A>
+<LI><A HREF="#TestingtheControl">
+Testing the Control</A>
+<LI><A HREF="#ExposingtheHappyHourControlsCaptionProperty">
+Exposing the HappyHour Control's Caption Property</A>
+<UL>
+<LI><A HREF="#CodingthePropertyGet">
+Coding the Property Get</A>
+<LI><A HREF="#CodingthePropertyLet">
+Coding the Property Let</A>
+<LI><A HREF="#TestingtheNewCaptionProperty">
+Testing the New Caption Property</A>
+<LI><A HREF="#ResizingtheControl">
+Resizing the Control</A>
+<LI><A HREF="#SupplyingaDefaultCaptionUsingtheExtenderObject">
+Supplying a Default Caption Using the Extender Object</A>
+<LI><A HREF="#StoringDesignTimePropertyChanges">
+Storing Design-Time Property Changes</A>
+</UL>
+<LI><A HREF="#ExposingPropertiesUsingtheActiveXControlInterfaceWizard">
+Exposing Properties Using the ActiveX Control Interface Wizard
+</A>
+<UL>
+<LI><A HREF="#TestingtheNewCode">
+Testing the New Code</A>
+</UL>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+This chapter steps you through a basic control project without going into too much detail
+about why things are the way they are. (We'll go back and cover
+each topic in detail later.) The objective is to familiarize you
+with how control development works in Visual Basic and to get
+you comfortable with the various terms and techniques you'll use
+on a regular basis.
+<P>
+The control you'll build in this chapter is designed to notify
+a company's employees of special events. The control could be
+deployed in either an executable application or a Web page. It
+is comprised of a graphical component and a textual component,
+combining the functionality of the standard Windows PictureBox
+and Label controls.
+<H2><A NAME="GettingStarted"><FONT SIZE=5 COLOR=#FF0000>
+Getting Started</FONT></A></H2>
+<P>
+Start by creating a control project. To do this:
+<OL>
+<LI>Start Visual Basic Control Creation Edition.
+<LI>The New Project dialog box will appear (see Figure 3.1). Select
+ActiveX control.
+</OL>
+<P>
+<A HREF="f3-1.gif"><B>Figure 3.1 :</B> <I>New Project dialog box</I>.</A>
+<P>
+You're now in the Visual Basic IDE window (see Figure 3.2). On
+the right side is the Project<I> </I>Explorer, an outline list
+of all the files in your project. (If you can't see the Project
+Explorer, choose the menu command View, Project<B> </B>Explorer
+or use the keystroke shortcut Ctrl+R.)
+<P>
+<A HREF="f3-2.gif"><B>Figure 3.2 :</B> <I>Visual Basic IDE</I>.</A>
+<H3><A NAME="SettingUptheIDE">
+Setting Up the IDE</A></H3>
+<P>
+You'll want to make sure that a few other Visual Basic windows
+are open before you start working. The Toolbox enables you to
+manipulate existing controls, as well as the control you're working
+on. To make the Toolbox visible, use the menu command View, Toolbox.
+<P>
+The Immediate<I> </I>window enables you to type in Visual Basic
+code while your project is running. This can be a great help when
+you're testing and debugging your code. To display the Immediate
+window, use the menu command View, Immediate<B> </B>Window or
+use the keystroke shortcut Ctrl+G.
+<P>
+Finally, for the purposes of this walk-through, you'll want to
+change the Visual Basic development environment from the default
+MDI to SDI. To do this (if you haven't done it already):
+<OL>
+<LI>Choose the menu command <B>Tools, Options</B>.
+<LI>Select the Advanced tab.
+<LI>Activate the SDI<B> </B>Development<B> </B>Environment checkbox
+(see Figure 3.3).
+<LI>Click on <B>OK</B>.
+<LI>Restart Visual Basic. VB's interface will have changed; it's
+now equipped with close buttons for individual windows that you
+can drag around the screen.
+</OL>
+<P>
+<A HREF="f3-3.gif"><B>Figure 3.3 :</B> <I>Advanced Options dialog box</I>.</A>
+<H2><A NAME="ManagingtheProject"><FONT SIZE=5 COLOR=#FF0000>
+Managing the Project</FONT></A></H2>
+<P>
+The Project Explorer currently contains two files: the project
+file, called Project1, and a new control, currently called UserControl1.
+Start by changing the names of these objects to something more
+meaningful. To change the name of the project:
+<OL>
+<LI>In Project Explorer, click on Project1. The Properties window
+changes, displaying properties for Project1. At the top of the
+list is the Name property.
+<LI>Double-click on the name UserControl1 to select it. Type the
+new name of this project, HappyHourProject. Figure 3.4 shows all
+the changes that will occur to reflect the new name.
+</OL>
+<P>
+<A HREF="f3-4.gif"><B>Figure 3.4 :</B> <I>Renamed project</I>.</A>
+<P>
+Now give the control a more meaningful (and festive) name. To
+do this:
+<OL>
+<LI>In the Project Explorer window, double-click on the control
+UserControl1.
+<LI>The Properties window will change to display properties for
+the control. In the control's Name property, change UserControl1
+to HappyHour.
+</OL>
+<P>
+When you're done, the Project Explorer will look as in Figure
+3.5.
+<P>
+<A HREF="f3-5.gif"><B>Figure 3.5 :</B> <I>Renamed control</I>.</A>
+<H2><A NAME="DesigningYourControl"><FONT SIZE=5 COLOR=#FF0000>
+Designing Your Control</FONT></A></H2>
+<P>
+On the screen you'll see a window containing a nondescript gray
+rectangle. This is known as the <I>control designer</I>. The control
+designer is the visual representation of the control, analogous
+to a form in a Visual Basic EXE project.
+<P>
+Every control you create using Visual Basic has a designer<FONT FACE="Times">-</FONT>even
+controls designed to be invisible at runtime have them.
+<P>
+The HappyHour control you'll create will be comprised of two standard
+Windows controls: a PictureBox control and a Label control. The
+Label control will act as a caption for the graphic that appears
+in the PictureBox control. To add these controls to the form designer:
+<OL>
+<LI>In the Toolbox, double-click on the PictureBox control, shown
+in Figure 3.6.
+<LI>A PictureBox control will appear in the middle of the control
+designer.
+<LI>Set the PictureBox's properties as shown in Table 3.1.
+</OL>
+<P>
+<A HREF="f3-6.gif"><B>Figure 3.6 :</B> <I>PictureBox control in Toolbox</I>.</A><BR>
+<P>
+<CENTER><B>Table 3.1 Picturebox Properties For Controls</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=40%>
+<TR VALIGN=TOP><TD WIDTH=96><B>Property</B></TD><TD WIDTH=96><B>Value</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Left</TD><TD WIDTH=96>0</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Top</TD><TD WIDTH=96>0</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Height</TD><TD WIDTH=96>150</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Width</TD><TD WIDTH=96>400</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=4>
+<LI>Double-click on the Label control icon in the Toolbox to create
+a Label control on the control designer. Move the Label below
+the PictureBox and resize it so it takes up the bottom third of
+the designer.
+<LI>In the Properties window, change the properties of the Label
+as shown in Table 3.2.
+</OL>
+<P>
+<P>
+<CENTER><B>Table 3.2 Label Properties</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=40%>
+<TR VALIGN=TOP><TD WIDTH=96><B>Property</B></TD><TD WIDTH=96><B>Value</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Name</TD><TD WIDTH=96>lblCaption</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Caption</TD><TD WIDTH=96>(nothing)</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>WordWrap</TD><TD WIDTH=96>True</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Top</TD><TD WIDTH=96>150</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Height</TD><TD WIDTH=96>100</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Left</TD><TD WIDTH=96>0</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=96>Width</TD><TD WIDTH=96>400</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=6>
+<LI>Before you go any further, save the project. To do this, use
+the menu command <B>File, Save Project</B>. You'll be prompted
+to save the files (use the file names shown in Table 3.3).
+</OL>
+<P>
+<P>
+<CENTER><B>Table 3.3 Control Filenames</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=40%>
+<TR VALIGN=TOP><TD WIDTH=150><B>File</B></TD><TD WIDTH=153><B>Description</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=150>HappyHour.ctl</TD><TD WIDTH=153>The control designer
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=150>HappyHourProject.vbp</TD><TD WIDTH=153>The project file
+</TD></TR>
+</TABLE></CENTER>
+<P>
+Later you'll add more files to the project and re-save them. The
+project file keeps references to all the files in your projects,
+so when you quit and restart Visual Basic, you won't have to re-load
+all the files in your project one at a time.
+<P>
+The visual design of this control is done for now. Close the HappyHour
+designer by clicking on its close button. The close buttons for
+the control designers<FONT FACE="Times">-</FONT>in both the MDI
+and SDI interfaces<FONT FACE="Times">-</FONT>are shown in Figures
+3.7 and 3.8.
+<P>
+<A HREF="f3-7.gif"><B>Figure 3.7 :</B> <I>Close button (SDI interface)</I>.</A>
+<P>
+<A HREF="f3-8.gif"><B>Figure 3.8 :</B> <I>Close button (MDI interface)</I>.</A>
+<H2><A NAME="TestingtheControl"><FONT SIZE=5 COLOR=#FF0000>
+Testing the Control</FONT></A></H2>
+<P>
+Even though your control technically doesn't do anything at this
+point, you can still instantiate it on a form and view its visual
+interface.
+<P>
+The problem, though, is that ActiveX control projects can't be
+run like conventional Visual Basic programs can; they can only
+be run in the context of a <I>container</I>. A container can be
+a form in a Visual Basic executable, an HTML Web page displayed
+in Microsoft Internet Explorer, or another application that supports
+ActiveX controls.
+<P>
+In order to test your controls without having to mess around with
+a completely different development environment, Visual Basic gives
+you the ability to insert an <I>EXE project</I> into your control
+project. Forms in an EXE project are identical to Visual Basic
+forms; they just can't be compiled into an actual EXE file under
+VB. To insert an EXE project into your current project:
+<OL>
+<LI>Make sure that the control designer for the HappyHour control
+is closed. You won't be able to test the control unless it is
+closed.
+<LI>Select the menu command <B>File, Add Project</B>.
+<LI>The Add<B> </B>Project dialog box will appear. (This window
+appears startlingly similar to the New Project dialog box, so
+be sure you pull up the one that lets you add a project rather
+than create a new one.)
+<LI>Choose <B>Standard EXE</B>, then click on <B>Open</B>. In
+the Project Explorer, two new files are added to your project:
+Project1, a Visual Basic EXE project file, and Form1, a standard
+Visual Basic form. Form1 appears in the middle of the screen.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE </B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>You can't insert a control onto a form if that control's designer is open. When a control's designer is open, the control's icon in the Toolbox will appear disabled. To close the control designer, click on its close button.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=5>
+<LI>Insert a HappyHour control on the form by double-clicking
+on its icon in the Toolbox (illustrated in Figure 3.9). An instance
+of your control, called HappyHour1, is created.
+</OL>
+<P>
+<A HREF="f3-9.gif"><B>Figure 3.9 :</B> <I>HappyHour control in the Toolbox</I>.</A>
+<P>
+Even though you haven't written any code yet, the HappyHour1 control
+already has a rudimentary set of properties and events. By looking
+at the Properties window, you can see that HappyHour1 has Height,
+Width, and Visible properties, as well as GotFocus and LostFocus
+events, among others. These properties and events are not really
+a part of your control, but rather passed through from the container
+in which your control resides. You can see these properties by
+looking in the Properties window, as illustrated in Figure 3.10.
+<P>
+<A HREF="f3-10.gif"><B>Figure 3.10:</B> <I>Properties window of the HappyHour control</I>.</A>
+<P>
+I'll discuss more about the relationship between controls and
+containers in <A HREF="ch7.htm" >Chapter 7</A>
+<P>
+Although you now have a basic control with a few properties and
+events, this isn't nearly enough. For one thing, if you resize
+HappyHour1 and make it smaller, the Label and PictureBox controls
+inside can easily get lost. And nothing makes a constituent control
+more angry, believe me.
+<P>
+For another thing, the important properties of the controls within
+HappyHour1 (such as the Caption<B> </B>property of the Label and
+the Picture property of the PictureBox control) can't be accessed.
+<P>
+We'll spend the rest of this chapter rectifying this situation.
+Start by closing Form1 by clicking on its close button, then returning
+to the control designer for HappyHour through the Project Explorer.
+<H2><A NAME="ExposingtheHappyHourControlsCaptionProperty"><FONT SIZE=5 COLOR=#FF0000>
+Exposing the HappyHour Control's Caption Property</FONT></A></H2>
+<P>
+The easiest way to implement a property in a control you create
+is to use an existing property of another control. Controls included
+in your controls are called <I>constituent controls</I>; the process
+of hijacking their properties and events is referred to as <I>delegation</I>.
+In this case you'll delegate the Caption<B> </B>property of the
+constituent Label control to provide a Caption<B> </B>property
+for the HappyHour control.
+<P>
+To give the HappyHour control a Caption<B> </B>property, do the
+following:
+<OL>
+<LI>In the Project Explorer, double-click on HappyHour.ctl to
+open it.
+<LI>Double-click on the HappyHour control's designer to bring
+up its code window.
+<LI>Choose the menu command <B>Tools, Add Procedure</B>. The Add<B>
+</B>Procedure dialog box will appear.
+<LI>In the Name box, type <B>Caption</B>.
+<LI>In the Type panel, select the Property option. The Add<B>
+</B>Procedure dialog box should look like Figure 3.11.
+<LI>Click on <B>OK</B>. The code window will create two new procedures,
+a Property<B> </B>Get and a Property<B> </B>Let, as illustrated
+in Figure 3.12.
+</OL>
+<P>
+<A HREF="f3-11.gif"><B>Figure 3.11:</B> <I>The Add Procedure window</I>.</A>
+<P>
+<A HREF="f3-12.gif"><B>Figure 3.12:</B> <I>Code window with Property Get and Property
+Let</I>.</A>
+<H3><A NAME="CodingthePropertyGet">
+Coding the Property Get</A></H3>
+<P>
+To cause the label's Caption property to be read whenever the
+HappyHour control's Caption property is accessed, modify the Property
+Get procedure like this:
+<BLOCKQUOTE>
+<PRE>
+Public Property Get Caption() As String
+    Caption = lblCaption.Caption
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+Note that you must change the first line of the procedure to be
+defined As String instead of As Variant, since captions should
+be treated as strings.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Remember, you can toggle between Full Module view and Procedure view by using the buttons in the lower left corner of the code window.</I></BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>Property Get versus Property Let</B></TD>
+</TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+The concepts of Property Get and Property Let were first introduced in Visual Basic 4.0. For some reason, when this feature was first introduced, I had trouble remembering that Property Get was the code that was run when the property was read, and Property 
+Let was the code that was run when the property was altered. If you have this problem, too, and you're an old hand with Basic, it might help you to remember that Let is a Basic keyword from the old days of Basic programming. The code was the way you set 
+the variable x to the value 5. So it is with properties, thereby proving that everything old is new again.</BLOCKQUOTE>
+<BLOCKQUOTE>
+To know when to use Property Let vs Property Set, it helps to remember that assigning a value to an object variable always requires a Set statement; similarly, properties that represent objects (such as the Picture property of a PictureBox control) require 
+a Property Set instead of a Property Let.</BLOCKQUOTE>
+<BLOCKQUOTE>
+<TT>Let x = 5</TT>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="CodingthePropertyLet">
+Coding the Property Let</A></H3>
+<P>
+Property Let is the procedure that runs when the value of a property
+is set or changed. To cause the label's Caption property to pass
+through to the HappyHour control's Caption property, alter the
+Property Let procedure so it looks like this:
+<BLOCKQUOTE>
+<PRE>
+Public Property Let Caption(ByVal NewCaption As String)
+    lblCaption.Caption = NewCaption
+    PropertyChanged &quot;Caption&quot;
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+Note that the data type of the Property Let procedure was changed
+from Variant to String, to reflect the fact that captions are
+strings.
+<P>
+PropertyChanged looks like a statement, but it's actually a method
+of your control's container. The method sends a message to the
+container, informing it that a property of your control has been
+changed. This flags the container to trigger a WriteProperties
+event, which saves any design-time changes to this property that
+you make. (We'll deal with the WriteProperties event again later
+on.)
+<H3><A NAME="TestingtheNewCaptionProperty">
+Testing the New Caption Property</A></H3>
+<P>
+To test that the HappyHour control's new Caption property works
+properly, you can go back to the instance of your HappyHour control
+that exists on Form1. To do this:
+<OL>
+<LI>Close the code window by clicking on its close button.
+<LI>Close HappyHour's designer by clicking on its close button.
+<LI>Using the Project Explorer, open Form1 by double-clicking
+on it.
+<LI>There should still be an instance of your HappyHour control
+on Form1. Click on it to select it, if it isn't selected already.
+</OL>
+<P>
+Look in the Properties window. You should be able to see that
+there is now a Caption property available for HappyHour1. Try
+changing the property by typing something else in the Caption
+property. Your control should look something like Figure 3.13.
+<P>
+<A HREF="f3-13.gif"><B>Figure 3.13:</B> <I>Caption property for HappyHour1</I>.</A>
+<P>
+We're finished exposing the HappyHour control's Caption property.
+We'll expose the Picture property of the PictureBox control through
+the HappyHour control later. For now, there's another problem
+to solve: resizing.
+<H3><A NAME="ResizingtheControl">
+Resizing the Control</A></H3>
+<P>
+When HappyHour1 is resized, the two controls contained in it aren't
+resized along with it. This can cause the Label or the PictureBox
+to become lost if the control is made too small. And we can't
+have that. To rectify this, we can insert code that will cause
+the components of the HappyHour control to resize themselves.
+To do this:
+<OL>
+<LI>Close Form1, if it is open, and reopen the control designer
+for HappyHour from the Project Explorer.
+<LI>Double-click on the control designer to open a code window.
+<LI>In the Object combo box (at the top left of the code window),
+select UserControl, if it isn't selected already. This exposes
+the events for the control itself. The UserControl object is to
+a control what the Form object is to a conventional Visual Basic
+application.
+<LI>In the Event combo box(at the top right of the code window),
+select <B>Resize</B>.
+<LI>In the UserControl's Resize event, insert the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_Resize()
+    'To make this more concise as well as faster executing,
+    'You can also use a Move method instead of setting
+    'Width and Height separately. I did it this way for clarity.
+
+    Picture1.Width = UserControl.ScaleWidth
+    Picture1.Height = (UserControl.ScaleHeight / 3) * 2
+    lblCaption.Width = UserControl.ScaleWidth
+    lblCaption.Height = UserControl.ScaleHeight / 3
+    lblCaption.Top = Picture1.ScaleHeight + 60
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+This code will ensure that the width and height of the HappyHour
+control will always be slightly less than the overall width of
+the control.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=590><B>NOTE</B> </TD></TR>
+<TR VALIGN=TOP><TD WIDTH=590>
+<BLOCKQUOTE>
+<I>In the preceding code example, you use the ScaleWidth and ScaleHeight properties of the UserControl because you don't know whether the user will reset the ScaleMode property to a measurement value other than the standard Visual Basic unit of measurement 
+(the twip, equal to 1/1440th of an inch). Your control doesn't have a ScaleMode property yet, but writing code like this protects you in case you ever decide to give it one.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+You can see how this code works if you close the control designer,
+return to Form1, and stretch the control HappyHour1. You should
+be able to see that the PictureBox and the Label stretch proportionately.
+<H3><A NAME="SupplyingaDefaultCaptionUsingtheExtenderObject">
+Supplying a Default Caption Using the Extender Object</A></H3>
+<P>
+Controls that have a Caption property should supply a default
+value for their captions. The default caption for a CommandButton
+is Command1, the default caption for a Label is Label1, and so
+forth. You can supply the same functionality in your control by
+reading a property of the Extender object in your UserControl's
+InitProperties event.
+<P>
+Extender properties are supplied by the container in which your
+constituent control resides. So if you set the default Caption
+property of the HappyHour control to be equal to Extender<B>.</B>Name,
+you can achieve the effect that users expect. To do this:
+<OL>
+<LI>Close Form1, if it is open, and reopen HappyHour<B>.</B>ctl.
+<LI>Double-click on HappyHour's designer to open its code window.
+<LI>In the Procedures combo box<B> </B>of the<B> </B>UserControl
+code window, choose InitProperties.
+<LI>Type the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_InitProperties()
+    Caption = Extender.Name
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+
+<OL START=5>
+<LI>Close the control designer and return to Form1.
+<LI>Now you'll have to re-create the HappyHour control to see
+the default you just created. To do this, click on HappyHour1,
+then press <B>Delete</B>. 
+<LI>Create another instance of HappyHour1 on your form by double-clicking
+on its icon in the Toolbox. You should be able to see that the
+default Caption property for the new instance of HappyHour1 has
+been set properly, as illustrated in Figure 3.14.
+</OL>
+<P>
+<A HREF="f3-14.gif"><B>Figure 3.14:</B> <I>HappyHour control with default caption
+set</I>.</A>
+<H3><A NAME="StoringDesignTimePropertyChanges">
+Storing Design-Time Property Changes</A></H3>
+<P>
+You've probably noticed that the changes you've been making to
+the HappyHour1's Caption property have vanished into the ether
+each time you flip between the control designer and Form1<FONT FACE="Times">-</FONT>specifically,
+the Caption property has been wiped out each time you make a change
+to the control designer.
+<P>
+You can make design-time property settings persistent by writing
+code in the WriteProperties event of the UserControl. The WriteProperties
+event is triggered each time the user's design-time property settings
+need to be saved.
+<P>
+Property settings are made persistent by the use of the PropertyBag
+object. You have the ability to put data into the PropertyBag
+and take data out of the PropertyBag. The WriteProperty method
+of the PropertyBag object stores a property in the PropertyBag,
+while the ReadProperty method does the opposite. Either way, Visual
+Basic is left holding the PropertyBag, which is a good thing.
+<P>
+To make your control save its design-time Caption property, do
+the following:
+<OL>
+<LI>Close Form1, if it is open, and open the HappyHour control
+designer.
+<LI>Double-click on the control designer to expose its code window.
+<LI>In the Procedure combo box at the upper right side of the
+code window, select WriteProperties.
+<LI>Into the code window, insert the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
+    PropBag.WriteProperty &quot;Caption&quot;, Caption, Extender.Name
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL>
+<BR>This code uses the WriteProperty method of the PropertyBag
+object to save the value of the Caption property of your control.
+There's more information on how the PropertyBag works in Chapter
+4, &quot;Control Properties.&quot;
+</OL>
+<P>
+Conversely, just as you must write code to save a design-time
+property change to the PropertyBag, you must also write code to
+retrieve previously set properties from the PropertyBag in your
+control's ReadProperties event. To do this, add the following
+code to your code window:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
+    Caption = PropBag.ReadProperty(&quot;Caption&quot;, Extender.Name)
+End Sub<BR>
+</PRE>
+</BLOCKQUOTE>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The value for Extender.Name is a parameter to the WriteProperty and ReadProperty methods so those methods can know whether the design-time properties have been changed by the user. If the properties haven't been changed (that is, they're equal to 
+Extender.Name) then there's no need to write a specific entry to the PropertyBag. This makes the process of managing saved property settings more efficient.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+Your control should now have the ability to retain the properties
+set for it at design time. To test this:
+<OL>
+<LI>Close the code window and the form designer.
+<LI>Open Form1.
+<LI>Set the Caption property of the HappyHour control to the text
+of your choice.
+<LI>Close Form1.
+<LI>Re-open Form1. You should be able to see that the change you
+made in the Caption property has been retained.
+</OL>
+<H2><A NAME="ExposingPropertiesUsingtheActiveXControlInterfaceWizard"><FONT SIZE=5 COLOR=#FF0000>
+Exposing Properties Using the ActiveX Control Interface Wizard
+</FONT></A></H2>
+<P>
+Now that you know how things work under the hood, try exposing
+a property of a constituent control the easy way, using the ActiveX
+Control Interface Wizard. This tool takes care of much of the
+busywork involved in control creation, particularly when your
+control is primarily comprised of one or more constituent controls.
+<P>
+You can use the ActiveX Control Interface Wizard to delegate a
+Picture property for your control to the constituent PictureBox
+control. To do this:
+<OL>
+<LI>From the Add-Ins menu, select ActiveX Control Interface Wizard.
+The Wizard launches, as shown in Figure 3.15. 
+<BR>
+<A HREF="f3-15.gif"><B>Figure 3.15:</B> <I>The ActiveX Control Interface Wizard</I>.</A>
+<P>
+<LI>Click on <B>Next</B>.
+<LI>The Select<B> </B>Interface<B> </B>Members screen appears.
+In this panel, you choose the interface elements (properties,
+methods, and events) you want your control to have.
+<LI>On the left side of this screen is a list, labeled Available<B>
+</B>names<B>,</B> of interface elements that can be delegated
+to constituent controls. Scroll down the list until you find the
+Picture<B> </B>property.
+<LI>Double-click on the Picture property to add it to the Selected<B>
+</B>names<B> </B>list, as shown in Figure 3.16.
+<BR>
+<A HREF="f3-16.gif"><B>Figure 3.16:</B> <I>The Select Interface Members window</I>.</A>
+<P>
+
+
+<LI>Click on <B>Next</B>. 
+<LI>The Create Custom Interface Members window appears (see Figure
+3.17).
+<BR>
+<A HREF="f3-17.gif"><B>Figure 3.17:</B> <I>The Create Custom Interface Members window</I>.</A>
+<P>
+<LI>You won't be adding any custom elements to the interface for
+now, so click on <B>Next </B>once again.
+<LI>The Set Mapping screen appears.
+<LI>Here you will delegate the Picture property of your control
+to the Picture property of the constituent PictureBox control.
+To begin, click on Picture property in the Public Name list.
+<LI>In the Control combo box in the Maps To panel, select Picture1.
+The Member combo understands that you're trying to map your control
+to the Picture property of Picture1, so it displays the Picture
+property.
+<LI>The Set Mapping screen should look like Figure 3.18.
+<BR>
+<A HREF="f3-18.gif"><B>Figure 3.18:</B> <I>The Set Mapping screen</I>.</A>
+<P>
+<LI>Click on <B>Next</B>.
+<LI>The Set<B> </B>Attributes window appears, as shown in Figure
+3.19.
+<BR>
+<A HREF="f3-19.gif"><B>Figure 3.19:</B> <I>The Set Attributes window</I>.</A>
+<P>
+
+<LI>Your control doesn't have any unmapped members, so click on
+<B>Next</B>.
+<LI>The Finished! window appears. Make sure the View Summary Report
+checkbox is selected, as shown in Figure 3.20. Then click on <B>Finish</B>.
+</OL>
+<BR>
+<A HREF="f3-20.gif"><B>Figure 3.20:</B> <I>Finished!</I>.</A>
+<P>
+The wizard now goes to work, writing the code that will support
+the property mapping you asked for. When it is done writing code,
+the wizard displays a summary reminding you of what you need to
+do to complete your control project (see Figure 3.21). Note this
+information, then click on Close.
+<P>
+<A HREF="f3-21.gif"><B>Figure 3.21:</B> <I>Interface Wizard Summary</I>.</A>
+<P>
+Open the HappyHour control and double-click on its designer to
+view its code. You should be able to see that the following code
+has been added to your project:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
+    PropBag.WriteProperty 'Caption&', Caption, Extender.Name
+    Call PropBag.WriteProperty(&quot;Picture&quot;, Picture, Nothing)
+End Sub
+
+Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
+    Caption = PropBag.ReadProperty(&quot;Caption&quot;, Extender.Name)
+    Set Picture = PropBag.ReadProperty(&quot;Picture&quot;, Nothing)
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+The WriteProperty and ReadProperty methods inserted by the wizard
+are essentially identical to the code you wrote for the Caption
+property; the wizard just uses an alternate syntax.
+<BLOCKQUOTE>
+<PRE>
+'WARNING! DO NOT REMOVE OR MODIFY THE FOLLOWING COMMENTED LINES!
+'MappingInfo=Picture1,Picture1,-1,Picture
+Public Property Get Picture() As Picture
+    Set Picture = Picture1.Picture
+End Property
+
+Public Property Set Picture(ByVal New_Picture As Picture)
+    Set Picture1.Picture = New_Picture
+    PropertyChanged &quot;Picture&quot;
+End Property
+</PRE>
+</BLOCKQUOTE>
+<P>
+The only really new thing here is the Property<B> </B>Set procedure.
+Property<B> </B>Set (rather than Property<B> </B>Let) is required
+here because the Picture property is an object, rather than a
+conventional value.
+<H3><A NAME="TestingtheNewCode">
+Testing the New Code</A></H3>
+<P>
+This code enables you to include a picture in your control at
+design time. To test this, you'll need some graphics file on your
+hard disk.
+<OL>
+<LI>Close the code window and the designer for the HappyHour control.
+<LI>Open Form1.
+<LI>Select the control HappyHour1, then look at the Properties
+window. You should be able to see that HappyHour1 now has a Picture
+property.
+<LI>Click on <B>None</B> next to the Picture property, then click
+on <B>Browse</B>.
+<LI>A file open dialog box appears. Locate any graphic file (such
+as Windows Bitmap, .GIF, .JPG) on your disk. If you're stuck,
+try my personal favorite, the file cars<B>.</B>bmp in your Windows
+folder.
+</OL>
+<P>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>Support for GIF and JPEG images is a new feature in Visual Basic 5.0.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+
+<OL START=6>
+<LI>Click on the file, then click on <B>Open</B>. The graphic
+is assigned to your control's Picture property. See Figure 3.22
+for the result.
+</OL>
+<P>
+<A HREF="f3-22.gif"><B>Figure 3.22:</B> <I>The finished product</I>.</A>
+
+<H2><A NAME="Summary">
+<FONT SIZE=5 COLOR=#FF0000>Summary</FONT></A></H2>
+<P>
+In this chapter you stepped through the creation of a very simple
+control. You added properties using two methods: manually, by
+writing code, and automatically, using the ActiveX Control Interface
+Wizard.
+<P>
+The next few chapters will discuss control properties, events,
+and methods in more detail. This discussion will enable you to
+create a richer, more full-featured control.
+<HR>
+
+<CENTER><P><A HREF="ch2.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch4.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

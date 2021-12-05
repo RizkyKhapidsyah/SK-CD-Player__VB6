@@ -1,0 +1,769 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 1 -- Whatís New In Visual Basic 5.0</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;1</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>What's New In Visual Basic 5.0</FONT>
+</H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#WhatsNewintheIntegratedDevelopmentEnvironment">
+What's New in the Integrated Development Environment</A>
+<UL>
+<LI><A HREF="#ProjectsFilesandtheProjectExplorer">
+Projects, Files, and the Project Explorer</A>
+<LI><A HREF="#FormLayoutWindow">
+Form Layout Window</A>
+<LI><A HREF="#IndentOutdent">
+Indent/Outdent</A>
+<LI><A HREF="#CustomizableToolbars">
+Customizable Toolbars</A>
+<LI><A HREF="#Wizards">
+Wizards</A>
+<LI><A HREF="#ProcedureViewFullModuleView">
+Procedure View/Full Module View </A>
+<LI><A HREF="#Bookmarks">
+Bookmarks</A>
+<LI><A HREF="#AutomaticCodeCompletion">
+Automatic Code Completion</A>
+<LI><A HREF="#DragandDropEditing">
+Drag-and-Drop Editing</A>
+</UL>
+<LI><A HREF="#NewLanguageFeatures">
+New Language Features</A>
+<UL>
+<LI><A HREF="#Assertions">
+Assertions</A>
+<LI><A HREF="#EnumeratedConstants">
+Enumerated Constants</A>
+<LI><A HREF="#AddressOf">
+AddressOf</A>
+<LI><A HREF="#LanguageFeaturesPertainingtoControlCreation">
+Language Features Pertaining to Control Creation</A>
+</UL>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+This chapter describes important new features in Visual Basic 5.0, including changes
+to the interface and changes in the Visual Basic (VB) programming
+language.
+<P>
+At first glance, the changes in the interface might look daunting.
+Fortunately, though, the designers of Visual Basic 5.0 have given
+you an unprecedented number of customizable features. You can
+make the interface look just like the one for Visual Basic 4.0
+and then add new features as you need them until the interface
+is well nigh unrecognizable. It's up to you.
+<H2><A NAME="WhatsNewintheIntegratedDevelopmentEnvironment"><FONT SIZE=5 COLOR=#FF0000>
+What's New in the Integrated Development Environment</FONT></A></H2>
+<P>
+The IDE is where you'll spend most of your time when you're developing
+a Visual Basic project. It's where you write code, add components
+to your project, and design your application's visual interface.
+<P>
+Visual Basic 5.0 adds a number of new features to the IDE to make
+it even easier to develop applications quickly with a minimum
+of mental anguish.
+<H3><A NAME="ProjectsFilesandtheProjectExplorer">
+Projects, Files, and the Project Explorer</A></H3>
+<P>
+The <I>Project Explorer</I> is the where you manage the files
+that comprise your Visual Basic 5.0 project; it is analogous to
+the Project window in previous versions of Visual Basic.
+<P>
+The main reason why the Project Explorer is necessary in Visual
+Basic 5.0 is that you can now have multiple projects open at once.
+This might seem excessive to a Visual Basic veteran, but it makes
+sense once you take a look at how control creation works. Because
+an EXE project and an ActiveX project are two separate things
+and you need an EXE project to test the ActiveX controls you create,
+you'll likely use multiple projects quite often.
+<P>
+With all these new files and multiple projects, it can be hard
+to keep track of what's what. Figure 1.1 displays the hierarchy
+of files and filename extensions.
+<P>
+<A HREF="f1-1.gif"><B>Figure 1.1 :</B> <I>File and project hierarchy in Visual Basic
+5.0</I>.</A>
+<P>
+Note that both ActiveX project files and EXE project files end
+in .VBP. This means you'll probably want to add some other identifying
+characteristic to your project files to differentiate them from
+each other. You may want to denote project files that contain
+ActiveX controls by including the word &quot;Control&quot; in
+their filenames, for example.
+<P>
+For example, say you have a project called <B>StickShift</B>.
+This project is an ActiveX control for a graphical push button
+shaped like the stickshift for a 1989 five-speed Jeep Wrangler.
+For this project, at a minimum, you need a file for the StickShift
+control itself (StickShift.ctl) and a project file (StickShiftControl.vbp).
+If StickShift has a custom property sheet, you'd call that file
+StickShift.pag.
+<P>
+You will almost always use an EXE project in order to test your
+ActiveX control project. For the StickShift project, that means
+you'll add a project file (TestStickShift.vbp) and a form (TestStickShift.frm).
+Finally, your project would require a Project group file, StickShift.vpg,
+to house the EXE project and the ActiveX project.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>It is not a bad idea to put each project you create into its own folder, in order to keep all the files you need in one place. The projects on the CD-ROM that accompanies this book are organized in this way.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H4>Single Document/Multiple Document Interface Options</H4>
+<P>
+When you launch Visual Basic 5.0 for the first time, the first
+thing you'll probably notice is that the layout of the windows
+and menus has changed somewhat. The Visual Basic Integrated Development
+Environment (IDE) now has a Multiple Document Interface (MDI).
+The advantage of MDI is that all the subwindows (of which there
+are many) stay in one big window that stays in the background
+(called a <I>parent</I> <I>window</I>).
+<P>
+The disadvantage of MDI is that you don't have quite as much flexibility
+in moving and re-sizing windows. Also, the new interface can be
+a little jarring when you've been working with Visual Basic for
+years. Fortunately, there is a way to get the Visual Basic IDE
+to look like it did in previous versions: with a style known as
+Single Document Interface (SDI). To change Visual Basic to an
+SDI interface:
+<OL>
+<LI>From the menu, select Tools,<B> </B>then<B> </B>Options.
+<LI>The Options dialog box appears. Select the Advanced tab.
+<LI>Check the box labeled SDI Development Environment.
+<LI>Click on OK.
+</OL>
+<P>
+You will have to re-start Visual Basic after doing this, but that's
+a small price to pay to return to the decent, red-blooded, God-fearing
+Visual Basic interface we've come to know and love for all these
+years.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>NOTE</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>The examples in this book assume that you're using the SDI interface. The instructions for procedures differ only slightly between the two interfaces. You'll be able to figure out what to do if you insist on using the new MDI interface, but for certain 
+things like closing and resizing windows, the SDI interface is easier to use. If you're getting the impression that I have a personal vendetta against the MDI interface, you're right. This is because an MDI interface killed my brother</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="FormLayoutWindow">
+Form Layout Window</A></H3>
+<P>
+The Form Layout window is just below the Properties window on
+the right side of the screen. It enables you to see just where
+a form will appear on the screen at runtime by visually positioning
+forms on the screen. Now instead of having to write the tedious
+few lines of code to center each form with respect to the screen,
+you can use the Form Layout window.
+<P>
+By right-clicking on the Form Layout window, you can display resolution
+guides. These guides show you what your form layout will look
+like on a standard VGA screen at 640 by 480 resolution. This can
+be helpful, since many developers have higher-resolution screens,
+although some users are still trapped in the low-res world. Figure
+1.2 shows the location of the Form Layout window on the screen.
+<P>
+<A HREF="f1-2.gif"><B>Figure 1.2 :</B> <I>The Form Layout window</I>.</A>
+<P>
+By right-clicking on the Form Layout window and selecting Startup
+Position, you can denote where a form should be located when your
+application starts. (You need to have a form in the foreground
+of your project to see this feature in action.)
+<P>
+You can also specify that a form should be centered with respect
+to the screen at startup time by setting the form's Startup Position
+property to 2-Center Screen (this is a new property for forms
+in Visual Basic 5.0).
+<P>
+You probably won't use the Form Layout window much when creating
+controls using Visual Basic 5.0, unless your control displays
+forms that act as custom dialog boxes. In that case, you should
+use the Form Layout window to ensure that your custom dialog box
+is displayed correctly.
+<H3><A NAME="IndentOutdent">
+Indent/Outdent</A></H3>
+<P>
+Visual Basic 5.0 gives you the ability to automatically indent
+or outdent one or more lines of code. This can go a long way toward
+making your code more readable. And the fact that it's automatic
+means that you won't have to change the individual indents for
+30 lines of code every time you decide to enclose that big code
+chunk in an If&#133;Then statement. To see how automatic indent/outdent
+works:
+<OL>
+<LI>Start Visual Basic. When the Startup screen appears, create
+a new standard EXE project.
+<LI>When the project is created, open Form1's code window by double-clicking
+on it.
+<LI>Type in a few lines of code. Comments (starting with single
+apostrophe or the Rem statement) are okay, just as long as you
+have multiple lines.
+<LI>Select two or three lines of code.
+<LI>Press Tab once or twice. The code indents.
+<LI>Press Shift+Tab. The code outdents.
+</OL>
+<H3><A NAME="CustomizableToolbars">
+Customizable Toolbars</A></H3>
+<P>
+You have the ability to move, resize, and customize Visual Basic's
+toolbars. This feature is not unlike the dockable and customizable
+toolbars that have existed in Microsoft Office applications for
+years.
+<P>
+There are four toolbars in Visual Basic: Standard, Edit, Form
+Editor, and Debug. Visual Basic will generally display whatever
+toolbar is appropriate for what you're doing. But there are situations
+where you might want to add a frequently used command to an existing
+VB toolbar. For example, say you use the Toggle Bookmark command
+frequently and you'd like the command to appear on the toolbar
+instead of in the Edit menu. To add a Bookmark button to the Visual
+Basic toolbar:
+<OL>
+<LI>Using the mouse, right-click on an existing toolbar (or use
+the menu commands View, Toolbars, Customize).
+<LI>The Customize dialog box will appear.
+<LI>Click on the Commands tab.
+<LI>Under Categories, click on Edit.
+<LI>A list of edit commands will appear in the list box under
+Commands. Scroll down and locate Toggle<B> </B>Bookmark. Figure
+1.3 shows the dialog box with this command highlighted.
+<LI>Click and drag the Toggle Bookmark command from the Commands
+list to the toolbar. The Toggle Bookmark command now resides on
+the toolbar.
+</OL>
+<P>
+<A HREF="f1-3.gif"><B>Figure 1.3 :</B> <I>Customizing the toolbar</I>.</A>
+<P>
+If you like, at this point you can modify the Toggle Bookmark
+toolbar button you just created. To do this:
+<OL>
+<LI>In the Customize dialog box, click on the Modify<B> </B>Selection
+button.
+<LI>The Modify Selection menu will appear, as shown in Figure
+1.4.
+<LI>Select Change Button Image, then click on the image of your
+choice. (I'm partial to the eight ball, but that's just me.)
+<LI>Go back to the Modify Selection menu and choose Image and
+Text. This is a good selection to make when you're not familiar
+with the command or when the button's icon alone doesn't jog your
+memory as to what the button is supposed to do.
+<LI>If you want to remove the new button from your customized
+toolbar, simply click and drag it off the toolbar. (This only
+works if the Customize<B> </B>dialog box is open.)
+<LI>When you're done with the Customize dialog box, click on Close.
+</OL>
+<P>
+<A HREF="f1-4.gif"><B>Figure 1.4 :</B> <I>The Modify Selection menu</I>.</A>
+<H3><A NAME="Wizards">
+Wizards</A></H3>
+<P>
+Visual Basic 5.0 comes with two new wizards that automate the
+process of developing controls.
+<P>
+The ActiveX Control Interface Wizard is a tool that automatically
+inserts property and event code in controls you write. You can
+use it to add the properties of existing controls to your control
+(a process known as <I>delegation</I>) or create entirely new
+properties and methods. Since controls have lots of properties,
+but the code to implement them is exactly the same, this wizard
+can take the drudgery out of creating a programmable interface.
+<P>
+The Property Page Wizard is a tool that helps you create property
+pages for your controls. A <I>property page</I> is a customized
+version of the Visual Basic property window. Property pages are
+good ways to give access to a control's properties to its users,
+particularly if your control has many properties or if it has
+a few complicated properties.
+<P>
+The ActiveX Control Interface Wizard and the Property Page Wizard
+are both discussed in more detail in <A HREF="ch4.htm" >Chapter 4</A> &quot;Control
+Properties.&quot;
+<H3><A NAME="ProcedureViewFullModuleView">
+Procedure View/Full Module View </A></H3>
+<P>
+Visual Basic 5.0 gives you the ability to switch between two views
+of your code. Procedure View displays one procedure at a time,
+while Full Module View shows all the procedures in a module, one
+after the other. Procedure View was the default in versions of
+Visual Basic prior to 5.0; Full Module View is the default in
+Visual Basic 5.0.
+<P>
+Many programmers who are new to Visual Basic get annoyed because
+they can't see all their code at once-they're afraid they're going
+to write code that will later &quot;get lost&quot; in the interface.
+Full Module View is handy because it lets you compare several
+adjacent procedures in your code. This is particularly useful
+when you're defining a new property for a control, since implementing
+a property always requires at least two procedures (and usually
+more). To demonstrate the difference between Procedure View and
+Full Module View:
+<OL>
+<LI>Double-click on a standard EXE project form to open its code
+window.
+<LI>Type some code. A few lines worth of comments are fine here.
+<LI>Using the Procedure combo box on the upper-right side of the
+code window, switch to a different procedure.
+<LI>You should be able to see both procedures in the code window.
+Click on the Procedure View button in the lower-left corner of
+the code window. You should now be able to see only the current
+procedure in the code window.
+</OL>
+<P>
+You'll probably switch between Procedure View and Full Module
+View frequently as you work with Visual Basic 5.0, depending on
+what kind of code you're working on. If you're working with a
+set of small property procedures, you're likely to want to use
+Full Module View. But if you're slogging through a giant global
+procedure with lots of lines of code, it might make sense to switch
+to Procedure View in order to reduce the amount of clutter on
+your screen.
+<P>
+If you always want code to start in Procedure View (that is, you
+want Visual Basic 5.0 to work the way previous versions of Visual
+Basic did), do the following:
+<OL>
+<LI>Choose the menu commands Tools, Options.
+<LI>Make sure the Editor tab is selected.
+<LI>Clear the box labeled Default To Full Module View.
+<LI>Click OK.
+</OL>
+<H3><A NAME="Bookmarks">
+Bookmarks</A></H3>
+<P>
+In Visual Basic 5.0 you can set bookmarks in code to make it easier
+to return to a piece of code you're working on or to flip between
+two pieces of code quickly. You have the ability to move to the
+next or previous bookmark and to clear all the bookmarks in your
+project. In this respect, bookmarks work a lot like breakpoints,
+except they don't cause your code to pause.
+<P>
+To see how bookmarks work:
+<OL>
+<LI>Open any code window.
+<LI>Click on the Procedure View button in the lower left corner
+of the code window to switch to Procedure View.
+<LI>Type some code. These can be comments if you wish.
+<LI>Move the insertion point to the middle of the code you typed.
+<LI>Choose the menu commands Edit, Bookmarks, Toggle Bookmark.
+<LI>A light blue lozenge-shaped bookmark will appear to the left
+of the line you bookmarked.
+<LI>Using the Procedure combo box in the upper right corner, switch
+to another procedure in the module.
+<LI>Choose the menu commands Edit, Bookmarks, Next Bookmark. You'll
+be speedily returned to the position of your original bookmark.
+<LI>Select the menu commands Edit, Bookmarks, Clear All Bookmarks
+to clear your bookmark.
+</OL>
+<H3><A NAME="AutomaticCodeCompletion">
+Automatic Code Completion</A></H3>
+<P>
+As you write code in Visual Basic 5.0, you'll notice that helpful
+hints will appear on your screen as you type. These hints are
+comprised of several features of the Visual Basic 5.0 editor,
+collectively known as Automatic Code Completion. Table 1.1 lists
+code completion features in Visual Basic 5.0.<BR>
+<P>
+<CENTER><B>Table 1.1 Code Completion Features  in Visual Basic
+5.0</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=60%>
+<TR VALIGN=TOP><TD WIDTH=127><B>Feature</B></TD><TD WIDTH=354><B>Displays</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=127>Auto List Members</TD><TD WIDTH=354>Members of object classes
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=127>Auto Quick Info</TD><TD WIDTH=354>Syntax of Visual Basic functions
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=127>Auto Data Tips</TD><TD WIDTH=354>Displays the value of the variable under your cursor
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+All three elements of automatic code completion are available
+by default. You can also shut off these features if you wish.
+To demonstrate how Auto List Members works, open any code window.
+Type <B>Debug.P</B>. An Auto List Members window will pop up at
+the point where you were typing, displaying the two members of
+the Debug object, Assert and Print. (Assert is new to Visual Basic
+5.0 and is discussed later in this chapter.) Figure 1.5 shows
+what an Auto List Members window looks like. Type a Tab to accept
+Print as the completed statement.
+<P>
+<A HREF="f1-5.gif"><B>Figure 1.5 :</B> <I>Auto List Members window</I>.</A>
+<P>
+To demonstrate how Auto Quick Info works:
+<OL>
+<LI>In any code window, type the following code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+MsgBox
+</PRE>
+</BLOCKQUOTE>
+<OL START=2>
+<LI>Type a space, as if you're now going to complete the statement
+by typing a parameter for the MsgBox statement.
+<LI>An Auto Quick Info window will appear, providing the syntax
+of the MsgBox statement. Figure 1.6 shows what an Auto Quick Info
+window looks like.
+<LI>Finish typing the MsgBox statement, or press Esc to dismiss
+the Auto Quick Info window. 
+</OL>
+<P>
+<A HREF="f1-6.gif"><B>Figure 1.6 :</B> <I>Code completion using Auto Quick Info</I>.</A>
+<P>
+Auto Data Tips are like the ToolTips you might be familiar with
+if you're a user of any of the Microsoft Office products. In Microsoft
+Word, for example, when you position your mouse pointer above
+a toolbar button and wait a second, a ToolTip appears telling
+you what the button does. The difference is that Visual Basic's
+Auto Data Tips work only on running code. So to demonstrate how
+they work, you'll have to create some running code.
+<OL>
+<LI>Add a form to your project using the menu commands File, Add
+Project.
+<LI>Select EXE Project from the Add Project dialog box, then click
+on OK.
+<LI>A new form, Form1, will appear in the Project Explorer. Double-click
+on it to open it.
+<LI>Double-click on Form1 to expose its code window. You should
+be in its Load event procedure.
+<LI>Type the code in Listing 1.1.
+</OL>
+<HR>
+<BLOCKQUOTE>
+<B>Listing 1.1 Code to demonstrate Auto Data Tips<BR>
+</B>
+</BLOCKQUOTE>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Form_Load()
+
+  Dim ImportantVariable As Integer
+  ImportantVariable = 45
+  Stop
+  Debug.Print ImportantVariable
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<HR>
+<P>
+
+<OL START=6>
+<LI>Run the code by pressing the function key F5 or by using the
+menu commands Run, Start.
+<LI>Position your mouse on top of ImportantVariable. The value
+of ImportantVariable will pop up. Figure 1.7 shows what an AutoDataTips
+window looks like.
+</OL>
+<P>
+<A HREF="f1-7.gif"><B>Figure 1.7 :</B> <I>Display of an Auto Data Tip</I>.</A>
+<P>
+I think these features are extremely cool additions to the Visual
+Basic IDE, but if they bug you, you can turn them off. To turn
+off these editing features:
+<OL>
+<LI>Choose the menu commands Tools, Options.
+<LI>The Options dialog box appears. Make sure the Editor tab is
+selected.
+<LI>Clear Auto List Members, Auto Quick Info, and/or Auto Data
+Tips.
+<LI>Click on OK.
+</OL>
+<H3><A NAME="DragandDropEditing">
+Drag-and-Drop Editing</A></H3>
+<P>
+In Visual Basic 5.0 you can now use drag-and-drop editing, just
+as in any Microsoft Office application. Drag-and-drop editing
+lets you move code quickly and easily. For example, take the code
+of Listing 1.2.
+<P>
+Say that the Stop statement needs to be moved down a line. You
+could select it, copy it, reposition the insertion point, and
+paste it, but that's the old-fashioned, backward-thinking way.
+Instead, try this:
+<OL>
+<LI>In any Visual Basic form, open a code window.
+<LI>Type the code in Listing 1.2. (You'll note that, for your
+convenience, this code is astoundingly similar to Listing 1.1.)
+</OL>
+<HR>
+<BLOCKQUOTE>
+<B>Listing 1.2 Code to demonstrate drag-and-drop editing<BR>
+</B>
+</BLOCKQUOTE>
+<BLOCKQUOTE>
+<PRE>
+Private Sub Form_Load()
+
+  Dim ImportantVariable As Integer
+  ImportantVariable = 45
+  Stop
+  Debug.Print ImportantVariable
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<HR>
+<P>
+
+<OL START=3>
+<LI>Select the Stop statement by clicking and dragging across
+it with the mouse.
+<LI>Release the mouse button.
+<LI>Click on the center of the selected text and drag it to the
+blank line under the Debug.Print statement.
+<LI>The Stop statement should now appear in the code after the
+Debug.Print statement.
+</OL>
+<P>
+You can use a little-known additional feature of drag and drop,
+<I>drag-and-copy</I>, to duplicate text. For example, say you
+need two Stop statements in your code. To do this using drag-and-copy:
+<OL>
+<LI>Select the Stop statement by click-dragging.
+<LI>Release the mouse key.
+<LI>Hold down Ctrl as you click-drag the selected text with the
+mouse. You should notice the drag icon includes a plus to indicate
+the item you are copying.
+<LI>Release the mouse key on the blank line between the Debug.Print
+and End Sub statement. The Stop statement will be copied to the
+blank line.
+</OL>
+<P>
+If drag-and-drop editing bugs you, you can turn it off. To do
+this:
+<OL>
+<LI>From the Tools menu, select Options.
+<LI>Make sure the Editor tab is selected.
+<LI>In the Window Settings panel, clear the box labeled Drag-and-Drop
+Text Editing.
+<LI>Click on OK.
+</OL>
+<H2><A NAME="NewLanguageFeatures"><FONT SIZE=5 COLOR=#FF0000>
+New Language Features</FONT></A></H2>
+<P>
+The Visual Basic 5.0 programming language contains a number of
+new keywords, program objects, and concepts. The new language
+features that apply to control creation are discussed in detail
+throughout this book and are summarized in a table at the end
+of this chapter. In addition, here's a quick summary of the features
+that are not directly pertinent to control creation. 
+<H3><A NAME="Assertions">
+Assertions</A></H3>
+<P>
+An <I>assertion</I> is a debugging tool designed to conditionally
+pause your code if a fatal error is raised. Essentially, an assertion
+tests a condition. The condition can be a variable, a function
+call, or what have you. If the assertion is True, code continues
+executing. If the assertion is False, code pauses so you can diagnose
+the problem.
+<P>
+It's possible to have assertions in virtually any language using
+a function call, but now Visual Basic supports assertions as a
+method of the Debug object.
+<P>
+For example, say you have a function called OpenMyFile() that
+opens a file. The function returns True if it succeeds and False
+if it fails. You can incorporate the return value of this function
+in an assertion like this:
+<BLOCKQUOTE>
+<PRE>
+Sub AssertOpen()
+  Debug.Assert OpenMyFile(&quot;c:\windows\myfile.txt&quot;)
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+In this code, if the OpenMyFile function failed, the Assert method
+would pause the code, enabling you to see exactly where the problem
+took place.
+<P>
+Because your code can only be paused in the development environment,
+using the Assert method only makes sense in that context. When
+your code is compiled, any Assert methods remaining in your code
+are ignored.
+<H3><A NAME="EnumeratedConstants">
+Enumerated Constants</A></H3>
+<P>
+An <I>enumerated constant</I> is a concept that programmers from
+other languages such as C will be familiar with. The idea behind
+an enumeration is that constants can often be grouped together
+in categories. Since people have an easier time remembering words
+than numbers, it makes sense to name, or enumerate, these constants.
+<P>
+An Enum declaration goes in the declarations section of a code
+module. A typical Enum declaration looks like this:
+<BLOCKQUOTE>
+<PRE>
+Public Enum Shoes
+  TennisShoes = 0
+  HikingBoots = 1
+  HipWaders = 2
+  StilletoHeels = 3
+End Enum
+</PRE>
+</BLOCKQUOTE>
+<P>
+You can make reference to the values in an enumeration using code
+that looks like this:
+<BLOCKQUOTE>
+<PRE>
+Sub SetShoes()
+  Dim MyShoes As Shoes
+  MyShoes = HipWaders
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+You may be thinking that this feature is suspiciously similar
+to the Type declaration, which has existed in VB forever. Types
+and Enums are similar, although Enums are used to declare related
+constants, while Types are used to create a custom variable type.
+But the place where Enums come in handy is in the area of defining
+properties for controls.
+<P>
+If you've used Visual Basic in the past, you've probably run across
+enumerated properties without realizing it. For example, consider
+the Align property of the Picture Box control. The legal values
+for an Align property are the numbers 0 through 4. But when you
+set the Align property control in the Properties window, you're
+shown these choices:
+<BLOCKQUOTE>
+<PRE>
+0 - None
+1 - Align Top
+2 - Align Bottom
+3 - Align Left
+4 - Align Right
+</PRE>
+</BLOCKQUOTE>
+<P>
+The values stored by the Align property are the numbers 0 through
+4, but the choices displayed by the combo box include enumerated
+names for each value. You do the same thing for properties in
+controls you create by using Enums. See <A HREF="ch4.htm" >Chapter 4</A> &quot;Control
+Properties,&quot; for information on how to do this.
+<H3><A NAME="AddressOf">
+AddressOf</A></H3>
+<P>
+The AddressOf operator permits the use of callbacks in Windows
+API and DLL calls. This is a pretty advanced topic that is way
+beyond the scope of this book, but it's the kind of thing that
+causes C programmers to either jump up and click their heels or
+moan in grief. Go figure.
+<P>
+The AddressOf operator was added to Visual Basic 5.0 so VB programmers
+can place calls to Windows API functions that take function pointers
+as arguments. There are a few cases in the dark, foreboding world
+of the Windows API where you'd need to do this; the VB5 Help file
+demonstrates how you can use the AddressOf operator to generate
+a list of all the fonts installed on your system.
+<P>
+I was thinking about providing my own code example using AddressOf
+but realized that I'd approach mandatory retirement age before
+I was able to come up with a good example of my own; second, it
+wouldn't be as good as the example in the VB Help file; and third,
+it wouldn't be pertinent to control creation anyway. So I'll leave
+it to some other enterprising author to cover Windows API calls
+using AddressOf.
+<H3><A NAME="LanguageFeaturesPertainingtoControlCreation">
+Language Features Pertaining to Control Creation</A></H3>
+<P>
+Table 1.2 summarizes new features of the Visual Basic language
+that have specific implications for control creation. All of these
+features are discussed in depth elsewhere in this book.<BR>
+<P>
+<CENTER><B>Table 1.1 Language Features Pertaining to Control Creation</B></CENTER><P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=190><B>Language Feature</B></TD><TD WIDTH=229><B>Description</B>
+</TD><TD WIDTH=229><B>Discussed in</B></TD></TR>
+<TR VALIGN=TOP><TD WIDTH=190>AmbientProperties Object</TD><TD WIDTH=229>Holds properties of a control container to enable a user control to initialize itself
+</TD><TD WIDTH=229><A HREF="ch4.htm" >Chapter 4</A> &quot;Control Properties&quot;</TD>
+</TR>
+<TR VALIGN=TOP><TD WIDTH=190>AsyncRead method,
+<BR>
+AsyncProperty object,<BR>
+AsyncReadComplete event
+</TD><TD WIDTH=229>Enables a control to read a property from a source located on the Internet
+</TD><TD WIDTH=229><A HREF="ch14.htm" >Chapter 14</A>, with the Internet&quot; &quot;Controls That Interact 
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=190>DataBindings collection,<BR>
+DataBinding object,<BR>
+IsBindable property
+</TD><TD WIDTH=229>Enables you to bind your control to databases
+</TD><TD WIDTH=229><A HREF="ch17.htm" >Chapter 17</A>, &quot;Database Access&quot;</TD>
+</TR>
+<TR VALIGN=TOP><TD WIDTH=190>Extender object</TD><TD WIDTH=229>Holds properties of a control provided by its container
+</TD><TD WIDTH=229><A HREF="ch4.htm" >Chapter 4</A> &quot;Control Properties&quot;</TD>
+</TR>
+<TR VALIGN=TOP><TD WIDTH=190>Hyperlink object,<BR>
+GoBack method,<BR>
+GoForward method,<BR>
+NavigateTo method
+</TD><TD WIDTH=229>Enables you to tell a Web browser object to jump to a particular URL
+</TD><TD WIDTH=229><A HREF="ch14.htm" >Chapter 14</A>, &quot;Controls That Interact with the Internet&quot;
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=190>PropertyBag object,<BR>
+ReadProperty method,<BR>
+WriteProperty method.
+</TD><TD WIDTH=229>Stores design-time properties of a user-defined control
+</TD><TD WIDTH=229><A HREF="ch4.htm" >Chapter 4</A> &quot;Control Properties&quot;</TD>
+</TR>
+<TR VALIGN=TOP><TD WIDTH=190>PropertyPage object</TD><TD WIDTH=229>Provides a custom property page for your control
+</TD><TD WIDTH=229><A HREF="ch4.htm" >Chapter 4</A> &quot;Control Properties&quot;</TD>
+</TR>
+<TR VALIGN=TOP><TD WIDTH=190>UserControl object</TD><TD WIDTH=229>The object used to create your own ActiveX control
+</TD><TD WIDTH=229>Hither and yon throughout the whole book</TD>
+</TR>
+<TR VALIGN=TOP><TD WIDTH=190>Event statement</TD><TD WIDTH=229>Defines a custom event
+</TD><TD WIDTH=229><A HREF="ch5.htm" >Chapter 5</A> &quot;Control Events&quot;</TD>
+</TR>
+<TR VALIGN=TOP><TD WIDTH=190>RaiseEvent statement</TD><TD WIDTH=229>Fires a user-defined event
+</TD><TD WIDTH=229><A HREF="ch5.htm" >Chapter 5</A> &quot;Control Events&quot;</TD>
+</TR>
+<TR VALIGN=TOP><TD WIDTH=190>Implements statement</TD><TD WIDTH=229>Specifies a interface or class that will be a class module
+</TD><TD WIDTH=229><A HREF="ch16.htm" >Chapter 16</A>, &quot;Object-Oriented used in Programming&quot;
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+This chapter introduced a number of new features of Visual Basic
+5.0. In addition to changes in the integrated development environment,
+a number of new language features were discussed.
+<P>
+<A HREF="ch2.htm" >Chapter 2</A>is a brief walk-through demonstrating how to set up
+a very simple control project. In this chapter, you'll learn a
+number of basic concepts pertaining to control creation while
+putting the new features of Visual Basic 5.0 into action.
+<HR>
+
+<CENTER><P>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch2.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

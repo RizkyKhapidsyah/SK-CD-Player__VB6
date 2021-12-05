@@ -1,0 +1,583 @@
+<HTML>
+<HEAD>
+<TITLE>Appendix -- Regular Expressions in Perl</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Appendix</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Regular Expressions in Perl</FONT>
+</H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#TheRulesofRegularExpressionMatching">
+The Rules of Regular Expression Matching</A>
+<UL>
+<LI><A HREF="#UnquantifiedAtoms">
+Unquantified Atoms</A>
+<LI><A HREF="#QuantifiersandQuantifiedAtoms">
+Quantifiers and Quantified Atoms</A>
+<LI><A HREF="#Assertions">
+Assertions</A>
+</UL>
+<LI><A HREF="#ExamplesofRegularExpressions">
+Examples of Regular Expressions</A>
+<LI><A HREF="#OperatorsThatUseRegularExpressionsinPerl">
+Operators That Use Regular Expressions in Perl</A>
+<UL>
+<LI><A HREF="#PerlsRegularExpressionMatchingOperatorm">
+Perl's Regular Expression Matching Operator: m//</A>
+<LI><A HREF="#PerlsSearchandReplaceOperators">
+Perl's Search-and-Replace Operator: s///</A>
+</UL>
+</UL>
+<HR>
+<P>
+Perl's regular expression handling is one of its most powerful
+features and is one of the main reasons that Perl is a nearly
+ideal language for CGI programming. Text manipulation is central
+to many CGI applications, and the proficiency with which regular
+expressions search and replace text is without parallel. To beginners,
+however, the terse notation, the many options, and the alternative
+ways of forming a pattern can be somewhat daunting. If you are
+new to regular expressions, don't expect to master all the rules
+on your first pass through the summary below. As is the case with
+most other features in Perl, you don't need to know everything
+there is to know about regular expressions in order to begin using
+them effectively. If, on the other hand, you are already familiar
+with regular expression matching, you will still find this appendix
+helpful for its description of the usage of regular expressions
+in Perl 5 as opposed to earlier implementations (such as Henry
+Spencer's original design, used by the Unix <B>egrep</B> command).
+<H2><A NAME="TheRulesofRegularExpressionMatching"><FONT SIZE=5 COLOR=#FF0000>
+The Rules of Regular Expression Matching</FONT></A></H2>
+<P>
+A regular expression consists of zero or more alternative <I>patterns</I>,
+which are strings of <I>elements</I>. Patterns are separated by
+the vertical bar character (<B>|</B>), and the whole expression
+is usually delimited by forward slashes (<B>/</B>), followed by
+zero or more of the option characters <B>g</B>, <B>i</B>, <B>m</B>,
+<B>o</B>, <B>s</B>, or<B> x</B>. Regular expressions almost always
+appear within delimiters, and these delimiters are spoken of as
+if they were a part of the regular expression itself, even though
+they do not participate in the matching. An element is either
+an <I>atom</I>, quantified or unquantified, or an <I>assertion</I>.
+An unquantified atom always matches a single character, whereas
+a quantified atom can match zero or more characters. An <I>assertion</I>
+matches a contextual condition, such as the beginning or end of
+a string, and does not absorb any of the matched string's characters.
+A regular expression matches a string if any one of its patterns
+matches some part of that string, element-for-element. Testing
+always proceeds from left to right and stops at the first complete
+match. The individual elements match as described in the following
+sections.
+<H3><A NAME="UnquantifiedAtoms">
+Unquantified Atoms</A></H3>
+<P>
+As an unquantified atom, each character matches itself, unless
+it is one of the special characters <B>+</B>, <B>?</B>, <B>.</B>,
+<B>*</B>, <B>^</B>, <B>$</B>, <B>(</B>, <B>)</B>, <B>[</B>, <B>]</B>,
+<B>{</B>, <B>}</B>, <B>|</B>, or<B> \ </B>(not including the commas,
+which are used here only for readability). The actual meanings
+of these special characters will become apparent below. To match
+one of them as a literal character, you can precede it with a
+backslash to &quot;escape&quot; its special meaning. For example,
+the special character <B>.</B> (period) is a wildcard that matches
+any single character, but <B>\.</B> matches only a period. In
+general, a preceding <B>\</B> escapes the special meaning of any
+non-alphanumeric character, but it converts most alphanumeric
+characters <I>into</I> special atoms or assertions. Thus you can
+also use <B>\</B> on itself, or on <B>/</B>, which is a special
+character only when it is being used as the delimiter; for instance,
+the <B>/</B>&#173;delimited regular expression <B>/\/\\/</B> matches
+<B>/\</B> inside any string. (For an explanation of using other
+non-alphanumeric characters as delimiters, see the sections on
+Perl's <B>m//</B> and <B>s///</B> operators, later in this appendix).
+All of the special atoms are enumerated below, and match as follows:
+<BR>
+
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=70><B>.</B> (period)</TD><TD WIDTH=520>Matches any character except a newline. Will match a newline if option&nbsp;<B>s</B> (single-line match) is specified.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\w</B></TD><TD WIDTH=520>Matches any alphanumeric character, including <B>_</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\W</B></TD><TD WIDTH=520>Matches any non-alphanumeric character, excluding <B>_</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\s</B></TD><TD WIDTH=520>Matches one whitespace character; that is, a tab, newline, vertical tab, form feed, carriage return, or space (ASCII 9 through 13 and 32), which individually match <B>\t</B>,<B> \n</B>, <B>\v</B>, 
+<B>\f</B>, <B>\r</B>, and <B>\040</B>, respectively. 
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\S</B></TD><TD WIDTH=520>Matches one non-whitespace character.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\d</B></TD><TD WIDTH=520>Matches a digit, 0 through 9.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\D</B></TD><TD WIDTH=520>Matches any non-numerical character.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\<I>NNN</I></B></TD><TD WIDTH=520>Matches the character specified by the 2- or 3-digit octal number <I><B>NNN</B></I>, unless it would be interpreted as a back-reference (see the definition of <B>/N</B> below). For example, 
+<B>\177</B> matches the DEL character (ASCII 127).
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\x<I>XX</I></B></TD><TD WIDTH=520>Matches the character represented by hexadecimal value <I><B>XX</B></I>; for example, <B>\xA9</B> matches the copyright character &#169; (ISO Latin-1 169).
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\c<I>C</I></B></TD><TD WIDTH=520>Matches the control character Ctrl-<I><B>C</B></I>, where <I><B>C</B></I> is any single character; for example, <B>\cH</B> matches a backspace (ASCII 8). This atom is the same as 
+<B>\<I>NNN</I></B>, where <I><B>NNN</B></I><B> </B>is the octal value of <B>ord(<I>C</I>) + 64</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>[<I>S</I>]</B></TD><TD WIDTH=520>Matches any character in the class <I><B>S</B></I>, where <I><B>S</B></I> is specified as a string of literal characters (as in <B>[abc$%^&amp;]</B>), a range of characters in ASCII order (as 
+in <B>[a-z]</B>), or any combination thereof (as in <B>[a-c$-&amp;^]</B>). Most of the special characters lose their special meanings inside the square brackets, but the hyphen must be escaped as <B>\-</B>, the <B>\b</B> character matches a backspace 
+(<B>\010</B>), and most other backslashed characters retain their special meanings as atoms or assertions.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>(<I>E</I>)</B></TD><TD WIDTH=520>Matches any regular expression <I><B>E</B></I> and stores the substring matching the <I><B>N</B>th</I> parenthesized expression in the special read-only memory variable <B>$<I>N</I></B> (that 
+is, in <B>$1</B>, <B>$2</B>, etc.). The parentheses serve both to group a string of elements or patterns into one atom and to mark that atom for future reference.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\<I>N</I></B></TD><TD WIDTH=520>Matches whatever the <I><B>N</B>th</I> parenthesized atom actually matched, where <I><B>N</B></I> = 1, 2, 3....up to the total number of preceding parenthesized atoms. Such an atom is called a 
+<I>back-reference</I> to a subexpression.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>(?:<I>E</I>)</B></TD><TD WIDTH=520>Matches the regular expression <I><B>E</B></I> but does not store the match in any <B>$<I>N</I></B> variable for back-referencing.
+</TD></TR>
+</TABLE></CENTER>
+<P>
+<H3><A NAME="QuantifiersandQuantifiedAtoms">
+Quantifiers and Quantified Atoms</A></H3>
+<P>
+The regular expression <I>quantifiers</I> are the special characters
+<B>+</B>, <B>*</B>, <B>?</B>, and the expressions <B>{<I>N</I>}</B>,
+<B>{<I>N</I>,}</B>, and <B>{<I>N</I>,<I>M</I>}</B>. A quantified
+atom is an atom that is followed by a quantifier. If <I><B>A</B></I>
+is any atom, <I><B>A</B></I><B>+</B> matches <I><B>A</B></I> one
+or more times; that is, it matches one or more adjacent substrings
+that each match <I><B>A</B></I> individually. Similarly, <I><B>A</B></I><B>*</B>
+matches <I><B>A</B></I> zero or more times, and <I><B>A</B></I><B>?</B>
+matches zero or one occurrence of <I><B>A</B></I>. Furthermore,
+<I><B>A</B></I><B>{<I>N</I>}</B> matches <I><B>A</B></I> exactly
+<I><B>N</B></I> times, <I><B>A</B></I><B>{<I>N</I>,}</B> matches
+<I><B>A</B></I> <I><B>N</B></I> or more times, and <I><B>A</B></I><B>{<I>N</I>,<I>M</I>}</B>
+matches a minimum of <I><B>N</B></I> and a maximum of <I><B>M</B></I>
+occurrences of <I><B>A</B></I>. A quantified atom matches as many
+characters as possible, unless a <B>?</B> is appended to the quantifier,
+in which case the atom matches the smallest substring allowed
+by the context. Thus <B>/(ab+)([bc])/</B> and <B>/(ab+?)([bc])/</B>
+both match <B>abbc</B>, but the first expression sets <B>$1</B>
+and <B>$2</B> to <B>abb</B> and <B>c</B>, respectively, whereas
+the second expression sets <B>$1</B> and <B>$2</B> to <B>ab</B>
+and <B>b</B> (for the meanings of <B>$1</B> and <B>$2</B>, see
+the parenthesis rule above, in the table entry for <B>(<I>E</I>)</B>).
+<H3><A NAME="Assertions">
+Assertions</A></H3>
+<P>
+An <I>assertion</I> is different from an atom in that it doesn't
+match any characters but rather matches a <I>contextual condition</I>,
+such as a difference between two adjacent characters. Because
+assertions cannot add any characters to a matched substring, they
+are said to have zero width. Assertions match as follows:<BR>
+
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=70><B>\A</B></TD><TD WIDTH=520>Matches the beginning of a string. 
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\Z</B></TD><TD WIDTH=520>Matches the end of a string.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70>^ and <B>$</B></TD><TD WIDTH=520>These are like <B>\A</B> and <B>\Z</B> except that in multiline mode (option <B>m), ^</B> and <B>$</B> match the beginning and end of every line (that is, after and before every newline 
+character), respectively.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\b</B></TD><TD WIDTH=520>Matches a word boundary. 
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\B</B></TD><TD WIDTH=520>Matches a non-boundary.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>\G</B></TD><TD WIDTH=520>Matches the point at which the previous global search (option <B>g</B>) left off.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>(?=<I>E</I>)</B></TD><TD WIDTH=520>Matches the beginning of the regular expression <I><B>E</B></I>, without including <I><B>E</B></I> as part of the matched substring. In other words, <I><B>E</B></I> must be present for 
+(<B>?=<I>E</I></B>) to match, but the match has no effect on subsequent matching or processing. This is called a zero-width positive look-ahead assertion.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>(?!<I>E</I>)</B></TD><TD WIDTH=520>Matches the absence of the regular expression <I><B>E</B></I>. This is called a zero-width negative look-ahead assertion.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>(?#<I>T</I>)</B></TD><TD WIDTH=520>Matches anything and nothing; <I>T </I>is only an embedded comment. That is, /(?#<I>T</I>)/ always returns 1, no matter what string is searched, but the matched substring is always null.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=70><B>(?<I>M</I>)</B></TD><TD WIDTH=520>Matches anything, like <B>(?#<I>T</I>)</B>, except that <I><B>M</B></I> is an embedded pattern-match modifier, namely one or more of the options <B>i, m, s</B>, or <B>x</B>. (For a 
+description of these options, see the discussion of <B>m</B>// below.) The specified options(s) affect the entire search, the same as if they are appended to the ending delimiter as modifiers.
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="ExamplesofRegularExpressions"><FONT SIZE=5 COLOR=#FF0000>
+Examples of Regular Expressions</FONT></A></H2>
+<P>
+The following list of examples and the descriptions of what they
+match covers the essentials of regular expression matching in
+Perl 5.<BR>
+
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=210><B>Regular Expression</B></TD><TD WIDTH=384><B>What It Matches in Perl </B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/abc/</B></TD><TD WIDTH=384><B>abc</B> anywhere in the search string. 
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/^abc/</B></TD><TD WIDTH=384><B>abc</B> at the beginning of the string.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/abc$/</B></TD><TD WIDTH=384><B>abc</B> at the end of the string.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/(abc)/</B></TD><TD WIDTH=384><B>abc</B> anywhere in the string; the matched expression is stored in <B>$1</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/ab|cd/</B></TD><TD WIDTH=384><B>ab</B> or <B>cd</B>, whichever comes first.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/a(b|c)d/</B></TD><TD WIDTH=384><B>a</B> followed by <B>b</B> or <B>c</B>, then <B>d (abd</B> or <B>acd</B>, not <B>abcd</B>).
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/ab{3}c/</B></TD><TD WIDTH=384><B>a</B> followed by exactly 3 <B>b</B>'s, then by <B>c</B>. This is the same as <B>/</B>abbbc<B>/</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/ab{1,3}c/</B></TD><TD WIDTH=384><B>a</B> followed by 1, 2, or 3 <B>b</B>'s; then by <B>c</B>. This is the same as <B>/abb?b?c/</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/ab?c/</B></TD><TD WIDTH=384><B>a</B> followed by <B>c</B> with an optional <B>b</B> in between (<B>ac or abc</B>). This is the same as <B>/ab{0,1}c/</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/ab*c/</B></TD><TD WIDTH=384><B>a</B> followed by zero or more <B>b</B>'s, then <B>c (ac, abc, abbc</B>, etc.). This is the same as <B>/ab{0,}c/</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/ab+c/</B></TD><TD WIDTH=384><B>a</B> followed by one or more <B>b</B>'s, then <B>c (abc, abbc</B>, etc.). This is the same as /<B>ab{1,}c/</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/[abc]/</B></TD><TD WIDTH=384>Any single character in the bracketed class, namely, <B>a</B> or <B>b</B> or <B>c</B>. This is the same as /<B>[a-c]/</B> and <B>/a|b|c/</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/[abc]+/</B></TD><TD WIDTH=384>Any string of one or more characters from the bracketed class (<B>a, b, c, aa, ab, ac, ba, bb, bc</B>, etc.).
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/[^abc]/</B></TD><TD WIDTH=384>Any single character not in the class inside the brackets. (Note that the ^ character has a different special meaning at the beginning of a character class than at the beginning of a pattern. 
+In the interior of a character class, or as an element in the interior of a pattern and not preceded by \<B>n</B>, ^ matches itself.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/\w+/</B></TD><TD WIDTH=384>Any string of alphanumeric characters, including _. This is the same as <B>/[0-9A-Z_a-z]+/</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/\W+/</B></TD><TD WIDTH=384>Any string of non-alphanumeric characters. This is the same as <B>/[^\w]+/</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/abe\b/</B></TD><TD WIDTH=384><B>abe</B> followed by a word boundary (the zero-width space between alphanumeric and non-alphanumeric characters, that is, between characters matched by \<B>w </B>and \<B>W</B>); this 
+expression will not match the <B>abe</B> in <B>abecedarian</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/./</B></TD><TD WIDTH=384>Any single character except a newline (\<B>n</B>).
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/((.|\n)+)/</B></TD><TD WIDTH=384>Any string of one or more characters, including \<B>n; $1</B> will contain the whole string, and <B>$2</B> will contain only the last character matched.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/name=([^&amp;]*)&amp;ident=\1(&amp;|$)/</B>
+</TD><TD WIDTH=384>A string of the form <B>name=<I>val</I>&amp;ident=<I>val</I></B>, followed either by <B>&amp;</B> or the end of the string; <I><B>val</B></I> can be made up of any characters besides <B>&amp;</B> and \<B>n</B> and will be placed in the 
+special read-only memory variable <B>$1</B> (see the parenthesis rule in the section on &quot;Unquantified Atoms,&quot; above).
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/(ab+)([bc])/</B></TD><TD WIDTH=384><B>a</B> followed by one or more <B>b</B>'s (as many as possible), then either a <B>b</B> or a <B>c</B> (<B>abb, abc, abbb, abbc</B>, etc.). If the last character matched is c, all of the 
+b's will be placed in <B>$1</B>, following the initial <B>a</B>, and <B>$2</B> will be assigned the value c. Otherwise, the matched string must contain at least two <B>b</B>'s, and <B>$2</B> will be assigned the last matched <B>b</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/(ab+?)([bc])/</B></TD><TD WIDTH=384><B>a</B> followed by one or more <B>b</B>'s (as few as possible, because of the <B>?</B>), then either a <B>b</B> or a <B>c</B>. In other words, this expression can match only the 
+substrings <B>abb</B> or <B>abc</B>. After a match, the only possible value for <B>$1</B> is <B>ab</B>, whereas <B>$2</B> will be either <B>b</B> or <B>c</B>.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/&lt;[^&gt;]*?(&gt;|$)|(^|\G)[^&lt;&gt;]*?&gt;/</B>
+</TD><TD WIDTH=384>Any full tag delimited by angle brackets, or any partial tag broken by a line ending. That is, any substring that begins with &lt; and ends with either &gt; or the end of the string as a whole, or any substring that starts at the 
+beginning of the string and ends with &gt;.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=210><B>/&lt;[^&gt;]*?&gt;/m</B></TD><TD WIDTH=384>Any angle-bracket-delimited tag, even one that spans many line endings within the search string.
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="OperatorsThatUseRegularExpressionsinPerl"><FONT SIZE=5 COLOR=#FF0000>
+Operators That Use Regular Expressions in Perl</FONT></A></H2>
+<P>
+Perl has three operators that search strings for regular expression
+matches: <B>m/<I>pattern</I>/</B>, <B>?<I>pattern</I>?</B>, and
+<B>s/<I>pattern</I>/<I>replacement</I>/</B> (also known simply
+as <B>//</B>, <B>??</B>, and <B>s</B> or <B>s///</B>). The first
+of these is usually written without the optional <B>m</B>; indeed,
+<B>/<I>pattern</I>/</B> is practically synonymous with regular
+expression matching in Perl and other programming languages. 
+<P>
+The <B>?<I>pattern</I>?</B> operator is just like <B>/<I>pattern</I>/</B>,
+except that it matches only once between calls to the <B>reset</B>
+operator. This can be useful when you want to see only the first
+match in a file, for instance, but there are better ways to accomplish
+this, and the <B>??</B> operator may be removed from future versions
+of Perl. 
+<P>
+The usage of the search-and-replace operator, <B>s/<I>pattern</I>/<I>replacement</I>/</B>,
+also closely follows that of <B>m//</B>, except that with <B>s///</B>
+any part of the search string that matches the regular expression
+<I><B>pattern</B></I> is replaced by <I><B>replacement</B></I>
+(which is not a regular expression). This extra step makes the
+<B>s///</B> operator so powerful that entire programs can be written
+using almost nothing else.
+<P>
+The following sections go into more detail about how to use the
+<B>m//</B> and <B>s///</B> operators. For further examples (and
+a great deal of other valuable reference information), see Perl's
+online documentation, especially perlop.html and perlre.html.
+In the NTPerl distribution, these files can be found in the docs
+subdirectory under the main Perl directory, and in MacPerl, they
+can be found in the pod subfolder. In Unix installations, these
+files are usually kept in a directory such as /usr/local/lib/perl5/pod
+and may have to be converted to HTML format with the <B>pod2html</B>
+utility program, which should reside in the same directory as
+the Perl interpreter itself. (Try /usr/local/bin/pod2html.)
+<H3><A NAME="PerlsRegularExpressionMatchingOperatorm">
+Perl's Regular Expression Matching Operator: m//</A></H3>
+<P>
+Perl's pattern matching operator <B>m//</B> is used as follows:
+<BLOCKQUOTE>
+<PRE>
+$match = (<I>string</I> =~ m/<I>pattern</I>/<I>options</I>);
+</PRE>
+</BLOCKQUOTE>
+<P>
+This construct searches a string for a regular expression and
+assigns the return value true (<B>1</B>) or false (<B>''</B>)
+to <B>$match</B>. If <I><B>string</B></I> contains the regular
+expression <I><B>pattern</B></I>, as modified by the <I><B>options</B></I>,
+the value of <B>$match</B> will be <B>1</B>; otherwise it will
+be <B>''</B>. The <B>=~</B> is called the <I>pattern binding operator</I>.
+Despite its appearance (and its association with the search-and-replace
+operator, <B>s///</B>), <B>=~</B> is not some kind of fancy assignment
+operator but is a logical operator like <B>==</B> or <B>eq</B>
+(which denote numerical and string equality, respectively). Its
+opposite is <B>!~</B>, which causes the expression <B>(<I>string</I>
+~! /<I>pattern</I>/)</B> to evaluate to true if and only if <I><B>string</B></I>
+does <I>not</I> match <I><B>pattern</B></I>.
+<P>
+The value of the whole expression <B>(<I>string</I> =~ m/<I>pattern</I>/)</B>
+depends on both of the operands <I><B>string</B></I> and <B>m/<I>pattern</I>/</B>,
+and neither is changed as a result of the operation. If you omit
+the search string, Perl will search the special variable <B>$_</B>.
+You can also leave out the <B>m</B>, as long as you are using
+slashes to delimit the regular expression. Thus <B>/<I>pattern</I>/</B>
+all by itself is equivalent to <B>($_ =~ m/<I>pattern</I>/)</B>.
+If you keep the <B>m</B>, you can use almost any character as
+the pattern delimiter, as long as it doesn't explicitly appear
+within the pattern. The <B>#</B> character is often used to delimit
+patterns that contain <B>/</B>'s, as in
+<BLOCKQUOTE>
+<PRE>
+print &quot;local\n&quot; if ($path =~ m#/usr/local/bin/#);
+</PRE>
+</BLOCKQUOTE>
+<P>
+On the other hand, the slashes are not a problem in
+<BLOCKQUOTE>
+<PRE>
+$pattern = &quot;/usr/local/bin&quot;;
+print &quot;$pattern\n&quot; if ($path =~ m/$pattern/);
+</PRE>
+</BLOCKQUOTE>
+<P>
+You can also use the <I>bracketing character</I> pairs <B>[]</B>,
+<B>()</B>, <B>{}</B>, and <B>&lt;&gt;</B> as the opening and closing
+delimiters. Otherwise, the same character must be used to mark
+both the beginning and the end of the regular expression. 
+<P>
+The options tell Perl how to optimize and perform the matching:
+<B>g</B> will cause the search to match as many times as possible
+(in other words, to perform a &quot;global&quot; search); <B>i</B>
+will cause the search to be case-insensitive; <B>o</B> will interpolate
+any variables in the pattern only once; <B>m</B> will cause the
+string to be searched as multiple lines (slower); <B>s</B> will
+cause the string to be searched as a single line only (faster;
+this is the default); and <B>x</B> enables Perl's extensions to
+regular expressions. The only such extension documented in Perl
+5 is to ignore any white space in a search pattern. This can make
+the pattern much easier to read, but it also means that a literal
+white space character in the pattern string will not match itself
+in the search string. (The very last to example in this appendix
+illustrates an effective use of the <B>/x</B> modifier along with
+embedded comments.)
+<H3><A NAME="PerlsSearchandReplaceOperators">
+Perl's Search-and-Replace Operator: s///</A></H3>
+<P>
+Perl's search-and-replace operator, <B>s///,</B> is used as follows:
+<BLOCKQUOTE>
+<PRE>
+$matches = (<I>string</I> =~ s/<I>pattern</I>/<I>replacement</I>/<I>options</I>);
+</PRE>
+</BLOCKQUOTE>
+<P>
+This construct searches <I><B>string</B></I> for the regular expression
+<I><B>pattern</B></I>, replaces one or all of any matching substrings
+with <I><B>replacement</B></I>, and returns the number of substitutions
+made. If there were no matches, the <B>s</B> operator returns
+false (<B>''</B>). If no string is specified via the <B>=~ </B>or
+<B>!~</B> operator, the special variable <B>$_</B> is searched
+and modified. If specified, <I><B>string</B></I> must be an lvalue-that
+is, either a variable that evaluates as a scalar value or an assignment
+to such a variable. 
+<P>
+As with the <B>m//</B> operator, the pattern delimiter can be
+nearly any non-alphanumeric character instead of <B>/</B>, and
+a few such delimiters have special meanings. (You can think of
+the <B>??</B> operator in this way.) If the delimiter chosen is
+the single quote character, no variable interpolation is done
+on either the <I><B>pattern</B></I> or the <I><B>replacement</B></I>.
+Otherwise, if <I><B>pattern</B></I> contains a <B>$</B> followed
+by an alphanumeric character (so that it looks like a variable
+rather than an end-of-string test), the variable will be interpolated
+into <I><B>pattern</B></I> at runtime. Variables in <I><B>replacement</B></I>
+will also be interpolated. (The <B>/e</B> modifier forces this
+behavior even if the delimiter is the single quote character.)
+If backquotes are used as delimiters, the replacement string will
+be executed as a shell command and its output will be used as
+the actual replacement text. If <I><B>pattern</B></I> is delimited
+by a pair of bracketing characters, <I><B>replacement</B></I>
+must have its own pair of delimiters, which need not be the same.
+Two examples of this approach are <B>s(foo)[bar]</B> and <B>s
+&lt;foos&gt;/ball/</B>.
+<P>
+The options are the same as for <B>m//</B>, except that the <B>/g</B>
+modifier causes the pattern matching operation to replace all
+occurrences of the pattern (in other words, to perform a global
+replacement), and to return the total number of replacements.
+There is also one additional option: the <B>/e modifier</B> causes
+the operation to evaluate the replacement string as a full-fledged
+Perl expression (possibly using the equivalent of an <B>eval</B>),
+as in:
+<BLOCKQUOTE>
+<PRE>
+$escapes = ($name =~ s/%([0-9A-Za-z][0-9A-Za-z])/pack(&quot;C&quot;, &#153;
+hex($1))/eg);
+</PRE>
+</BLOCKQUOTE>
+<P>
+Here the value of the special &quot;memory&quot; variable <B>$1</B>
+will be whatever has just matched the parenthesized sub-expression
+<B>([0-9A-Za-z][0-9A-Za-z])</B>, namely, a 2&#173;character string
+representing a hexidecimal number. The <B>hex</B> function returns
+the decimal equivalent of this hexidecimal number, and the <B>pack</B>
+function with the parameter <B>&quot;C&quot;</B> returns the ASCII
+character corresponding to this number. Thus the overall effect
+of this expression is to replace a URL-escaped character with
+the equivalent literal character. (Note that <B>%</B> is not a
+special character; it matches only itself.) Further examples of
+<B>/e</B>'s usage are given below, as well as a caveat.
+<H4>Examples of s///'s Usage</H4>
+<P>
+Many of the following examples are identical or similar to those
+on Perl's manual page (as converted to perlre.html), but here
+they are accompanied by explanations:
+<P>
+The following statement replaces all occurrences of <B>green</B>
+as a whole word in the current contents of <B>$_</B>:
+<BLOCKQUOTE>
+<PRE>
+s/\bgreen\b/mauve/g;        # don't change wintergreen
+</PRE>
+</BLOCKQUOTE>
+<P>
+This statement replaces uses <B>|</B> instead of <B>/</B> as the
+delimiter, and replaces the first occurrence of <B>/usr/bin</B>
+with <B>/usr/local/bin</B> in <B>$path</B>:
+<BLOCKQUOTE>
+<PRE>
+$path =~ s|/usr/bin|/usr/local/bin|;
+</PRE>
+</BLOCKQUOTE>
+<P>
+This one substitutes the current values of <B>$foo</B> and <B>$bar</B>
+in the search pattern and the replacement string, respectively,
+before performing the search and replacement operation:
+<BLOCKQUOTE>
+<PRE>
+s/Login: $foo/Login: $bar/;       # pattern computed at runtime
+</PRE>
+</BLOCKQUOTE>
+<P>
+If <B>$foo</B> or <B>$bar</B> is not defined, it is replaced by
+nothing. Note that when <B>$</B> appears in the interior of a
+search string, it loses its special meaning as an assertion that
+matches the end of a line or string. To match <B>$</B> as a literal
+character, however, you have to use <B>\$</B>.
+<P>
+The following statement assigns the value of <B>$bar</B> to <B>$foo</B>
+and then replaces the first occurrence of this with that in <B>$foo</B>
+but not in <B>$bar</B>:
+<BLOCKQUOTE>
+<PRE>
+($foo = $bar) =~ s/this/that/;
+</PRE>
+</BLOCKQUOTE>
+<P>
+This one uses memory variables to reverse the first two space-separated
+sub-strings in <B>$_</B>:
+<BLOCKQUOTE>
+<PRE>
+s/([^ ]*) *([^ ]*)/$2 $1/;  # reverse the first two fields
+</PRE>
+</BLOCKQUOTE>
+<P>
+In the next example, the replacement string is actually a Perl
+expression, so you have to use the <B>/e</B> modifier:
+<BLOCKQUOTE>
+<PRE>
+s/(\d+) elf/($1 != 1 ? &quot;$1 elves&quot; : $&amp;)/ge;
+</PRE>
+</BLOCKQUOTE>
+<P>
+This statement replaces all substrings in <B>$_</B> that consist
+of a number followed by the word <B>elf</B> with the same number
+followed by the word <B>elves</B>, unless the number is <B>1</B>,
+in which case a matching substring is replaced by itself. The
+special variable <B>$&amp;</B> always contains the string matched
+by the last (successful) pattern match.
+<P>
+With the <B>/e</B> modifier, you can also call your own subroutines
+(as opposed to Perl's built-in functions) within a replacement
+expression:
+<BLOCKQUOTE>
+<PRE>
+s/^=(\w+)/&amp;myFunc($1)/ge;      # use function call
+</PRE>
+</BLOCKQUOTE>
+<P>
+In my experience, however, this only works well in Perl 5 on a
+Unix platform. Both NTPerl and MacPerl NTPerl are prone to abort
+execution with diagnostic messages such as &quot;Out of memory&quot;
+or &quot;panic: realloc,&quot; so beware.
+<P>
+You can even nest the <B>/e </B>modifiers; the following statement
+will expand simple embedded variables in <B>$_</B>:
+<BLOCKQUOTE>
+<PRE>
+s/(\$\w+)/$1/eeg;
+</PRE>
+</BLOCKQUOTE>
+<P>
+The following statement finds all the relative hyperlinks in the
+text stored in <B>$html</B> and replaces them with forms:
+<BLOCKQUOTE>
+<PRE>
+$html =~ s[&lt;A\s+HREF\s*=\s*&quot;?/(.*)&quot;?\s*&gt;\s*(.+?)\s*&lt;/A&gt;]
+{
+&lt;FORM ACTION=/cgi-bin/myParser.cgi/$1&gt;
+&lt;INPUT TYPE=SUBMIT NAME=SubmitFromLink VALUE=&quot;$2&quot;&gt;
+&lt;/FORM&gt;
+}ig;
+</PRE>
+</BLOCKQUOTE>
+<P>
+The hyperlink reference field from the HREF attribute is turned
+into extra path information at the end of the FORM tag's ACTION
+attribute, and the link's anchor text becomes the VALUE field
+in the INPUT element that defines a SUBMIT button. The line breaks
+between the bracketing delimiters <B>{}</B> are included in the
+replacement string.
+<P>
+This last example removes all SSI-style directives from the text
+stored in <B>$html</B>:
+<BLOCKQUOTE>
+<PRE>
+$html =~ s {
+    &lt;!-#   (?# Match the opening delimiter)
+     .*?    (?# Match a minimal number of characters)
+     -&gt;    (?# Match the closing delimiter)
+} []gsx;
+</PRE>
+</BLOCKQUOTE>
+<P>
+Here the <B>/s</B> modifier causes the search string to be treated
+as a single line, and the <B>/x</B> modifier causes any white
+space in the search pattern to be ignored. (Note that this is
+not the same things as ignoring white space in the search string;
+for that, use <B>\s*</B>, as in the previous example.) The expressions
+delimited by <B>(?#</B> and <B>)</B> don't match anything; they
+are merely comments embedded in the search expression. The replacement
+string, delimited by <B>[]</B>, is nothing.
+<HR>
+
+<CENTER><P><A HREF="ch17.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch19.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

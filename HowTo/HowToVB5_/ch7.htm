@@ -1,0 +1,626 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 7 -- Interacting With the Container</TITLE>
+
+<META>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;7</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Interacting With the Container</FONT>
+</H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#WhatIsaContainer">
+What Is a Container?</A>
+<UL>
+<LI><A HREF="#VisualBasicContainers">
+Visual Basic Containers</A>
+<LI><A HREF="#InteractingwithNonVBContainers">
+Interacting with Non-VB Containers</A>
+<LI><A HREF="#UsingMicrosoftInternetExplorerasaContainer">
+Using Microsoft Internet Explorer as a Container</A>
+</UL>
+<LI><A HREF="#UsingtheExtenderObject">
+Using the Extender Object</A>
+<UL>
+<LI><A HREF="#PropertiesExposedbytheVisualBasicExtenderObject">
+Properties Exposed by the Visual Basic Extender Object</A>
+<LI><A HREF="#ProvidinganEnabledProperty">
+Providing an Enabled Property</A>
+<LI><A HREF="#UsingtheAmbientPropertiesObjecttoSynchronizeProperties">
+Using the AmbientProperties Object to Synchronize Properties
+</A>
+<LI><A HREF="#UsingExtenderPropertieswiththeContaineratorProject">
+Using Extender Properties with the Containerator Project</A>
+<LI><A HREF="#TheContainerProperty">
+The Container Property</A>
+</UL>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+</UL>
+<HR>
+<P>
+ActiveX controls can't exist on their own. In order to function, they must be deposited
+into some other element of a running application, referred to
+as a <I>container</I>.
+<P>
+Often it is necessary to obtain information about or alter properties
+of the container. You can query the container in order to keep
+your control's properties in synch with the properties of its
+container; you can even alter certain properties of the container
+from your control.
+<H2><A NAME="WhatIsaContainer"><FONT SIZE=5 COLOR=#FF0000>
+What Is a Container?</FONT></A></H2>
+<P>
+A container can be a Visual Basic form, but it can also be any
+number of other things, including a Microsoft Access form, a Microsoft
+Excel spreadsheet, or a Web page displayed in Microsoft Internet
+Explorer. Other ActiveX controls can act as containers. A&Ecirc;container
+can also be an application you've never even heard of at the time
+you authored your ActiveX control.
+<P>
+You have to refrain from overly-ambitious assumptions about what
+your control's container can do, because the ActiveX specification
+sets out few hard-and-fast requirements for what containers can
+be expected to do.
+<P>
+You can use the container to provide a number of handy features
+for your control. However, failing to plan for the various implementations
+of ActiveX control containers can leave your control without a
+leg to stand on, so to speak.
+<H3><A NAME="VisualBasicContainers">
+Visual Basic Containers</A></H3>
+<P>
+The most commonly used container in a Visual Basic project is
+the form. Virtually every Visual Basic application has at least
+one form, and almost every form contains at least one control.
+<P>
+In addition, Visual Basic controls can contain other controls.
+For example, PictureBox controls are sometimes used solely as
+containers, without even utilizing their primary property, the
+Picture.
+<P>
+The Visual Basic Frame control can also be a container; it is
+most commonly used as a container for OptionButton<B> </B>controls,
+although you can use it as a container for your controls as well.
+<H3><A NAME="InteractingwithNonVBContainers">
+Interacting with Non-VB Containers</A></H3>
+<P>
+As the number of applications that use Visual Basic for Applications
+(VBA) increases, you'll find there are more and more places in
+which ActiveX controls can be found. Now that Microsoft has licensed
+VBA version 5.0 to third-party developers, you'll likely start
+seeing ActiveX controls popping up in unexpected places, such
+as Microsoft Office applications, Visio drawing documents, and
+Adobe Photoshop. This is because support for ActiveX control hosting
+is a feature of VBA 5.0. For more information on the applications
+in which ActiveX controls can be used today, see <A HREF="ch2.htm" >Chapter 2</A> &quot;Control
+Basics.&quot;
+<P>
+For a demonstration of how to embed an ActiveX control in a non-VB
+container (specifically, Microsoft Access) see <A HREF="ch12.htm" >Chapter 12</A>.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD><B>TIP</B></TD></TR>
+<TR VALIGN=TOP><TD>
+<BLOCKQUOTE>
+<I>You can see a complete list of the companies that have licensed VBA 5.0, and are presumably going to adapt their applications to serve as ActiveX control hosts, on the Microsoft Web site, <A 
+HREF="http://www.microsoft.com/vba/">http://www.microsoft.com/vba/</A> vbawho.htm. </I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H3><A NAME="UsingMicrosoftInternetExplorerasaContainer">
+Using Microsoft Internet Explorer as a Container</A></H3>
+<P>
+Microsoft Internet Explorer's browser window is a container of
+its own, with its own effects on a control's behavior.
+<P>
+You use the Microsoft ActiveX control pad to embed an ActiveX
+control in a Web page. For more information on how to embed and
+program ActiveX controls in a Web page, see <A HREF="ch13.htm" >Chapter 13</A>, &quot;Using
+Your Control on the Web.&quot;
+<H2><A NAME="UsingtheExtenderObject"><FONT SIZE=5 COLOR=#FF0000>
+Using the Extender Object</FONT></A></H2>
+<P>
+The Extender object is your primary interface with the container.
+The properties exposed by the Extender object are the way you
+gain information about the container and alter its properties
+(for those container properties that are allowed to be changed
+by controls they contain).
+<P>
+The Extender object becomes available when the InitProperties
+or ReadProperties event is raised in your UserControl. It is not
+available in your control's Initialize event.
+<P>
+For more information on events in the UserControl object, see
+<A HREF="ch5.htm" >Chapter 5</A> &quot;Handling and Raising Events.&quot;
+<H3><A NAME="PropertiesExposedbytheVisualBasicExtenderObject">
+Properties Exposed by the Visual Basic Extender Object</A></H3>
+<P>
+The Extender object of a container exposes a set of standard properties
+described in Table 7.1.<BR>
+<BR>
+<P>
+<CENTER><B>Table 7.1 Standard Extender properties</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=103><B>Property</B></TD><TD WIDTH=378><B>Description</B>
+</TD><TD WIDTH=78><B>Data Type</B></TD><TD WIDTH=126><B>Availability</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=103>Name</TD><TD WIDTH=378>The name given to the control by the user (not the name of the container)
+</TD><TD WIDTH=78>String</TD><TD WIDTH=126>Read-only</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=103>Visible</TD><TD WIDTH=378>Specifies whether the control is visible
+</TD><TD WIDTH=78>Boolean</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=103>Parent</TD><TD WIDTH=378>An object that represents the control's container. You can get the name of the container (for example) by using the syntax  Extender.Parent.Name
+</TD><TD WIDTH=78>Object</TD><TD WIDTH=126>Read-only</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=103>Cancel</TD><TD WIDTH=378>Specifies whether the control acts as the cancel button for the form; only used with command button-like controls
+</TD><TD WIDTH=78>Boolean</TD><TD WIDTH=126>Read-only</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=103>Default</TD><TD WIDTH=378>Specifies whether the control acts as the default button for the form; only used with command button-like controls
+</TD><TD WIDTH=78>Boolean</TD><TD WIDTH=126>Read-only</TD></TR>
+</TABLE></CENTER>
+<P>
+<P>
+In addition to the standard Extender properties described in the
+preceding table, Visual Basic exposes an additional set of Extender
+properties listed in Table 7.2.<BR>
+<P>
+<CENTER><B>Table 7.2 Additional VB Extender properties</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=104><B>Property</B></TD><TD WIDTH=376><B>Description</B>
+</TD><TD WIDTH=80><B>Data Type</B></TD><TD WIDTH=126><B>Availability</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>Container</TD><TD WIDTH=376>An object that represents the control's container. You can use this object to get additional properties of the container; for example, Extender.Container.Name will return the name of the container on 
+which the control resides
+</TD><TD WIDTH=80>Object</TD><TD WIDTH=126>Read-only</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>DragIcon</TD><TD WIDTH=376>A Picture object; the icon displayed when the control is being dragged
+</TD><TD WIDTH=80>Object</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>DragMode</TD><TD WIDTH=376>Specifies manual or automatic drag-and-drop
+</TD><TD WIDTH=80>Integer</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>Enabled</TD><TD WIDTH=376>Specifies whether the control can be accessed as an element of the user interface. This property requires special implementation.
+</TD><TD WIDTH=80>Boolean</TD><TD WIDTH=126>Read-only</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>Height</TD><TD WIDTH=376>The height of the control
+</TD><TD WIDTH=80>Integer</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>HelpContextID</TD><TD WIDTH=376>The ID of the help topic that is displayed when the user requests online help and the focus is on the control
+</TD><TD WIDTH=80>Integer</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>Index</TD><TD WIDTH=376>The position this control occupies if it is in control array; if the control is not in an array, the property is not available
+</TD><TD WIDTH=80>Integer</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>Left</TD><TD WIDTH=376>The position of the control in terms of how far it is from the left edge of its container
+</TD><TD WIDTH=80>Integer</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>TabIndex</TD><TD WIDTH=376>The control's position in the tab order
+</TD><TD WIDTH=80>Integer</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>TabStop</TD><TD WIDTH=376>Determines whether the control takes the focus when the user presses Tab to change the focus from one control to the next
+</TD><TD WIDTH=80>Boolean</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>Tag</TD><TD WIDTH=376>A text string stored by the control and accessible in code
+</TD><TD WIDTH=80>String</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>ToolTipText</TD><TD WIDTH=376>Text that appears when the user positions the mouse on top of the control for one second
+</TD><TD WIDTH=80>String</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>Top</TD><TD WIDTH=376>The position of the control in terms of how far it is from the top edge of its container
+</TD><TD WIDTH=80>Integer</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>WhatThisHelpID&nbsp;&nbsp;</TD><TD WIDTH=376>The ID of the control's What's This pop-up help topic
+</TD><TD WIDTH=80>Integer</TD><TD WIDTH=126>Read-write</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=115>Width</TD><TD WIDTH=376>The width of the control
+</TD><TD WIDTH=80>Integer</TD><TD WIDTH=126>Read-write</TD></TR>
+</TABLE></CENTER>
+<P>
+In addition to these properties, the Visual Basic Extender object
+provides the following standard methods:
+<UL>
+<LI>Drag
+<LI>Move
+<LI>SetFocus
+<LI>ShowWhatsThis
+<LI>ZOrder
+<LI>DragDrop
+<LI>DragOver
+<LI>GotFocus
+<LI>LostFocus
+</UL>
+<P>
+All of these methods are similar to other standard methods you
+should be familiar with in Visual Basic controls.
+<H3><A NAME="ProvidinganEnabledProperty">
+Providing an Enabled Property</A></H3>
+<P>
+The Enabled property is a special case, since it is technically
+a container-supplied property, but it doesn't function until you
+write code for it. This has to do with the fact that controls
+that provide the Enabled<B> </B>property have both runtime and
+design-time behaviors that need to be managed by the Visual Basic
+IDE.
+<P>
+The code to add an Enabled<B> </B>property to your control is
+fairly simple:
+<BLOCKQUOTE>
+<PRE>
+Public Property Get Enabled() As Boolean
+    Enabled = UserControl.Enabled
+End Property
+
+Public Property Let Enabled(ByVal NewValue As Boolean)
+    UserControl.Enabled = NewValue
+    PropertyChanged &quot;Enabled&quot;
+End Property
+</PRE>
+</BLOCKQUOTE>
+<H3><A NAME="UsingtheAmbientPropertiesObjecttoSynchronizeProperties">
+Using the AmbientProperties Object to Synchronize Properties
+</A></H3>
+<P>
+The AmbientProperties object is another way for your control to
+interact with its container. You can inspect the properties of
+the AmbientProperties<B> </B>object to get cues about how your
+control's default properties should be set. You synchronize your
+control's properties with that of its container in your control's
+InitProperties event.
+<P>
+For example, to make the default BackColor of your control the
+same as the form on which it resides, you'd write the following
+code in your control's InitProperties event:
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_InitProperties()
+    Debug.Print &quot;InitProperties.&quot;
+    BackColor = Ambient.BackColor
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<P>
+To test this code, switch to an EXE project form, change the form's
+BackColor property to some color other than the default, then
+place the control on the form. You should be able to see that
+the control is the same color as the form (as shown in Figure
+7.1).
+<P>
+<A HREF="f7-1.gif"><B>Figure 7.1 :</B> <I>The control is the same color as the form</I>.</A>
+<P>
+The control's AmbientProperties object is typically accessed through
+the use of the Ambient property of the UserControl. For example,
+to determine whether the control is in design mode or run mode,
+you might use the following code. Ambient properties are always
+read-only.
+<BLOCKQUOTE>
+<PRE>
+If Ambient.UserMode = True Then
+    Label1.Caption = &quot;Running.&quot;
+Else
+    Label1.Caption = &quot;Design mode.&quot;
+End If
+</PRE>
+</BLOCKQUOTE>
+<P>
+Table 7.3 contains the complete list of ambient properties provided
+through the Visual Basic AmbientProperties object.<BR>
+<P>
+<CENTER><B>Table 7.3 Properties of the AmbientProperties object</B></CENTER>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR VALIGN=TOP><TD WIDTH=181><B>Property</B></TD><TD WIDTH=468><B>Description</B>
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>BackColor, ForeColor</TD><TD WIDTH=468>Standard color properties
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>DisplayAsDefault</TD><TD WIDTH=468>Determines if the control is the container's default button
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>DisplayName</TD><TD WIDTH=468>Returns a string used as the name displayed in the control's error messages
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>Font</TD><TD WIDTH=468>Standard font property
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>LocaleID</TD><TD WIDTH=468>Used for internationalization purposes
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>MessageReflect</TD><TD WIDTH=468>Indicates whether the container can handle message reflection. This property is ignored in a Visual Basic ActiveX control
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>Palette</TD><TD WIDTH=468>Standard palette property
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>RightToLeft</TD><TD WIDTH=468>Determines the text input method on a bidirectional system
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>ScaleUnits</TD><TD WIDTH=468>A string that indicates the container's coordinate measurement system (such as points, pixels, or twips). This property is ignored in a Visual Basic ActiveX control.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>ShowGrabHandles</TD><TD WIDTH=468>Indicates whether the control should display grab handles in design mode. This property envisions a container that handles control resizing in some custom manner unlike that of Visual Basic; 
+consequently this property is ignored in a Visual Basic ActiveX control.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>ShowHatching</TD><TD WIDTH=468>Indicates whether the control should display hatching around its edges when it is in design mode in a container designed to accommodate hatching. Visual Basic does not support design-mode 
+hatching, but Microsoft Access, for example, does. Consequently, this property is ignored in a Visual Basic ActiveX control.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>SupportsMnemonics</TD><TD WIDTH=468>Indicates that the container supports access keys. This property is ignored in a Visual Basic ActiveX control.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>TextAlign</TD><TD WIDTH=468>Indicates the manner in which the container would like the control to align text. Values are 0 (general alignment), 1 (left), 2 (center), 3 (right), 4 (fill justify).
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>UIDead</TD><TD WIDTH=468>Indicates whether the control should respond to user input. This property is ignored in a Visual Basic ActiveX control.
+</TD></TR>
+<TR VALIGN=TOP><TD WIDTH=181>UserMode</TD><TD WIDTH=468>Indicates whether the control is in a container that is in run mode (True) or design mode (False)
+</TD></TR>
+</TABLE></CENTER>
+<H4>Using the AmbientChanged Event</H4>
+<P>
+The AmbientChanged event of the UserControl enables your control
+to keep up with changes in the container's properties. For example,
+you might want the background color of your control to always
+be the same as the background color of its container. To do this,
+you write code in the AmbientChanged event to make the BackColor
+property of your control the same as the ambient BackColor<B>
+</B>property. To see how to use the AmbientChanged event, do the
+following:
+<OL>
+<LI>Create a new control project. Add the following code to the
+UserControl:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Private Sub UserControl_AmbientChanged(PropertyName As String)
+    Debug.Print &quot;AmbientChanged: &quot; &amp; PropertyName
+    BackColor = Ambient.BackColor
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<OL START=2>
+<LI>Close the code window and the control designer, then switch
+to the EXE test form. Add the control to an EXE project form.
+<LI>Using the Properties window, change the BackColor property
+of the EXE project form. The background color of the UserControl
+will change to match the color you selected.
+</OL>
+<H3><A NAME="UsingExtenderPropertieswiththeContaineratorProject">
+Using Extender Properties with the Containerator Project</A></H3>
+<P>
+The Containerator project exists on the CD-ROM that accompanies
+this book. This project is designed to test which container-provided
+properties are available in a container.
+<P>
+The Containerator control is comprised of a single text box. The
+control exposes one custom method, ShowContainerProperties. This
+method displays a list of the container properties accessible
+by the control.
+<P>
+To build this control, do the following:
+<OL>
+<LI>Start a new control project. Give the UserControl the name
+Containerator.
+<LI>Place a text box on the control designer. Make the text box
+about the same size as the designer.
+<LI>Give the text box the name txtInfo, set its Text property
+to nothing, and set its MultiLine property to True.
+<LI>Double-click on the control designer to open its code window.
+Enter the code in Listing 7.1.
+</OL>
+<HR>
+<BLOCKQUOTE>
+<B>Listing 7.1&nbsp;&nbsp;The Containerator Control<BR>
+</B>
+</BLOCKQUOTE>
+<BLOCKQUOTE>
+<PRE>
+Public Sub ShowContainerProperties()
+' sticks info on container properties into
+' txtInfo.
+
+On Error Resume Next     ' very important
+
+    txtInfo.Text = txtInfo.Text &amp; &quot;*Cancel: &quot; &amp; Extender.Cancel &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;*Cancel: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    ' Container is an object, so use its Name
+    txtInfo.Text = txtInfo.Text &amp; &quot;Container: &quot;_
+                   &amp; Extender.Container.Name &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;Container: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;*Default: &quot; &amp; Extender.Default &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;*Default: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    ' DragIcon can't be displayed textually
+
+    txtInfo.Text = txtInfo.Text &amp; &quot;DragMode: &quot; &amp; Extender.DragMode &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;DragMode: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    ' Enabled requires some special fiddling around
+    txtInfo.Text = txtInfo.Text &amp; &quot;Enabled: &quot; &amp; Extender.Enabled &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;Enabled: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;Height: &quot; &amp; Extender.Height &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;Height: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;Index: &quot; &amp; Extender.Index &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;Index: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;HelpContextID: &quot;_
+                   &amp; Extender.HelpContextID &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;HelpContextID: Not available.&quot;_
+                       &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;Left: &quot; &amp; Extender.Left &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;Left: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;*Name: &quot; &amp; Extender.Name &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;*Name: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    ' Parent is actually an object, so you have to get its Name
+    txtInfo.Text = txtInfo.Text &amp; &quot;*Parent: &quot; &amp; Extender.Parent.Name_
+                   &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;*Parent: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;TabIndex: &quot; &amp; Extender.TabIndex &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;TabIndex: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;Tag: &quot; &amp; Extender.Tag &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;Tag: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;TabStop: &quot; &amp; Extender.TabStop &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;TabStop: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;ToolTipText: &quot; &amp; Extender.ToolTipText_
+                   &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;ToolTipText: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;Top: &quot; &amp; Extender.Top &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;Top: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;*Visible: &quot; &amp; Extender.Visible &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;*Visible: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;WhatsThisHelpID: &quot;_
+                 &amp; Extender.WhatsThisHelpID &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;WhatsThisHelpID: Not available.&quot;_
+                       &amp; vbCrLf
+        Err.Clear
+    End If
+    
+    txtInfo.Text = txtInfo.Text &amp; &quot;Width: &quot; &amp; Extender.Width &amp; vbCrLf
+    If Err Then
+        txtInfo.Text = txtInfo.Text &amp; &quot;Width: Not available.&quot; &amp; vbCrLf
+        Err.Clear
+    End If
+
+End Sub
+</PRE>
+</BLOCKQUOTE>
+<HR>
+<P>
+
+<OL START=5>
+<LI>Close the code window and close the control designer.
+<LI>Switch to the EXE test form. Place an instance of the Containerator
+on the EXE test form.
+<LI>Run the EXE test project by choosing the menu commands Run,<B>
+</B>Start (or by using the function key F5).
+<LI>The project runs. Pause the project by selecting the menu
+command Run,<B> </B>Break, or by using the keystroke shortcut
+Ctrl+Break.
+<LI>The EXE project pauses. In the Immediate window, type the
+code:
+</OL>
+<BLOCKQUOTE>
+<PRE>
+Containerator1.ShowContainerProperties
+</PRE>
+</BLOCKQUOTE>
+<OL START=10>
+<LI>The Containerator displays a list of Extender properties it
+was able to retrieve.
+</OL>
+<P>
+There's a bunch of code in the Containerator control, but it all
+does pretty much the same thing: tests the properties of the Extender
+object to see if they're available. The code uses error-trapping
+to keep from crashing the host application in the (very likely)
+case where a particular property of the Extender object isn't
+available. For more information on error-trapping in a control,
+see <A HREF="ch15.htm" >Chapter 15</A>, &quot;Debugging and Error Trapping.&quot;
+<P>
+To test the Containerator control, drop it into an EXE project
+form and add a command button to the form. In the command button's
+Click event, write the code:
+<BLOCKQUOTE>
+<PRE>
+Containerator1.ShowContainerProperties
+</PRE>
+</BLOCKQUOTE>
+<P>
+Run the EXE project, then click on the command button to execute
+the ShowContainerProperties method. Your form should display something
+similar to Figure 7.2.
+<P>
+<A HREF="f7-2.gif"><B>Figure 7.2 :</B> <I>Testing the Containerator</I>.</A>
+<H3><A NAME="TheContainerProperty">
+The Container Property</A></H3>
+<P>
+The Container property of a control is not to be confused with
+the concept of the container. Visual Basic provides the Container
+property so you can change the container that a control is associated
+with.
+<P>
+For example, consider a form that contains three controls: two
+PictureBoxes and a Label<B> </B>control contained in the first
+PictureBox. You could cause the Label to jump from the first PictureBox
+to the second by writing the code:
+<BLOCKQUOTE>
+<PRE>
+Label1.Container = PictureBox2
+</PRE>
+</BLOCKQUOTE>
+<P>
+The Container property doesn't have a direct bearing on control
+creation, although there's no reason why you couldn't build a
+control to take advantage of this property. (This property existed
+in versions of Visual Basic prior to version 5.0.) Hopefully with
+this short explanation of this property you won't furrow your
+brow, as I did, when you run across it in online Help.
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+In this chapter, you learned about the properties of the Visual
+Basic container and how non-Visual Basic containers differ from
+Visual Basic forms. We covered ambient properties supplied by
+the container, as well as using the Extender object as a way to
+interact with the container.
+<P>
+In the next chapter, you'll explore the concept of constituent
+controls in depth, putting together what you've learned in the
+last few chapters into one big mega-control of doom.
+<HR>
+
+<CENTER><P><A HREF="ch6.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch8.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

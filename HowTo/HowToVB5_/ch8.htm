@@ -1,0 +1,423 @@
+<HTML>
+<HEAD>
+<TITLE>Chapter 8 -- Using Constituent Controls</TITLE>
+
+<META>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#CE2910">
+
+<H1><FONT SIZE=6 COLOR=#FF0000>Chapter&nbsp;8</FONT></H1>
+<H1><FONT SIZE=6 COLOR=#FF0000>Using Constituent Controls</FONT></H1>
+<HR>
+<P>
+<CENTER><B><FONT SIZE=5><A NAME="CONTENTS">CONTENTS</A></FONT></B></CENTER>
+<UL>
+<LI><A HREF="#InherentControls">
+Inherent Controls</A>
+<LI><A HREF="#ActingonAlltheConstituentControlsinYourControl">
+Acting on All the Constituent Controls in Your Control</A>
+<LI><A HREF="#ThirdPartyControls">
+Third-Party Controls</A>
+<UL>
+<LI><A HREF="#LicensingConsiderationsApplicabletoThirdPartyControls">
+Licensing Considerations Applicable to Third-Party Controls
+</A>
+</UL>
+<LI><A HREF="#LocatingCommercialControls">
+Locating Commercial Controls</A>
+<UL>
+<LI><A HREF="#Microsoft">
+Microsoft</A>
+<LI><A HREF="#CNETActiveXcom">
+CNET ActiveX.com</A>
+<LI><A HREF="#TechWebActiveXpress">
+TechWeb ActiveXpress</A>
+<LI><A HREF="#DaveCentral">
+Dave Central</A>
+<LI><A HREF="#BrowserWatchActiveXArena">
+BrowserWatch ActiveX Arena</A>
+<LI><A HREF="#CatalogResellersSpecializinginVBControlsandAddOns">
+Catalog Resellers Specializing in VB Controls and Add-Ons
+</A>
+</UL>
+<LI><A HREF="#Summary">
+Summary</A>
+</UL>
+
+<HR>
+<P>
+<FONT FACE="New York">Although </FONT>previous chapters have demonstrated
+how to create a control using other controls and how to use constituent
+controls&#146; properties, events, and methods in your UserControl,
+a few issues remain. 
+<P>
+You understand how to use constituent controls, but how do you
+know what controls are available? And if the controls provided
+by the Windows operating system and Visual Basic don&Otilde;t
+quite fit the bill, where can you turn to uncover more options?
+This chapter answers those questions.
+<H2><A NAME="InherentControls"><FONT SIZE=5 COLOR=#FF0000>
+Inherent Controls</FONT></A></H2>
+<P>
+Inherent controls are controls that exist as part of Windows.
+These controls exist on every user&#146;s machine and are generated
+in Visual Basic by the VB run-time module you distribute with
+every VB application you create. Consequently, inherent controls
+do not have OCX files.<BR>
+<p>
+<center>
+<TABLE BORDERCOLOR=#000000 BORDER=1 width=80%>
+<TR><TD><B>NOTE</B></TD></TR>
+<TR><TD>
+<BLOCKQUOTE>
+<I>If you&#146;re a seasoned Visual Basic veteran but you haven&#146;t used VB in a while, note that the number of inherent controls has increased since the release of Windows 95 and Windows NT 3.5. These controls are the ImageList, ListView, ProgressBar, 
+RichTextBox, Slider, StatusBar, TabStrip, Toolbar, and TreeView controls.</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></center>
+<P>
+Here is a complete list of inherent controls in Visual Basic 5.0:
+<UL>
+<LI>CheckBox
+<LI>ComboBox
+<LI>CommandButton
+<LI>Data
+<LI>DriveListBox; DirListBox; FileListBox
+<LI>Frame
+<LI>HScrollBar; VScrollBar
+<LI>Label
+<LI>ListBox
+<LI>OptionButton
+<LI>PictureBox; Image
+<LI>Shape; Line
+<LI>TextBox
+<LI>Timer
+</UL>
+<P>
+The OLE container control does not appear in this list because
+while you can use an OLE container control in an EXE project,
+you can&#146;t use the OLE container control as a constituent
+control in your application, so distributing it is not an issue.
+<P>
+In addition to using inherent controls, you can use OLE controls
+(known as OCX controls) that predate the current ActiveX specification
+as constituent controls in your control project. So you can draw
+on the large market of third-party Visual Basic control vendors
+to provide constituent controls for your control projects, whether
+or not the vendor has positioned their controls as being explicitly
+ActiveX or not. The rule is: if it&#146;s a 32-bit OCX control,
+it should work in Visual Basic 5.0.
+<P>
+See &#147;Locating Commercial Controls&#148; later in this chapter
+for information on third-party control vendors.
+<H2><A NAME="ActingonAlltheConstituentControlsinYourControl"><FONT SIZE=5 COLOR=#FF0000>
+Acting on All the Constituent Controls in Your Control</FONT></A></H2>
+<P>
+Occasionally you may wish to perform an action on all the constituent
+controls in your UserControl. To do this, you can use a With block
+with the controls collection. Here is an example of how this works:
+<OL>
+<LI>Create a UserControl with a number of Label controls, all
+of different colors. The layout for this control is illustrated
+in Figure 8.1.<BR>
+<p>
+<A HREF="f8-1.gif"><B>Figure 8.1 :</B> <I>Multilabel control designer</I>.</A>
+<p>
+<LI>Write the following code in the UserControl&#146;s Click event:
+<blockquote>
+<PRE>
+Private Sub UserControl_Click()
+    Dim c As Control
+    For Each c In UserControl.Controls
+        c.Caption = &quot;Changed&quot;
+        c.BackColor = &amp;H808000
+    Next
+End Sub
+</PRE>
+</blockquote>
+
+<LI>To test this code, you must place an instance of the control
+on an EXE project form, run the application, then click on a part
+of the control&#146;s background (not on one of the labels). You
+should be able to see the control change to resemble Figure 8.2.
+<BR>
+<P>
+<A HREF="f8-2.gif"><B>Figure 8.2 :</B> <I>Multilabel control after clicking</I>.</A>
+</OL>
+<P>
+You can see from this demonstration that you can use a For Each
+block to iterate through all of the constituent controls in your
+UserControl. You can use this same technique to apply changes
+to all the controls in your UserControl no matter how many controls
+your control project contains.
+<P>
+The code for this example is on the CD-ROM that accompanies this
+book.
+<H2><A NAME="ThirdPartyControls"><FONT SIZE=5 COLOR=#FF0000>
+Third-Party Controls</FONT></A></H2>
+<P>
+There is no reason why you can&#146;t take existing ActiveX controls
+and extend their functionality by making them constituent controls
+of your controls. The problem with doing this is the same problem
+you face when you use an ActiveX control to begin with: when you
+use a third-party custom control, you put yourself at the mercy
+of the developer who created it. Be sure to bear this in mind
+before adding dozens of third-party controls to your project.
+<P>
+For example, let&#146;s say your control project uses a third-party
+ActiveX control designed to handle a number of different graphic
+formats. If you design your project around this control only to
+discover late in the project that the control doesn&#146;t handle
+a particular graphic format subtype in quite the way you expected,
+you&#146;ll be forced to work around the problem or compromise
+your project&Otilde;s feature set.
+<P>
+Third-party controls represent project dependencies that you have
+little or no control over. This is the case because with controls
+you purchase, you usually don&#146;t have access to the control&#146;s
+source code. And even if you had access to the control&#146;s
+source code, there&#146;s no guarantee that the control is written
+in a language you can deal with (many ActiveX controls are written
+in C++).<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR><TD><B>NOTE</B></TD></TR>
+<TR><TD>
+<BLOCKQUOTE>
+<I>If you&#146;re considering using a third-party control as a part of your control, you may want to instead consider writing your own code to provide the same functionality. Things that seem impossible to do in Visual Basic, such as multimedia and 
+Internet access, can often be accomplished with calls to the Windows API. For more information on this, see <A HREF="ch11.htm" >Chapter 11</A>, &#147;Making Windows API and DLL Calls.&#148;</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<P>
+That said, using a third-party control can save you a great deal
+of development time, particularly if you&#146;re attempting to
+delve into a complex area of programming.
+<P>
+For example, in <A HREF="ch14.htm" >Chapter 14</A>, you&#146;ll see an example of how
+to create a control project that is capable of sending electronic
+mail over the Internet. In order to do this with code, you&Otilde;d
+need to know not only the Internet SMTP mail protocol, but the
+Winsock API that enables a Windows application to send and receive
+data using the TCP/IP networking protocol (an API that is very
+poorly documented and very difficult to call from a VB perspective).
+<P>
+Using a constituent control resolves all those problems by wrapping
+them up in a programming paradigm that is easy to understand and
+consistent.
+<H3><A NAME="LicensingConsiderationsApplicabletoThirdPartyControls">
+Licensing Considerations Applicable to Third-Party Controls
+</A></H3>
+<P>
+Whenever you use a commercial, third-party control in your Visual
+Basic application, you must have a license to use it. In most
+cases, an improperly installed or unlicensed ActiveX control won&#146;t
+be usable in Visual Basic, because the IDE won&#146;t let you
+instantiate a control unless the appropriate licensing information
+has been inserted into your computer&#146;s system registry.
+<P>
+But what happens when you purchase an off-the-shelf control from
+a software vendor, incorporate it into an ActiveX control project
+of your own, add a few enhancements to it, and redistribute the
+control to other programmers for their use? Are the other programmers&#150;the
+users of your new, improved ActiveX control&#150;also required
+to have a license for the third-party constituent control?
+<P>
+The answer is yes. The reason is simple: when a software company
+grants you a license to redistribute their ActiveX control, they&#146;re
+granting you a <I>runtime</I> license, not a <I>design-time</I>
+license. If you had the right to redistribute a runtime license,
+the control developer would be giving the control away. There&#146;d
+be nothing to stop you from writing a wafer-thin wrapper that
+exposed 100% of the functionality of the constituent control,
+adding nothing new of your own, and reselling the knockoff version
+of the control on the street corners of America for $1.98.<BR>
+<P>
+<CENTER>
+<TABLE BORDERCOLOR=#000000 BORDER=1 WIDTH=80%>
+<TR><TD><B>NOTE</B></TD></TR>
+<TR><TD>
+<BLOCKQUOTE>
+<I>Special considerations apply to the issue of licensing when you&#146;re sending a control over the Internet. In a nutshell, the license for a control you distribute resides on the Web server, and a temporary copy of the license is passed to each Web 
+browser that encounters it. If your control supports licensing, then users who receive your control through a Web page do not have the ability to use your control at design time, unless they have purchased and installed a licensed copy of your control. For 
+more information on licensing Web-distributed controls, see <A HREF="ch13.htm" >Chapter 13</A>, &#147;Using Your Control On The Web.&#148; For information on how to add licensing to controls you create, see <A HREF="ch12.htm" >Chapter 12</A>, 
+&Ograve;Distributing Your Control.&Oacute;</I>
+</BLOCKQUOTE>
+
+</TD></TR>
+</TABLE></CENTER>
+<H2><A NAME="LocatingCommercialControls"><FONT SIZE=5 COLOR=#FF0000>
+Locating Commercial Controls</FONT></A></H2>
+<P>
+There are a number of companies that specialize in selling ActiveX
+components; many of these companies have been around for years,
+having built their businesses on the 16-bit VBX market, switching
+over to OCXes and ActiveX controls as Microsoft goes through its
+seemingly annual paradigm revisions.
+<P>
+There are also quite a number of free controls out there. The
+number of freeware and shareware controls available will undoubtedly
+increase dramatically now that Visual Basic can be used to create
+controls.
+<P>
+Many sites permit you to download versions of controls for evaluation
+before you purchase them. Some of these controls are fully functional,
+others are demo versions that stop working after a period of time
+or display a message when they aren&#146;t fully licensed.
+<P>
+There are a number of Web sites that make information on ActiveX
+controls available for free. Here is a listing of the best among
+them, ranked in descending order of indispensability:
+<H3><A NAME="Microsoft">
+Microsoft</A></H3>
+<P>
+The Microsoft Web site, at <A HREF="http://www.microsoft">http://www.microsoft</A> .com/activex/gallery/,
+is the first place to look for ActiveX resources.
+<P>
+<A HREF="f8-3.gif"><B>Figure 8.3 :</B> <I>Microsoft ActiveX Gallery</I>.</A>
+<P>
+As of this writing, the site has over 100 controls available for
+download. Many of them are geared toward use in Web pages, but
+they&#146;ll work in VB applications as well.
+<H3><A NAME="CNETActiveXcom">
+CNET ActiveX.com</A></H3>
+<P>
+Found at <A HREF="http://www.activex.com">http://www.activex.com</A>, this site is the only ActiveX
+site to rival Microsoft&#146;s in terms of completeness and ease
+of navigation. It features a library of downloadable ActiveX controls
+and Visual Basic utilities divided into categories. It is extremely
+well-maintained and well-organized.
+<P>
+<A HREF="f8-4.gif"><B>Figure 8.4 :</B> <I>Activex.com</I>.</A>
+<P>
+The site uses ActiveX controls for navigation, and it serves as
+a good example of how to use ActiveX to enhance your Web site.
+(The site works perfectly fine with Netscape as well as Internet
+Explorer.)
+<P>
+CNET&#146;s activex.com also contains links to news articles on
+ActiveX technology from CNET&#146;s techie news site, news<B>.</B>com.
+<H3><A NAME="TechWebActiveXpress">
+TechWeb ActiveXpress</A></H3>
+<P>
+Found at <A HREF="http://www.techweb.com/activexpress/">http://www.techweb.com/activexpress/</A>, this site has original
+articles and tutorials on how to use ActiveX technology on the
+Web, as well as a large download area with links to controls divided
+into categories. The full-text search feature is fast and easy
+to use, displaying only ActiveX-related information.
+<P>
+<A HREF="f8-5.gif"><B>Figure 8.5 :</B> <I>TechWeb ActiveXpress</I>.</A>
+<P>
+Like the CNET site, this site has a link to a daily news section
+(<A HREF="http://www.techweb.com/activexpress/xnews/xnews.html">http://www.techweb.com/activexpress/xnews/xnews.html</A>), that has
+a new story on ActiveX-related issues every two or three days.
+<H3><A NAME="DaveCentral">
+Dave Central</A></H3>
+<P>
+Who is this Dave person and why does he have a Web site (at <A HREF="http://www.davecentral.com/activex.html">http://www.davecentral.com/activex.html</A>)
+devoted to Microsoft development tools? I couldn&Otilde;t figure
+out the answer to that question, but he does have a pretty decent
+site.
+<P>
+<A HREF="f8-6.gif"><B>Figure 8.6 :</B> <I>Dave Central</I>.</A>
+<P>
+The layout isn&#146;t quite as nice as the CNET site, and the
+number of ActiveX resources isn&#146;t nearly as extensive, but
+the purpose is pretty much the same: provide a library of downloadable
+software, mainly focusing on Internet-related tools, including
+ActiveX controls.
+<P>
+The site lets you do keyword searches to look up information but
+doesn&Otilde;t let you search by category or product. This means
+that when you do a search on the keyword &Ograve;database,&Oacute;
+for example, you get a long list of database products (rather
+than a list of Visual Basic database products). This can be a
+bit inundating, but it&#146;s not impossible to navigate around.
+<H3><A NAME="BrowserWatchActiveXArena">
+BrowserWatch ActiveX Arena</A></H3>
+<P>
+At the time I hit their page (at <A HREF="http://browserwatch.iworld.com/activex.html">http://browserwatch.iworld.com/activex.html</A>),
+their big list of ActiveX controls (at <A HREF="http://browserwatch.iworld.com/activex/activex-big.html">http://browserwatch.iworld.com/activex/activex-big.html</A>)
+was formatted a little funny and hard to read in MS Internet Explorer.
+Also, their search engine is confusing and returned way too much
+information. I got a few crazy error messages when performing
+searches, and it never returned anything useful.
+<P>
+<A HREF="f8-7.gif"><B>Figure 8.7 :</B> <I>BrowserWatch ActiveX Arena</I>.</A>
+<P>
+The site seems fairly comprehensive, though, containing capsule
+descriptions of controls broken into categories, so if you don&#146;t
+mind navigating with links instead of a search engine, this is
+a good resource.
+<H3><A NAME="CatalogResellersSpecializinginVBControlsandAddOns">
+Catalog Resellers Specializing in VB Controls and Add-Ons
+</A></H3>
+<P>
+There are a number of resellers that specialize in selling Visual
+Basic add-ons, including ActiveX controls, that can be used as
+constituent controls in your control projects. Here (in no particular
+order) is a list of some retailers specializing in VB components.
+<H4>Programmer&#146;s Paradise</H4>
+<BLOCKQUOTE>
+<B>1163 Shrewsbury Avenue<BR>
+Shrewsbury, NJ 07702-4321<BR>
+Voice: 800-445-7899<BR>
+Fax: 908-389-9227<BR>
+Fax-back (product information): 908-389-8173<BR>
+Web: <A HREF="http://www.pparadise.com">http://www.pparadise.com</A></B>
+</BLOCKQUOTE>
+The Programmer&#146;s Paradise Web site offers online ordering.
+There are a few products that you can purchase online, then download
+immediately. They also have a fax-back server that can send information
+on products to your fax machine.
+<H4>ActiveXtras</H4>
+<BLOCKQUOTE>
+<B>1905 Powers Ferry Road, Suite 100<BR>
+Atlanta, GA  30339<BR>
+Voice: 1-800-788-4794<BR>
+Fax: 1-770-952-6388<BR>
+Web: <A HREF="http://www.vbxtras.com">http://www.vbxtras.com</A>, <A HREF="http://www.xtras.com/activex">http://www.xtras.com/activex</A></B>
+</BLOCKQUOTE>
+The VBXtras Web site offers online ordering and downloading of
+controls. They have a great search engine that enables you to
+search for products by product name, keyword, category, or vendor.
+They also provide invariably flattering &Ograve;evaluations&Oacute;
+of the controls they sell, which can be helpful, I guess, if you&#146;re
+good at translating from the native Marketingese.
+<H4>VB <I>only</I> Tools/Zachary Software</H4>
+<BLOCKQUOTE>
+<B>1090 Kapp Drive<BR>
+Clearwater, FL  34625<BR>
+Voice: 1-800-GO-BASIC<BR>
+Fax: 813-461-2743<BR>
+Web: <A HREF="http://www.zaccatalog.com/VBASIC/VBASIC.HTM">http://www.zaccatalog.com/VBASIC/VBASIC.HTM</A><BR>
+E-mail: sales@zaccatalog.com</B>
+</BLOCKQUOTE>
+The VB <I>only</I> Tools Web site permits you to perform keyword
+searches to find information on products you&#146;re interested
+in. You can download demo versions of some controls, but as of
+this writing there was no way to order online. They seem a little
+too proud of the fact that their Web site is rather rudimentary.
+<H2><A NAME="Summary"><FONT SIZE=5 COLOR=#FF0000>
+Summary</FONT></A></H2>
+<P>
+This chapter delved deeper into the perils of including constituent
+controls in the controls you develop. The chapter also provided
+information resources that should help you locate ActiveX resources
+you can use in your control.
+<P>
+In the next chapter, you&#146;ll look at controls you draw yourself,
+without any constituent controls.
+<HR>
+
+<CENTER><P><A HREF="ch7.htm"><IMG SRC="PC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="#CONTENTS"><IMG SRC="CC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="contents.htm"><IMG SRC="HB.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<A HREF="ch9.htm"><IMG SRC="NC.GIF" BORDER=0 HEIGHT=88 WIDTH=140></A>
+<HR WIDTH="100%"></P></CENTER>
+</BODY>
+</HTML>

@@ -1,0 +1,77 @@
+* VB-CODE (3)
+Tip 113: Creating Transparent Forms
+
+July 1, 1995
+
+Abstract
+When developing an application in Microsoft® Visual Basic®, you may need to design
+a transparent form. This article explains how to create transparent forms.
+
+Using Transparent Forms
+A transparent form is a form that, when displayed, does not cover up the
+underlying windows beneath it. The Microsoft® Windows® application programming
+interface (API) function SetWindowLong can be used to change the style settings
+of a form or window. You can create a transparent window by setting the
+WS_EX_TRANSPARENT style bit.
+
+To use the SetWindowLong function within your Microsoft Visual Basic® program,
+include the following Declare statement in the General Declarations section of a
+form (note that it must be typed as a single line of code):
+
+Private Declare Function SetWindowLong Lib "User" (ByVal hWnd As Integer, ByVal
+   nIndex As Integer, ByVal dwNewLong As Long) As Long
+
+The SetWindowLong function takes the following arguments:
+
+hWnd       An integer value containing the window's handle.
+nIndex     An integer value that describes the type of information you want
+           to set. This value may be one of the following:
+           GWL_EXSTYLE  Set the extended window style
+           GWL_STYLE    Set the window style
+           GWL_WNDPROC  The window function's address
+dwNewLong  A long value containing the new style bits to be given to the window.
+
+Because you want to make the specified form transparent, you call the
+SetWindowLong function with the nIndex argument set to GWL_EXSTYLE, specifying
+the transparency style bit.
+When you run the example program shown below, the form will be displayed in
+transparent mode.
+
+Example Program
+This program shows how to create a transparent form.
+
+ 1. Create a new project in Visual Basic. Form1 is created by default. Set the
+    form's Picture property to the ARCHES.BMP bitmap file (usually found in the
+    \WINDOWS directory).
+ 2. Add a Command Button control to Form1. Command1 is created by default. Set
+    its Caption property to "Show Form".
+ 3. Add the following code to the Click event for Command1:
+
+Private Sub Command1_Click()
+    Form2.Show
+End Sub
+
+ 4. From the Visual Basic Insert menu, select Form to create a new form. Form2
+    is created by default. Change the size of Form2 so that it is the same size
+    as Form1. Position Form2 so that it is on top of Form1.
+ 5. Add the following Constant and Declare statements to the General Declarations
+    section of Form2 (note that the Declare statement must be typed as one single
+    line of code):
+
+Private Declare Function SetWindowLong Lib "User" (ByVal hWnd As Integer, ByVal
+   nIndex As Integer, ByVal dwNewLong As Long) As Long
+Const WS_EX_TRANSPARENT = &H20&
+Const GWL_EXSTYLE = (-20)
+
+ 6. Add the following code to the Form_Load event for Form2:
+
+Private Sub Form_Load()
+   Dim Ret As Long
+   Ret = SetWindowLong(Form2.hWnd, GWL_EXSTYLE, WS_EX_TRANSPARENT)
+End Sub
+
+Run the example program by pressing F5. Click the "Show Form" command button.
+Form2 is displayed directly over Form1. It appears as if only Form1 is displayed
+because Form2 has the transparent attribute.
+
+

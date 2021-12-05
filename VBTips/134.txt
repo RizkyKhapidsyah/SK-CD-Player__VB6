@@ -1,0 +1,64 @@
+* VB-CODE (2)
+Tip 134: Creating Temporary Files
+
+July 1, 1995
+
+Abstract
+When developing an application in Microsoft=AE Visual Basic=AE, you may =
+need to create
+a temporary file on disk. This article explains how to create temporary =
+files in
+Visual Basic version 4.0.
+
+Using the GetTempFileName Function
+You can create a new file on a specified disk drive using the =
+ Declarations section of
+    Form1 (note that this Declare statement must be typed as a single =
+line of
+    code):
+
+Private Declare Function GetTempFileName Lib "kernel32" Alias =
+"GetTempFileNameA"
+   (ByVal lpszPath As String, ByVal lpPrefixString As String, ByVal =
+wUnique As
+   Long, ByVal lpTempFileName As String) As Long
+
+ 3. Add the following code to the Form_Load event for Form1:
+
+Private Sub Form_Load()
+    Text1.TEXT =3D ""
+End Sub
+
+ 4. Add a Text Box control to Form1. Text1 is created by default.
+ 5. Add a Command Button control to Form1. Command1 is created by =
+default.
+ 6. Add the following code to the Click event for Command1:
+
+Private Sub Command1_Click()
+    Dim FilePrefix As String
+    Dim NewFile As String * 256
+    FilePrefix =3D "TEST"
+    NewFile =3D GetTempName(FilePrefix)
+    Text1.TEXT =3D NewFile
+End Sub
+
+ 7. Create a new function called GetTempName. Add the following code to =
+this
+    function:
+
+Private Function GetTempName(TmpFilePrefix As String) As String
+    Dim TempFileName As String * 256
+    Dim X As Long
+    Dim DriveName As String
+    DriveName =3D "c:\"
+    X =3D GetTempFileName(DriveName, TmpFilePrefix, 0, TempFileName)
+    GetTempName =3D Left$(TempFileName, InStr(TempFileName, Chr(0)) - 1)
+End Function
+
+Run the example program by pressing F5. Click the command button to =
+create a new
+temporary file on drive C in the root directory. The name of the newly =
+created
+file is displayed in the Text Box control.
+
+
